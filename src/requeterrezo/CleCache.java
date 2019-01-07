@@ -1,0 +1,153 @@
+package requeterrezo;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Représente une requête. Composé du nom du terme recherché, du type de la relation si la requête avait un filtre de type (ou -1 sinon)
+ * et du filtre ({@link Filtre}) utilisé.
+ * @author jimmy.benoits
+ */
+class CleCache implements Serializable{
+
+	/**
+	 * 01/01/2019 - V1.0
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Nom du terme recherché. Il est préférable de toujours effectuer des requêtes grâce au "nom" des termes de rezoJDM et de n'utiliser les
+	 * noms formatés qu'à des fins d'affichage.
+	 */
+	protected String nom;
+	
+	/**
+	 * Type de la relation si un filtre sur le type a été utilisé (-1 sinon).
+	 */
+	protected int typeRelation;
+	
+	/**
+	 * Filtre entrants / sortants / les deux / aucun.
+	 */
+	protected Filtre filtre;
+
+	/**
+	 * Constructeur simple. 
+	 * @param nom Nom du terme.
+	 */
+	protected CleCache(String nom) {
+		this.nom = nom;
+		this.typeRelation = -1;
+		this.filtre = Filtre.AucunFiltre;
+	}
+
+	/**
+	 * Constructeur paramétré.
+	 * @param nom Nom du terme.
+	 * @param type Type de relation (-1 si aucun filtre sur le type).
+	 * @param filtre Filtre utilisé.
+	 */
+	protected CleCache(String nom, int type, Filtre filtre) {
+		this.nom = nom;
+		this.typeRelation = type;
+		this.filtre = filtre;
+	}
+
+//	protected static CleCache lire(String ligne) {
+//		CleCache res = null;
+//		String nom = ligne;
+//		int typeRelation = -1;
+//		Filtre filtre = Filtre.AucunFiltre;
+//		int indexOf;
+//		String tmp;
+//		indexOf = ligne.lastIndexOf(';');
+//		if(indexOf+1 < ligne.length()) {
+//			tmp = ligne.substring(indexOf+1, ligne.length());
+//			try{
+//				filtre = Filtre.valueOf(tmp);
+//			}catch(NumberFormatException e) {
+//				e.printStackTrace();
+//			}
+//			ligne = ligne.substring(0, indexOf);
+//
+//			indexOf = ligne.lastIndexOf(';');
+//			if(indexOf+1 < ligne.length()) {
+//				tmp = ligne.substring(indexOf+1, ligne.length());
+//				try{
+//					typeRelation = Integer.parseInt(tmp);					
+//				}catch(NumberFormatException e) {
+//					e.printStackTrace();
+//				}
+//				nom = ligne.substring(0, indexOf);
+//				res = new CleCache(nom, typeRelation, filtre);
+//			}
+//		}		
+//		return res;
+//	}
+
+//	protected static CleCache construireCleCache(String ligne) {
+//		CleCache cleCache = null;
+//		String nom;
+//		int type;
+//		Filtre filtre;
+//
+//		String tmp;
+//		//récupérer partie filtre => après dernier ';'
+//		int indexOf = ligne.lastIndexOf(';');
+//		if(indexOf != -1) {
+//			tmp = ligne.substring(indexOf+1, ligne.length());
+//			ligne = ligne.substring(0,indexOf);			
+//			try {
+//				filtre = Filtre.valueOf(tmp);
+//				//récupérer partie type relation => après dernier ';' restant
+//				indexOf = ligne.lastIndexOf(';');
+//				if(indexOf != -1) {
+//					tmp = ligne.substring(indexOf+1, ligne.length());
+//					ligne = ligne.substring(0,indexOf);			
+//					try {
+//						type = Integer.parseInt(tmp);
+//						//récupérer le mot => partie restante sans le premier (') et le dernier (') caractères
+//						if(ligne.length() >2) {
+//							nom = ligne.substring(1, ligne.length()-1);
+//							cleCache = new CleCache(nom, type, filtre);
+//						}						
+//					}catch(NumberFormatException e) {
+//						e.printStackTrace();
+//					}
+//				}	
+//			}catch(IllegalArgumentException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		return cleCache;
+//	}
+
+	@Override
+	public String toString() {
+		return "'" + nom + "';" + typeRelation + ";" + filtre;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 29 * hash + Objects.hashCode(this.nom) + Objects.hashCode(this.filtre) + Objects.hashCode(this.typeRelation);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final CleCache other = (CleCache) obj;
+		return Objects.equals(this.nom, other.nom) && (this.typeRelation == other.typeRelation) && (this.filtre == other.filtre);
+	}
+
+}

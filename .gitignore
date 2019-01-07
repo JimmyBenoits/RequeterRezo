@@ -1,0 +1,9 @@
+.settings
+bin
+lib
+cache
+javadoc
+.classpath
+.project
+src/test/Test.java
+Archive/RequeterRezo
