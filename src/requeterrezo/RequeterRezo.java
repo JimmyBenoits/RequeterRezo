@@ -24,7 +24,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 
 /**
@@ -575,13 +575,17 @@ public abstract class RequeterRezo {
 				info.incrementeOccurrences();
 				//On retourne la valeur du cache   
 				res = Utils.construireChemin(info.ID); 
-			} else if (demande(mot)) {
-				//Si le mot est intéressant (il y a de la place ou il est récurrent), 
-				//on le demande pour le stocker en cache
-				res = "$DEMANDE$";
 			} else {
-				//Sinon on effectue une requête sur le serveur, sans stocker le résultat
-				res = "$OSEF$";
+				//L'entrée est périmée : on la supprime
+				cache.supprimer(mot);
+				if (demande(mot)) {			
+					//Si le mot est intéressant (il y a de la place ou il est récurrent), 
+					//on le demande pour le stocker en cache
+					res = "$DEMANDE$";				
+				} else {
+					//Sinon on effectue une requête sur le serveur, sans stocker le résultat
+					res = "$OSEF$";
+				}
 			}
 		}
 		return res;

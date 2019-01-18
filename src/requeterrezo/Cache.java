@@ -34,7 +34,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 
 /**
@@ -63,32 +63,32 @@ class Cache implements Serializable{
 	 * 01/01/2019 - V1.0 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Table d'association entre une requête et ses informations associées 
 	 */
 	protected HashMap<CleCache, CacheInfo> cache = new HashMap<>();
-	
+
 	/**
 	 * Prochain ID a affecter si la file de recyclage est vide.
 	 */
 	protected int idMax;
-	
+
 	/**
 	 * Lorsqu'une entrée quitte le cache, son ID est conservé afin d'être ré-affecter et de ne pas croître indéfiniment.
 	 */
 	protected Queue<Integer> recyclesID;
-	
+
 	/**
 	 * Nombre d'heures à partir duquel un fichier du cache est considéré comme trop vieux pour être utilisable.
 	 */
 	protected final int peremption;
-	
+
 	/**
 	 * Taille actuelle (en octet) du cache.
 	 */
 	protected long tailleCourante;
-	
+
 	/**
 	 * Taille maximale (en octet) autorisée pour le cache. 
 	 */
@@ -244,7 +244,7 @@ class Cache implements Serializable{
 	 * @param cheminCache chemin vers le dossier contenant le cache.
 	 * @param avertissement True si l'utilisateur veut des détails sur l'exécution, false sinon.
 	 */
-	protected void verifierIntegrite(String cheminCache, boolean avertissement) {
+	protected void verifierIntegrite(String cheminCache, boolean avertissement) {		
 		//1er sens : vérifier que tous les mots du cache possèdent leur fichier 
 		ArrayList<CleCache> aRetirer = new ArrayList<>();
 		String chemin;
@@ -269,7 +269,7 @@ class Cache implements Serializable{
 		TreeSet<Integer> idsCache = new TreeSet<>();
 		for(CacheInfo info : cache.values()) {
 			idsCache.add(info.ID);
-		}
+		}		
 		//Récupération récursive des fichiers dans le dossier du cache.
 		fichiersCache = Utils.fichiersCache(dossierCache);
 		//nombre de fichier.
@@ -296,7 +296,7 @@ class Cache implements Serializable{
 			//Arrêt des recherches si on trouve toutes les entrées manquantes.	
 			while(i < fichiersCache.size() && (aAjouter > 0)) {
 				fichier = fichiersCache.get(i);
-				id = Utils.recupererID(fichier.getPath());
+				id = Utils.recupererID(fichier.getPath());								
 				if(id != null && !idsCache.contains(id)) {
 					//lecture du fichier seulement en dernier recours (opération coûteuse, ~400ms).
 					resultat = Resultat.lireCache(fichier.getPath(), null);
@@ -310,7 +310,7 @@ class Cache implements Serializable{
 					}else {
 						mot = resultat.getMot();
 						if(mot != null) {
-							cleCache = resultat.getMot().cleCache;
+							cleCache = resultat.getMot().cleCache;							
 							if(!cache.containsKey(cleCache)) {
 								if(avertissement) {
 									System.err.println("Avertissement RequeterRezo : Ajout de \""+cleCache.toString()+"\" grâce au fichier.");
@@ -323,6 +323,7 @@ class Cache implements Serializable{
 				}
 				++i;
 			}
+
 			//Suppression des fichiers illisibles détectés.
 			for(File supprimer : aSupprimer) {
 				supprimer.delete();
