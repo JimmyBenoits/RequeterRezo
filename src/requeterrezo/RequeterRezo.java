@@ -483,6 +483,8 @@ public abstract class RequeterRezo {
 		return listeMots;
 	}
 
+	public abstract int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination);
+	
 	/**
 	 * Centralisation des requêtes vers un point unique qui vérifie si la requête existe en cache, s'il faut faire entrer la requête dans le cache
 	 * ou simplement retourner le résultat.

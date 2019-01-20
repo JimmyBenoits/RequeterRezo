@@ -558,4 +558,19 @@ public class RequeterRezoDump extends RequeterRezo {
 		return resultat;
 	}
 
+	@Override
+	public int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination) {
+		Resultat resultat = this.requete(motSource, nomTypeRelation, Filtre.RejeterRelationsEntrantes);
+		Mot mot = resultat.getMot();
+		if(mot != null) {
+			ArrayList<Voisin> voisins = mot.getRelationsSortantesTypees(nomTypeRelation);
+			for(Voisin v : voisins) {
+				if(v.getNom().equals(motDestination)) {
+					return v.getPoids();
+				}
+			}
+		}
+		return 0;
+	}
+
 }
