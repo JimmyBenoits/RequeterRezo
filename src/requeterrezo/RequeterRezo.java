@@ -483,6 +483,13 @@ public abstract class RequeterRezo {
 		return listeMots;
 	}
 
+	/**
+	 * Permet de récupérer le poids d'une relation du RezoJDM
+	 * @param motSource Terme JDM de départ de la relation
+	 * @param nomTypeRelation Nom du type de relation devant lier les deux termes.
+	 * @param motDestination Terme JDM d'arriver de la relation
+	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 */
 	public abstract int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination);
 	
 	/**
