@@ -106,9 +106,9 @@ public class Configuration {
 						}
 						case "PEREMPTION": {
 							switch (valeur.charAt(valeur.length() - 1)) {
-							case 'j': {
+							case 'j': {								
 								try {
-									this.peremption = Integer.parseInt(valeur) * 24;
+									this.peremption = Integer.parseInt(valeur.substring(0, valeur.length()-1)) * 24;
 								} catch (NumberFormatException e) {
 									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de peremption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}
@@ -116,7 +116,7 @@ public class Configuration {
 							}
 							case 'h': {
 								try {
-									this.peremption = Integer.parseInt(valeur) * 24;
+									this.peremption = Integer.parseInt(valeur.substring(0, valeur.length()-1)) * 24;
 								} catch (NumberFormatException e) {
 									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de peremption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}

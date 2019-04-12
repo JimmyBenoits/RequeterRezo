@@ -91,8 +91,8 @@ public abstract class RequeterRezo {
 	/**
 	 * Permet la correspondance entre le nom et le type des relations de rezoJDM.
 	 */
-	protected static CorrespondanceRelation correspondancesRelations = new CorrespondanceRelation();    
-
+	protected static CorrespondanceRelation correspondancesRelations = new CorrespondanceRelation();
+	
 	/**
 	 * Mots en attente.
 	 */
