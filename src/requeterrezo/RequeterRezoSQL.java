@@ -446,4 +446,10 @@ public class RequeterRezoSQL extends RequeterRezo {
 			System.exit(1);
 		}
 	}
+
+	@Override
+	public int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination) {
+		//TODO:
+		throw new UnsupportedOperationException("Not implemented yet.");
+	}
 }
