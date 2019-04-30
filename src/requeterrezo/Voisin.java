@@ -36,9 +36,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 public class Voisin implements Serializable{
 
 	/**
-	 * 01/01/2019 - V1.0
+	 * 30/04/2019 - V1.1
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11L;
 	
 	/**
 	 * Noeud voisin.
@@ -49,15 +49,22 @@ public class Voisin implements Serializable{
 	 * Poids de la relation.
 	 */
     protected final int poids;
+    
+    /**
+     * id de la relation
+     */
+    protected final long idRelation;
 
     /**
      * Constructeur.
      * @param mot Noeud voisin.
      * @param poids Poids de la relation.
+     * @param idRelation Identifiant rezoJDM de la relation.
      */
-    protected Voisin(Noeud mot, int poids) {
+    protected Voisin(Noeud mot, int poids, long idRelation) {
         this.mot = mot;
         this.poids = poids;
+        this.idRelation = idRelation;
     }
 
     /**
@@ -86,6 +93,14 @@ public class Voisin implements Serializable{
      */
     public int getPoids() {
         return this.poids;
+    }
+    
+    /**
+     * Retourne l'id de la relation rezoJDM liant le voisin au mot requêté.
+     * @return L'id de la relation rezoJDM liant le voisin au mot requêté.
+     */
+    public long getIDRelation() {
+    	return this.idRelation;
     }
 
     @Override

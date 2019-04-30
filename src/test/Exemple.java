@@ -120,6 +120,7 @@ class Exemple {
 		}
 		//filtrer une relation permet d'obtenir des résultats bien plus rapidement et d'être sûr que le type que vous recherchez n'a pas été tronqué 
 		//avec un état "TROP_GROS"
+
 		
 		//Pour plus de détails, pensez à la javadoc.
 		//Bonne chance !		

@@ -228,6 +228,7 @@ public class RequeterRezoDump extends RequeterRezo {
 		int motType = -1;
 		int motPoids = 0;
 		String motMotFormate = motNom;
+		boolean isType128 = cleCache.typeRelation == 128;
 		URL jdm=null;
 		try {
 			jdm = new URL(construireURL(cleCache));
@@ -328,6 +329,8 @@ public class RequeterRezoDump extends RequeterRezo {
 			boolean trouveType;
 			boolean trouvePoids;
 			boolean trouveMotFormate;
+			
+			long idRelation;
 
 			//Traitement du voisinage
 			while ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("// les types de relations (Relation Types) :"))) {
@@ -459,21 +462,22 @@ public class RequeterRezoDump extends RequeterRezo {
 			long id_destination;
 			while (pasDeRelationsSortantes==false && (ligne = lecteur.readLine()) != null && !(ligne.startsWith("// les relations entrantes"))) {
 				pdivisions=ligne.split(";");
-				if (pdivisions.length>1){	
+				if (pdivisions.length>1){
+					idRelation = Long.parseLong(pdivisions[1]);
 					id_destination = Long.parseLong(pdivisions[3]);
 					type_relation=Integer.parseInt(pdivisions[4]);
 					poids_relation = Integer.parseInt(pdivisions[5]);
 					if (!(motRelationsSortantes.containsKey(type_relation))) {
 						motRelationsSortantes.put(type_relation, new ArrayList<>());
 					}
-					//cas annotation
-					if(type_relation == 128) {						
+					//cas annotation. Si la reqûete porte sur le type 128, on ne considère pas cela comme une annotation
+					if(!isType128 && type_relation == 128) {						
 						liste_annotations.add(new SimpleEntry<Long, Integer>(id_destination, poids_relation));
 					}
 					//cas normal
 					else {
 						noeud_voisin=motVoisinage.get(id_destination);
-						voisin=new Voisin(noeud_voisin,poids_relation);
+						voisin=new Voisin(noeud_voisin,poids_relation,idRelation);
 						motRelationsSortantes.get(type_relation).add(voisin);
 					}
 					mapping_relations.put(Long.parseLong(pdivisions[1]), ligne);
@@ -485,12 +489,13 @@ public class RequeterRezoDump extends RequeterRezo {
 			while (pasDeRelationsEntrantes==false && ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("// END")))) {
 				pdivisions=ligne.split(";");
 				if (pdivisions.length>1){
+					idRelation = Long.parseLong(pdivisions[1]);
 					type_relation=Integer.parseInt(pdivisions[4]);
 					if (!(motRelationsEntrantes.containsKey(type_relation))) {
 						motRelationsEntrantes.put(type_relation, new ArrayList<>());
 					}
 					noeud_voisin = motVoisinage.get(Long.parseLong(pdivisions[2]));
-					voisin = new Voisin(noeud_voisin,Integer.parseInt(pdivisions[5]));
+					voisin = new Voisin(noeud_voisin,Integer.parseInt(pdivisions[5]), idRelation);
 					motRelationsEntrantes.get(type_relation).add(voisin);
 					mapping_relations.put(Long.parseLong(pdivisions[1]), ligne);
 				}
@@ -516,7 +521,7 @@ public class RequeterRezoDump extends RequeterRezo {
 					source_relation = motVoisinage.get(id_source_relation);
 					destination_relation = motVoisinage.get(id_destination_relation);
 
-					annotation = new Annotation(noeud_annotation.getNom(), noeud_annotation.idRezo, noeud_annotation.getType(), entry.getValue(),
+					annotation = new Annotation(noeud_annotation.getNom(), noeud_annotation.getIdRezo(), noeud_annotation.getType(), entry.getValue(),
 							source_relation, type_relation, correspondance.get(type_relation), destination_relation, poids_relation);
 					motAnnotations.add(annotation);
 				}

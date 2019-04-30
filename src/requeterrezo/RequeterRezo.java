@@ -3,6 +3,7 @@ package requeterrezo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -92,7 +93,7 @@ public abstract class RequeterRezo {
 	 * Permet la correspondance entre le nom et le type des relations de rezoJDM.
 	 */
 	protected static CorrespondanceRelation correspondancesRelations = new CorrespondanceRelation();
-	
+
 	/**
 	 * Mots en attente.
 	 */
@@ -355,7 +356,8 @@ public abstract class RequeterRezo {
 
 
 	/**
-	 * Requête complète à partir d'un terme, d'un type de relation de rezoJDM et d'un filtre.
+	 * Requête complète à partir d'un terme, d'un type de relation de rezoJDM et d'un filtre. 
+	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme de rezoJDM.
 	 * @param typeRelation Type de la relation dont on cherche le voisinage pour "mot".
 	 * @param filtre Filtre à appliquer.
@@ -374,6 +376,7 @@ public abstract class RequeterRezo {
 	 * Requête à partir du terme. Retourne toutes les informations présentes dans le voisinage de ce terme. 
 	 * Pour les mots de taille importante, il est vivement déconseillé d'utiliser une requête de la sorte mais plutôt de passer 
 	 * par des filtres (type des relations ou entrants / sortants).
+	 * Retourne aussi les annotations.
 	 * @param mot Terme à rechercher dans rezoJDM.
 	 * @return Le résultat de la requête sur le terme demandé, sans aucun filtre.
 	 */
@@ -384,6 +387,7 @@ public abstract class RequeterRezo {
 	/**
 	 * Requête à partir du terme et d'un filtre sur les relations entrantes, sortantes ou les deux.
 	 * Pour les mots de taille importante, il est conseillé d'appliquer aussi un filtre sur le type de relation.
+	 * Retourne aussi les annotations.
 	 * @param mot Terme à rechercher dans rezoJDM.
 	 * @param filtre Filtre à appliquer (entrants / sortants).
 	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur la direction des relations. 
@@ -394,6 +398,7 @@ public abstract class RequeterRezo {
 
 	/**
 	 * Requête à partir du terme et d'un filtre sur le nom de relation.
+	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme à rechercher dans rezoJDM.
 	 * @param typeRelation Type de la relation dont il faut extraire le voisinage.
 	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur le types des relations. 
@@ -404,6 +409,7 @@ public abstract class RequeterRezo {
 
 	/**
 	 * Requête à partir du terme et d'un filtre sur le type de relation.
+	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme à rechercher dans rezoJDM.
 	 * @param nomTypeRelation nom du type de la relation dont il faut extraire le voisinage.
 	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur le types des relations. 
@@ -424,6 +430,7 @@ public abstract class RequeterRezo {
 
 	/**
 	 * Requête complète à partir d'un terme, d'un nom de relation de rezoJDM et d'un filtre.
+	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme de rezoJDM.
 	 * @param nomTypeRelation nom du type de la relation dont on cherche le voisinage pour "mot".
 	 * @param filtre Filtre à appliquer.
@@ -442,6 +449,65 @@ public abstract class RequeterRezo {
 		return res;
 	}
 
+
+	/**
+	 * Effectue deux requêtes afin de retrouver les relations d'un mot en fonction d'une requête classique ainsi que les annotations de cette relation. 
+	 * Sans appel de cette méthode, filtrer par type empêche de retrouver les annotations.  
+	 * @param mot Terme de rezoJDM.
+	 * @param typeRelation Type de la relation dont on cherche le voisinage pour "mot".
+	 * @param filtre Filtre à appliquer.
+	 * @return Le résultat de la requête.
+	 */
+	public Resultat requeteAvecAnnotations(String mot, int typeRelation, Filtre filtre) {
+		Resultat resultatMot = requete(mot, typeRelation, filtre);
+		Resultat resultatAnnotations = requete(mot,128, Filtre.RejeterRelationsEntrantes);
+		Mot motCible = resultatMot.getMot();
+		Mot motAnnotations = resultatAnnotations.getMot();
+		HashMap<Long, Triplet> relations = new HashMap<>();
+		Triplet relation;
+		String nomVoisin;
+		long idRelationAnnotee;
+		Noeud noeudVoisin;
+		ArrayList<Voisin> annotations;
+		if(motCible != null && motAnnotations != null) {			
+			//récupérer les id des relations de cible
+			for(Entry<Integer, ArrayList<Voisin>> e : motCible.getRelationsSortantes().entrySet()) {				
+				for(Voisin v : e.getValue()) {
+					relation = new Triplet(motCible, v.getNoeud(), v.getPoids());
+					relations.put(v.getIDRelation(), relation);
+				}
+			}
+			for(Entry<Integer, ArrayList<Voisin>> e : motCible.getRelationsEntrantes().entrySet()) {				
+				for(Voisin v : e.getValue()) {
+					relation = new Triplet(v.getNoeud(), motCible, v.getPoids());					
+					relations.put(v.getIDRelation(), relation);
+				}
+			}
+			//parcours des annotations : on ne garde que les annotations portant sur des relations de la requête principale.
+			annotations = motAnnotations.getRelationsSortantesTypees(128);
+			if(annotations != null) {
+				for(Voisin voisin : motAnnotations.getRelationsSortantesTypees(128)) {
+					nomVoisin = voisin.getNom();
+					if(nomVoisin.length() > 2 && nomVoisin.startsWith(":r")) {
+						nomVoisin = nomVoisin.substring(2);
+						idRelationAnnotee = Long.parseLong(nomVoisin);
+						if((relation = relations.get(idRelationAnnotee))!=null) {
+							noeudVoisin = voisin.getNoeud();							
+							motCible.getAnnotations().add(
+									new Annotation(
+											noeudVoisin.getNom(), noeudVoisin.getIdRezo(), noeudVoisin.getType(), noeudVoisin.getPoids(), 
+											relation.getSource(), 
+											typeRelation, correspondancesRelations.get(typeRelation), 
+											relation.getDestination(), 
+											relation.getPoids()));							
+						}
+					}
+				}
+			}
+		}		
+		return resultatMot;
+	}
+
 	/**
 	 * Permet d'effectuer une requête filtrée sur plusieurs types.
 	 * @param mot Terme sur lequel effectuer la requête.
@@ -454,6 +520,7 @@ public abstract class RequeterRezo {
 
 	/**
 	 * Permet d'effectuer une requête filtrée sur plusieurs types. 
+	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme sur lequel effectuer la requête.
 	 * @param filtre Filtre sur la direction des relations. Le même filtre est appliqué à toutes les requêtes.
 	 * @param nomsTypesRelations Noms ou types des relations, séparés par un point-virgule (';').
@@ -669,5 +736,33 @@ public abstract class RequeterRezo {
 	 */
 	public void setAvertissement(boolean avertissement) {
 		this.avertissement = avertissement;
+	}
+
+	/**
+	 * Classe privée permettant de stocker un triplet : noeud source, noeud destination et poids. 
+	 * Cela représente les informations nécessaires pour reconstruire une {@link Annotation}
+	 * lors de la méthode {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
+	 * @author jimmy.benoits
+	 *
+	 */
+	private class Triplet{
+		private final Noeud source;
+		private final Noeud destination;
+		private final int poids;
+		public Noeud getSource() {
+			return source;
+		}
+		public Noeud getDestination() {
+			return destination;
+		}
+		public int getPoids() {
+			return poids;
+		}
+		public Triplet(Noeud source, Noeud destination, int poids) {			
+			this.source = source;
+			this.destination = destination;
+			this.poids = poids;
+		}
+
 	}
 }

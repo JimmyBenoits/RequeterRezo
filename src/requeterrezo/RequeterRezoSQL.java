@@ -247,9 +247,10 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected Resultat construireMot(CleCache cleCache) {
 		Resultat resultat = new Resultat(cleCache); 	
 		String nom = cleCache.nom;
+		boolean isType128 = cleCache.typeRelation == 128;
 		String definition = "Pas de définition dans RequeterRezoSQL.";
 		String nomFormate;		
-		long idRezo;
+		long idRezo, idRelation;
 		int type;
 		int poids;
 		HashMap<Long, Noeud> voisinage = new HashMap<>();
@@ -289,7 +290,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 
 				//Relations sortantes
 				String requeteRelationsSortantes=""
-						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight "
+						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
 						+ "from edges e, nodes n "
 						+ "where e.source= \""+idRezo+"\" and e.destination=n.id ";
 				if(cleCache.typeRelation>=0) {
@@ -307,8 +308,9 @@ public class RequeterRezoSQL extends RequeterRezo {
 						mot_formate_autre_noeud = this.construireMotFormate(nom_autre_noeud);
 						type_autre_noeud = rs_relations.getInt(5);
 						poids_autre_noeud = rs_relations.getInt(6);
-						//cas annotation
-						if(type_rel == 128 && nom_autre_noeud.startsWith(":r")) {
+						idRelation = rs_relations.getInt(7);
+						//cas annotation. Si la reqûete porte sur le type 128, on ne considère pas cela comme une annotation
+						if(!isType128 && type_rel == 128 && nom_autre_noeud.startsWith(":r")) {
 							id_relation_annote = Long.parseLong(nom_autre_noeud.substring(2));
 							relation_depuis_id.setLong(1, id_relation_annote);									
 							rs_annotation = relation_depuis_id.executeQuery();							
@@ -342,7 +344,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 							}
 							motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);						
 							voisinage.put(id_autre_noeud,motAjoute);
-							relationsSortantes.get(type_rel).add(new Voisin(motAjoute, poids_rel));
+							relationsSortantes.get(type_rel).add(new Voisin(motAjoute, poids_rel, idRelation));
 						}
 					}					
 					relation_depuis_id.close();
@@ -352,7 +354,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 
 				//relations entrantes
 				String requeteRelationsEntrantes=""
-						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight "
+						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
 						+ "from edges e, nodes n "
 						+ "where e.destination= \""+idRezo+"\" and e.source=n.id ";
 				if(cleCache.typeRelation>=0) {
@@ -370,13 +372,14 @@ public class RequeterRezoSQL extends RequeterRezo {
 						mot_formate_autre_noeud = this.construireMotFormate(nom_autre_noeud);
 						type_autre_noeud = rs_relations.getInt(5);
 						poids_autre_noeud = rs_relations.getInt(6);
+						idRelation = rs_relations.getInt(7);
 						//Pas d'annotations dans les relations entrantes 
 						if(!(relationsEntrantes.containsKey(type_rel))) {
 							relationsEntrantes.put(type_rel, new ArrayList<>());
 						}								
 						motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);
 						voisinage.put(id_autre_noeud,motAjoute);							
-						relationsEntrantes.get(type_rel).add(new Voisin(motAjoute, poids_rel));
+						relationsEntrantes.get(type_rel).add(new Voisin(motAjoute, poids_rel,idRelation));
 					}
 				}
 				Mot mot = new Mot(nom, idRezo, type, nomFormate, poids, definition,
