@@ -551,6 +551,15 @@ public abstract class RequeterRezo {
 	}
 
 	/**
+	 * Permet de récupérer le poids d'une relation du RezoJDM
+	 * @param motSource Terme JDM de départ de la relation
+	 * @param nomTypeRelation Nom du type de relation devant lier les deux termes.
+	 * @param motDestination Terme JDM d'arriver de la relation
+	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 */
+	public abstract int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination);
+	
+	/**
 	 * Centralisation des requêtes vers un point unique qui vérifie si la requête existe en cache, s'il faut faire entrer la requête dans le cache
 	 * ou simplement retourner le résultat.
 	 * @param cleCache Requête à effectuer.
