@@ -7,3 +7,6 @@ javadoc
 .project
 src/test/Test.java
 Archive/RequeterRezo
+/RequeterRezo.ini
+/Archive/
+/RequeterRezo.jar
