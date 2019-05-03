@@ -253,9 +253,10 @@ public class RequeterRezoSQL extends RequeterRezo {
 		long idRezo, idRelation;
 		int type;
 		int poids;
+		Noeud noeudCourant;
 		HashMap<Long, Noeud> voisinage = new HashMap<>();
-		HashMap<Integer, ArrayList<Voisin>> relationsEntrantes = new HashMap<>();
-		HashMap<Integer, ArrayList<Voisin>> relationsSortantes = new HashMap<>();
+		HashMap<Integer, ArrayList<Relation>> relationsEntrantes = new HashMap<>();
+		HashMap<Integer, ArrayList<Relation>> relationsSortantes = new HashMap<>();
 		ArrayList<Annotation> annotations = new ArrayList<>();
 
 		Noeud motAjoute;
@@ -286,7 +287,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 				type=rs_noeud.getInt(2);				
 				poids=rs_noeud.getInt(3);
 				//On ajoute le noeud dans son voisinage
-				voisinage.put(idRezo, new Noeud(nom, idRezo, type, nomFormate, poids));
+				noeudCourant = new Noeud(nom, idRezo, type, nomFormate, poids);
+				voisinage.put(idRezo, noeudCourant);
 
 				//Relations sortantes
 				String requeteRelationsSortantes=""
@@ -344,7 +346,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 							}
 							motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);						
 							voisinage.put(id_autre_noeud,motAjoute);
-							relationsSortantes.get(type_rel).add(new Voisin(motAjoute, poids_rel, idRelation));
+							relationsSortantes.get(type_rel).add(new Relation(idRelation, noeudCourant, type_rel, motAjoute, poids_rel));							
 						}
 					}					
 					relation_depuis_id.close();
@@ -378,8 +380,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 							relationsEntrantes.put(type_rel, new ArrayList<>());
 						}								
 						motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);
-						voisinage.put(id_autre_noeud,motAjoute);							
-						relationsEntrantes.get(type_rel).add(new Voisin(motAjoute, poids_rel,idRelation));
+						voisinage.put(id_autre_noeud,motAjoute);
+						relationsEntrantes.get(type_rel).add(new Relation(idRelation, motAjoute, type_rel, noeudCourant, poids_rel));													
 					}
 				}
 				Mot mot = new Mot(nom, idRezo, type, nomFormate, poids, definition,
@@ -448,11 +450,5 @@ public class RequeterRezoSQL extends RequeterRezo {
 			this.sauvegarder();
 			System.exit(1);
 		}
-	}
-
-	@Override
-	public int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination) {
-		//TODO:
-		throw new UnsupportedOperationException("Not implemented yet.");
 	}
 }

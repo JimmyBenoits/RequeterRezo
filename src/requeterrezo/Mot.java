@@ -50,18 +50,19 @@ public class Mot extends Noeud implements Serializable{
 	 * Table d'association des noeuds du voisinage du terme (id -&gt; {@link Noeud}).
 	 */
 	protected HashMap<Long, Noeud> voisinage;
+		
 	
 	/**
 	 * Table d'assocation des relations entrantes (dont le Mot est la destination).
-	 * La table lie un type de relation et une liste de voisin ({@link Voisin}).
+	 * La table lie un type de relation et une liste de voisin ({@link Relation}).
 	 */
-	protected HashMap<Integer, ArrayList<Voisin>> relationsEntrantes;
+	protected HashMap<Integer, ArrayList<Relation>> relationsEntrantes;
 	
 	/**
 	 * Table d'assocation des relations sortantes (dont le Mot est la source).
-	 * La table lie un type de relation et une liste de voisin ({@link Voisin}).
+	 * La table lie un type de relation et une liste de voisin ({@link Relation}).
 	 */
-	protected HashMap<Integer, ArrayList<Voisin>> relationsSortantes;
+	protected HashMap<Integer, ArrayList<Relation>> relationsSortantes;
 	
 	/**
 	 * Liste des annotations portant sur les relations du mot.
@@ -90,11 +91,37 @@ public class Mot extends Noeud implements Serializable{
 	 */
 	protected Mot(String nom, long id, int type, String mot_formate, int poids, String description,
 			HashMap<Long, Noeud> voisinage,
-			HashMap<Integer, ArrayList<Voisin>> relationsEntrantes,
-			HashMap<Integer, ArrayList<Voisin>> relationsSortantes,
+			HashMap<Integer, ArrayList<Relation>> relationsEntrantes,
+			HashMap<Integer, ArrayList<Relation>> relationsSortantes,
 			ArrayList<Annotation> annotations,
 			CleCache cleCache) {
 		super(nom, id, type, mot_formate, poids);
+		this.voisinage = voisinage;
+		this.relationsEntrantes = relationsEntrantes;
+		this.relationsSortantes = relationsSortantes;
+		this.definition = description;
+		this.annotations = annotations;
+		this.cleCache = cleCache;
+	}
+	
+	/**
+	 * Construit un mot à partir d'un Noeud.
+	 * @param noeud
+	 * @param description définition du terme dans rezoJDM.
+	 * @param voisinage Table d'association du voisinnage d'un terme (id -> {@link Noeud}).
+	 * @param relationsEntrantes Table d'assocation des relations entrantes (dont le Mot est la destination).
+	 * @param relationsSortantes Table d'assocation des relations sortantes (dont le Mot est la source).
+	 * @param annotations Liste des annotations portant sur les relations du mot.
+	 * @param cleCache Descriptif interne de la requête.
+	 */
+	protected Mot(Noeud noeud,
+			String description,
+			HashMap<Long, Noeud> voisinage,
+			HashMap<Integer, ArrayList<Relation>> relationsEntrantes,
+			HashMap<Integer, ArrayList<Relation>> relationsSortantes,
+			ArrayList<Annotation> annotations,
+			CleCache cleCache) {
+		super(noeud.getNom(), noeud.getIdRezo(), noeud.getType(), noeud.getMotFormate(), noeud.getPoids());
 		this.voisinage = voisinage;
 		this.relationsEntrantes = relationsEntrantes;
 		this.relationsSortantes = relationsSortantes;
@@ -129,14 +156,14 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Voisin}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre.
 	 * Une relation entrante est une relation dont la destination est le mot.
 	 * @param nomType Nom de la relation.
-	 * @return Les voisins ({@link Voisin}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
+	 * @return Les voisins ({@link Relation}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
 	 * ou si le nom de correspond pas à une relation existante, retourne une liste vide.
 	 */
-	public ArrayList<Voisin> getRelationsEntrantesTypees(String nomType){
-		ArrayList<Voisin> resultats;
+	public ArrayList<Relation> getRelationsEntrantesTypees(String nomType){
+		ArrayList<Relation> resultats;
 		Integer type = RequeterRezo.correspondancesRelations.get(nomType);
 		if(type != null) {
 			resultats = getRelationsEntrantesTypees(type);
@@ -147,14 +174,14 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Voisin}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre.
 	 * Une relation sortante est une relation dont la source est le mot.
 	 * @param nomType Nom de la relation.
-	 * @return Les voisins ({@link Voisin}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
+	 * @return Les voisins ({@link Relation}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
 	 * ou si le nom de correspond pas à une relation existante, retourne une liste vide.
 	 */
-	public ArrayList<Voisin> getRelationsSortantesTypees(String nomType){
-		ArrayList<Voisin> resultats;
+	public ArrayList<Relation> getRelationsSortantesTypees(String nomType){
+		ArrayList<Relation> resultats;
 		Integer type = RequeterRezo.correspondancesRelations.get(nomType);
 		if(type != null) {
 			resultats = getRelationsSortantesTypees(type);
@@ -166,14 +193,14 @@ public class Mot extends Noeud implements Serializable{
 
 
 	/**
-	 * Retourne les voisins ({@link Voisin}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre.
 	 * Une relation entrante est une relation dont la destination est le mot.
 	 * @param type Type de la relation.
-	 * @return Les voisins ({@link Voisin}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
+	 * @return Les voisins ({@link Relation}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
 	 * ou si le nom de correspond pas à une relation existante, retourne une liste vide.
 	 */
-	public ArrayList<Voisin> getRelationsEntrantesTypees(int type){
-		ArrayList<Voisin> resultats;
+	public ArrayList<Relation> getRelationsEntrantesTypees(int type){
+		ArrayList<Relation> resultats;
 		if((resultats = relationsEntrantes.get(type))==null) {
 			resultats = new ArrayList<>();
 		}
@@ -181,37 +208,63 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Voisin}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre.
 	 * Une relation sortante est une relation dont la destination est le mot.
 	 * @param type Type de la relation.
-	 * @return Les voisins ({@link Voisin}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
+	 * @return Les voisins ({@link Relation}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
 	 * ou si le nom de correspond pas à une relation existante, retourne une liste vide.
 	 */
-	public ArrayList<Voisin> getRelationsSortantesTypees(int type){
-		ArrayList<Voisin> resultats;
+	public ArrayList<Relation> getRelationsSortantesTypees(int type){
+		ArrayList<Relation> resultats;
 		if((resultats = relationsSortantes.get(type))==null) {
 			resultats = new ArrayList<>();
 		}
 		return resultats;
 	}
+	
+	/**
+	 * Retourne la liste des relations entrantes.
+	 * Une relation entrantes est une relation dont le mot est la destination.
+	 * @return La liste des relations entrantes.
+	 */
+	public ArrayList<Relation> getListeRelationsEntrantes(){
+		ArrayList<Relation> res = new ArrayList<>();
+		for(ArrayList<Relation> relations : relationsEntrantes.values()) {
+			res.addAll(relations);
+		}		
+		return res;
+	}
+	
+	/**
+	 * Retourne la liste des relations sortantes.
+	 * Une relation sortantes est une relation dont le mot est la source.
+	 * @return La liste des relations sortantes.
+	 */
+	public ArrayList<Relation> getListeRelationsSortantes(){
+		ArrayList<Relation> res = new ArrayList<>();
+		for(ArrayList<Relation> relations : relationsSortantes.values()) {
+			res.addAll(relations);
+		}		
+		return res;
+	}
 
 	/**
 	 * Retourne la table d'association des relations entrantes.
 	 * Une relation entrantes est une relation dont le mot est la destination.
-	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Voisin}). 
+	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Relation}). 
 	 * @return La table d'association des relations entrantes.
 	 */
-	public HashMap<Integer, ArrayList<Voisin>> getRelationsEntrantes() {
+	public HashMap<Integer, ArrayList<Relation>> getRelationsEntrantes() {
 		return relationsEntrantes;
 	}
 
 	/**
 	 * Retourne la table d'association des relations sortantes.
 	 * Une relation sortantes est une relation dont le mot est la source.
-	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Voisin}). 
+	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Relation}). 
 	 * @return La table d'association des relations sortantes.
 	 */
-	public HashMap<Integer, ArrayList<Voisin>> getRelationsSortantes() {
+	public HashMap<Integer, ArrayList<Relation>> getRelationsSortantes() {
 		return relationsSortantes;
 	}
 
@@ -248,35 +301,35 @@ public class Mot extends Noeud implements Serializable{
 		Mot res = null;
 		if(!mots.isEmpty()) {
 			res = mots.get(0);
-			HashMap<Integer, ArrayList<Voisin>> entrantes = res.getRelationsEntrantes();
-			HashMap<Integer, ArrayList<Voisin>> sortantes = res.getRelationsSortantes();
+			HashMap<Integer, ArrayList<Relation>> entrantes = res.getRelationsEntrantes();
+			HashMap<Integer, ArrayList<Relation>> sortantes = res.getRelationsSortantes();
 			ArrayList<Annotation> annotations = res.getAnnotations();
 			Mot intermediaire;
 			int id_relation;
-			ArrayList<Voisin> voisins, voisins_intermediaire;
+			ArrayList<Relation> voisins, voisins_intermediaire;
 			for(int i = 1; i < mots.size(); ++i) {
 				intermediaire = mots.get(i);
 				if(intermediaire.getNom().equals(res.getNom())) {
-					for(Entry<Integer, ArrayList<Voisin>> entry : intermediaire.getRelationsEntrantes().entrySet()) {
+					for(Entry<Integer, ArrayList<Relation>> entry : intermediaire.getRelationsEntrantes().entrySet()) {
 						id_relation = entry.getKey();
 						voisins_intermediaire = entry.getValue();
 						if((voisins=entrantes.get(id_relation)) == null) {
 							entrantes.put(id_relation, voisins_intermediaire);
 						}else {
-							for(Voisin voisin : voisins_intermediaire) {
+							for(Relation voisin : voisins_intermediaire) {
 								if(!voisins.contains(voisin)) {
 									voisins.add(voisin);
 								}
 							}
 						}
 					}
-					for(Entry<Integer, ArrayList<Voisin>> entry : intermediaire.getRelationsSortantes().entrySet()) {
+					for(Entry<Integer, ArrayList<Relation>> entry : intermediaire.getRelationsSortantes().entrySet()) {
 						id_relation = entry.getKey();
 						voisins_intermediaire = entry.getValue();
 						if((voisins=sortantes.get(id_relation)) == null) {
 							sortantes.put(id_relation, voisins_intermediaire);
 						}else {
-							for(Voisin voisin : voisins_intermediaire) {
+							for(Relation voisin : voisins_intermediaire) {
 								if(!voisins.contains(voisin)) {
 									voisins.add(voisin);
 								}

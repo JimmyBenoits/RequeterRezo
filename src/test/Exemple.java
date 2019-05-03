@@ -9,7 +9,7 @@ import requeterrezo.Mot;
 import requeterrezo.RequeterRezo;
 import requeterrezo.RequeterRezoDump;
 import requeterrezo.Resultat;
-import requeterrezo.Voisin;
+import requeterrezo.Relation;
 
 /*
 RequeterRezo
@@ -69,9 +69,9 @@ class Exemple {
 		Mot mot = resultatRequete.getMot();
 		//Un Mot est notamment composé de relations sortantes (pour lesquelles il en est la source) et de relations entrantes (pour lesquelles il en est la destination).
 		//Un Voisin est un noeud rezoJDM ainsi que le poids de la relation associée.
-		ArrayList<Voisin> voisins = mot.getRelationsSortantesTypees("r_lieu");
+		ArrayList<Relation> voisins = mot.getRelationsSortantesTypees("r_lieu");
 		System.out.println("Un toto peut se trouver dans les lieux suivants : ");		
-		for(Voisin voisin : voisins) {
+		for(Relation voisin : voisins) {
 			System.out.println("\t"+voisin);
 		}
 		
@@ -114,7 +114,7 @@ class Exemple {
 		if(mot != null) {
 			voisins = mot.getRelationsSortantesTypees("r_lieu");
 			System.out.println("Une pomme de terre peut se trouver dans les lieux suivants : ");		
-			for(Voisin voisin : voisins) {
+			for(Relation voisin : voisins) {
 				System.out.println("\t"+voisin);
 			}
 		}

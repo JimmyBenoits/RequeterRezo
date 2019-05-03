@@ -156,13 +156,7 @@ public class Noeud implements Serializable{
 		}
 		final Noeud other = (Noeud) obj;
 		return !Objects.equals(this.nom, other.nom);
-	}
-
-	protected static Noeud lire(String ligne) {
-		Noeud noeud = null;
-
-		return noeud;
-	}
+	}	
 
 	@Override
 	public String toString() {

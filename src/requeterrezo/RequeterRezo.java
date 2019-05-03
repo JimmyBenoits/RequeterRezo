@@ -463,43 +463,41 @@ public abstract class RequeterRezo {
 		Resultat resultatAnnotations = requete(mot,128, Filtre.RejeterRelationsEntrantes);
 		Mot motCible = resultatMot.getMot();
 		Mot motAnnotations = resultatAnnotations.getMot();
-		HashMap<Long, Triplet> relations = new HashMap<>();
-		Triplet relation;
+		HashMap<Long, Relation> relations = new HashMap<>();
+		Relation relationAnnotee;
 		String nomVoisin;
 		long idRelationAnnotee;
 		Noeud noeudVoisin;
-		ArrayList<Voisin> annotations;
+		ArrayList<Relation> annotations;
 		if(motCible != null && motAnnotations != null) {			
-			//récupérer les id des relations de cible
-			for(Entry<Integer, ArrayList<Voisin>> e : motCible.getRelationsSortantes().entrySet()) {				
-				for(Voisin v : e.getValue()) {
-					relation = new Triplet(motCible, v.getNoeud(), v.getPoids());
-					relations.put(v.getIDRelation(), relation);
+			//récupérer les id des relations de cible			
+			for(Entry<Integer, ArrayList<Relation>> e : motCible.getRelationsSortantes().entrySet()) {				
+				for(Relation relation : e.getValue()) {
+					relations.put(relation.getIDRelation(), relation);
 				}
 			}
-			for(Entry<Integer, ArrayList<Voisin>> e : motCible.getRelationsEntrantes().entrySet()) {				
-				for(Voisin v : e.getValue()) {
-					relation = new Triplet(v.getNoeud(), motCible, v.getPoids());					
-					relations.put(v.getIDRelation(), relation);
+			for(Entry<Integer, ArrayList<Relation>> e : motCible.getRelationsEntrantes().entrySet()) {				
+				for(Relation relation : e.getValue()) {					
+					relations.put(relation.getIDRelation(), relation);
 				}
 			}
 			//parcours des annotations : on ne garde que les annotations portant sur des relations de la requête principale.
 			annotations = motAnnotations.getRelationsSortantesTypees(128);
 			if(annotations != null) {
-				for(Voisin voisin : motAnnotations.getRelationsSortantesTypees(128)) {
-					nomVoisin = voisin.getNom();
+				for(Relation voisin : motAnnotations.getRelationsSortantesTypees(128)) {
+					nomVoisin = voisin.getNomDestination();
 					if(nomVoisin.length() > 2 && nomVoisin.startsWith(":r")) {
 						nomVoisin = nomVoisin.substring(2);
 						idRelationAnnotee = Long.parseLong(nomVoisin);
-						if((relation = relations.get(idRelationAnnotee))!=null) {
-							noeudVoisin = voisin.getNoeud();							
+						if((relationAnnotee = relations.get(idRelationAnnotee))!=null) {
+							noeudVoisin = voisin.getDestination();							
 							motCible.getAnnotations().add(
 									new Annotation(
 											noeudVoisin.getNom(), noeudVoisin.getIdRezo(), noeudVoisin.getType(), noeudVoisin.getPoids(), 
-											relation.getSource(), 
+											relationAnnotee.getSource(), 
 											typeRelation, correspondancesRelations.get(typeRelation), 
-											relation.getDestination(), 
-											relation.getPoids()));							
+											relationAnnotee.getDestination(), 
+											relationAnnotee.getPoids()));							
 						}
 					}
 				}
@@ -551,14 +549,27 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Permet de récupérer le poids d'une relation du RezoJDM
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
+	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
+	 * Retourne 0 si la relation n'existe pas.  
 	 * @param motSource Terme JDM de départ de la relation
 	 * @param nomTypeRelation Nom du type de relation devant lier les deux termes.
 	 * @param motDestination Terme JDM d'arriver de la relation
 	 * @return Le poids de la relation si elle existe, 0 sinon.
-	 */
-	public abstract int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination);
-	
+	 */	
+	public int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination) {
+		Resultat resultat = this.requete(motSource, nomTypeRelation, Filtre.RejeterRelationsEntrantes);
+		Mot mot = resultat.getMot();
+		if(mot != null) {
+			ArrayList<Relation> voisins = mot.getRelationsSortantesTypees(nomTypeRelation);
+			for(Relation voisin : voisins) {
+				if(voisin.getNomDestination().equals(motDestination)) {
+					return voisin.getPoids();
+				}
+			}
+		}
+		return 0;
+	}	
 	/**
 	 * Centralisation des requêtes vers un point unique qui vérifie si la requête existe en cache, s'il faut faire entrer la requête dans le cache
 	 * ou simplement retourner le résultat.
@@ -745,33 +756,5 @@ public abstract class RequeterRezo {
 	 */
 	public void setAvertissement(boolean avertissement) {
 		this.avertissement = avertissement;
-	}
-
-	/**
-	 * Classe privée permettant de stocker un triplet : noeud source, noeud destination et poids. 
-	 * Cela représente les informations nécessaires pour reconstruire une {@link Annotation}
-	 * lors de la méthode {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
-	 * @author jimmy.benoits
-	 *
-	 */
-	private class Triplet{
-		private final Noeud source;
-		private final Noeud destination;
-		private final int poids;
-		public Noeud getSource() {
-			return source;
-		}
-		public Noeud getDestination() {
-			return destination;
-		}
-		public int getPoids() {
-			return poids;
-		}
-		public Triplet(Noeud source, Noeud destination, int poids) {			
-			this.source = source;
-			this.destination = destination;
-			this.poids = poids;
-		}
-
 	}
 }

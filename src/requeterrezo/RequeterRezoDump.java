@@ -34,7 +34,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 
 /**
@@ -258,8 +258,8 @@ public class RequeterRezoDump extends RequeterRezo {
 			boolean pasDeRelationsEntrantes=false;
 
 			HashMap<Long, Noeud> motVoisinage = new HashMap<>();
-			HashMap<Integer, ArrayList<Voisin>> motRelationsEntrantes = new HashMap<>();
-			HashMap<Integer, ArrayList<Voisin>> motRelationsSortantes = new HashMap<>();
+			HashMap<Integer, ArrayList<Relation>> motRelationsEntrantes = new HashMap<>();
+			HashMap<Integer, ArrayList<Relation>> motRelationsSortantes = new HashMap<>();
 			ArrayList<Annotation> motAnnotations = new ArrayList<>();
 
 			//definition
@@ -309,8 +309,8 @@ public class RequeterRezoDump extends RequeterRezo {
 
 			HashMap<Long, Long> annotations=new HashMap<>();			
 			boolean premier= false;
-			Noeud noeud_voisin;
-			Voisin voisin;
+			Noeud noeud_voisin, noeudCourant;
+			Relation voisin;
 
 			String regex_annotation = ":r\\d+";
 			Pattern pattern = Pattern.compile(regex_annotation);
@@ -329,7 +329,7 @@ public class RequeterRezoDump extends RequeterRezo {
 			boolean trouveType;
 			boolean trouvePoids;
 			boolean trouveMotFormate;
-			
+
 			long idRelation;
 
 			//Traitement du voisinage
@@ -414,7 +414,7 @@ public class RequeterRezoDump extends RequeterRezo {
 					motFormate=motFormate.substring(1,motFormate.length()-1);
 				}
 				if (trouveId && trouveType) {
-					if (premier==false) {
+					if (!premier) {
 						motType = Integer.parseInt(type);
 						motMotFormate = motFormate;						
 						premier=true;
@@ -433,6 +433,7 @@ public class RequeterRezoDump extends RequeterRezo {
 				}					
 			}
 
+			noeudCourant = new Noeud(motNom, motIdRezo, motType, motMotFormate, motPoids);
 
 			//Traitement des types de relations utilisées dans le mot : on ajoute s'il y a des choses à ajouter
 			CorrespondanceRelation correspondance = RequeterRezo.correspondancesRelations;			
@@ -459,11 +460,12 @@ public class RequeterRezoDump extends RequeterRezo {
 			//Traitement des relations sortantes
 			//(possibilité d'annotations)			
 			int poids_relation;
-			long id_destination;
+			long id_destination, idSource;
+			idSource = motIdRezo;
 			while (pasDeRelationsSortantes==false && (ligne = lecteur.readLine()) != null && !(ligne.startsWith("// les relations entrantes"))) {
 				pdivisions=ligne.split(";");
 				if (pdivisions.length>1){
-					idRelation = Long.parseLong(pdivisions[1]);
+					idRelation = Long.parseLong(pdivisions[1]);					
 					id_destination = Long.parseLong(pdivisions[3]);
 					type_relation=Integer.parseInt(pdivisions[4]);
 					poids_relation = Integer.parseInt(pdivisions[5]);
@@ -477,27 +479,30 @@ public class RequeterRezoDump extends RequeterRezo {
 					//cas normal
 					else {
 						noeud_voisin=motVoisinage.get(id_destination);
-						voisin=new Voisin(noeud_voisin,poids_relation,idRelation);
+						voisin = new Relation(idRelation,noeudCourant,type_relation,noeud_voisin,poids_relation);						
 						motRelationsSortantes.get(type_relation).add(voisin);
 					}
-					mapping_relations.put(Long.parseLong(pdivisions[1]), ligne);
+					mapping_relations.put(idRelation, ligne);
 				}
 			}
 
 			// Relations entrantes
 			//Pas d'annotation possible
+			id_destination = motIdRezo;
 			while (pasDeRelationsEntrantes==false && ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("// END")))) {
 				pdivisions=ligne.split(";");
 				if (pdivisions.length>1){
 					idRelation = Long.parseLong(pdivisions[1]);
+					idSource = Long.parseLong(pdivisions[2]);
 					type_relation=Integer.parseInt(pdivisions[4]);
+					poids_relation = Integer.parseInt(pdivisions[5]);
 					if (!(motRelationsEntrantes.containsKey(type_relation))) {
 						motRelationsEntrantes.put(type_relation, new ArrayList<>());
 					}
-					noeud_voisin = motVoisinage.get(Long.parseLong(pdivisions[2]));
-					voisin = new Voisin(noeud_voisin,Integer.parseInt(pdivisions[5]), idRelation);
+					noeud_voisin = motVoisinage.get(idSource);
+					voisin = new Relation(idRelation,noeud_voisin,type_relation,noeudCourant,poids_relation);											
 					motRelationsEntrantes.get(type_relation).add(voisin);
-					mapping_relations.put(Long.parseLong(pdivisions[1]), ligne);
+					mapping_relations.put(idRelation, ligne);
 				}
 			}
 
@@ -529,7 +534,7 @@ public class RequeterRezoDump extends RequeterRezo {
 					System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" réfère une relation qui n'existe pas.");
 				}
 			}
-			Mot mot = new Mot(motNom, motIdRezo, motType, motMotFormate, motPoids, motDefinition,
+			Mot mot = new Mot(noeudCourant, motDefinition,
 					motVoisinage, motRelationsEntrantes, motRelationsSortantes, motAnnotations,
 					cleCache);
 			resultat = new Resultat(cleCache, mot, etat, EtatCache.EN_ATTENTE);
@@ -561,21 +566,6 @@ public class RequeterRezoDump extends RequeterRezo {
 			return new Resultat(cleCache);
 		}	   
 		return resultat;
-	}
-
-	@Override
-	public int verifierExistenceRelation(String motSource, String nomTypeRelation, String motDestination) {
-		Resultat resultat = this.requete(motSource, nomTypeRelation, Filtre.RejeterRelationsEntrantes);
-		Mot mot = resultat.getMot();
-		if(mot != null) {
-			ArrayList<Voisin> voisins = mot.getRelationsSortantesTypees(nomTypeRelation);
-			for(Voisin v : voisins) {
-				if(v.getNom().equals(motDestination)) {
-					return v.getPoids();
-				}
-			}
-		}
-		return 0;
 	}
 
 }
