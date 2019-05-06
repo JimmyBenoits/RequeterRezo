@@ -150,7 +150,26 @@ public class Relation implements Serializable{
 	public String getNomSource() {
 		return source.getNom();
 	}
+	
+	/**
+	 * Retourne le mot formaté du noeud source.
+	 *
+	 * @return Le mot formaté du noeud source.
+	 */
+	public String getMotFormateSource() {
+		return source.getMotFormate();
+	}
 
+	/**
+	 * Retourne le mot formaté du noeud destination.
+	 *
+	 * @return Le mot formaté du noeud destination.
+	 */
+	public String getMotFormateDestination() {
+		return destination.getMotFormate();
+	}
+
+	
 	/**
 	 * Retourne le poids de la relation liant le voisin au mot requêté.
 	 *
@@ -163,7 +182,7 @@ public class Relation implements Serializable{
 	
 	/**
 	 * Retourne le type de la relation.
-	 * @return
+	 * @return Retourne le type de la relation.
 	 */
 	public int getType() {
 		return this.type;
@@ -181,7 +200,7 @@ public class Relation implements Serializable{
 
 	@Override
 	public String toString() {
-		return "{"+this.getNomSource()+" --"+this.getType()+"--> "+this.getNomDestination() + "} = " + this.poids;
+		return "{"+this.getMotFormateSource()+" --"+this.getType()+"--> "+this.getMotFormateDestination() + "} = " + this.poids;
 	}
 
 }

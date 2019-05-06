@@ -30,7 +30,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 
 /**
@@ -78,6 +78,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 public class RequeterRezoSQL extends RequeterRezo {
 
 	/**
+	 * Expression régulière permettant de détecter les formes complexes de nom de rezoJDM telles que les questions ou les agrégats. 
+	 */
+	private Pattern schemaAgregat = Pattern.compile("::>(\\d+):(\\d+)>(\\d+):(\\d+)(>(\\d+))?");
+
+	/**
 	 * Connexion avec la base MySQL
 	 */
 	protected static Connection connexion;
@@ -86,7 +91,18 @@ public class RequeterRezoSQL extends RequeterRezo {
 	 * Requête utiliser de nombreuses fois pour obtenir un noeud à partir de son identifiant. 
 	 * Cela permet notamment de construire les mots formatés.  
 	 */
-	protected PreparedStatement formerNoeud;
+	protected PreparedStatement noeudDepuisID; //select name, type, weight from nodes where id=?	
+	protected PreparedStatement noeudDepuisNom; //select id, type, weight from nodes where name=?
+	protected PreparedStatement nomNoeud; //select name from nodes where id=?
+
+	protected PreparedStatement relationDepuisID;//"select source, destination, type, weight from edges where id=?;"
+
+	protected PreparedStatement nomTypeRelation;//connexion.prepareStatement("select name from edge_types where id=?;");
+
+	protected PreparedStatement relationsSortantes;
+	protected PreparedStatement relationsSortantesType;
+	protected PreparedStatement relationsEntrantes;
+	protected PreparedStatement relationsEntrantesType;
 
 
 	/**
@@ -149,70 +165,73 @@ public class RequeterRezoSQL extends RequeterRezo {
 		//cas particulier QUESTIONS, exemple :  ::>16:70527>29:83270>13
 		//"Qui pourrait divertir avec une musique ?"
 		//::>ID_REL_1:ID_MOT_1>ID_REL_2:ID_MOT_2>ID_REL_3
-		String regex = "::>(\\d+):(\\d+)>(\\d+):(\\d+)(>(\\d+))?";
 		//second cas particulier TRIPLET, exemple :   ::>66:60902>17:219016
-		//"dent [carac] cariÃ©e"
+		//"dent [carac] cariée"
 		String[] raffs;
-		int raff;
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(nom);
-		PreparedStatement ps_node_name;
-		PreparedStatement ps_edge_types;
-		//		long time_before, time_after;
+		int raff;		
+		Matcher matcher = schemaAgregat.matcher(nom);
 		if (matcher.find()) {
-			try {
-				ps_edge_types = connexion.prepareStatement("select name from edge_types where id=?;");
-				ps_node_name = connexion.prepareStatement("select name from nodes where id=?;");
-				int type_rel_1 = Integer.parseInt(matcher.group(1));
-				long id_mot_1 = Long.parseLong(matcher.group(2));
-				int type_rel_2 = Integer.parseInt(matcher.group(3));
-				long id_mot_2 = Long.parseLong(matcher.group(4));
-				int type_rel_3 = -1;
+			try {				
+				int typeRel1 = Integer.parseInt(matcher.group(1));
+				long idMot1 = Long.parseLong(matcher.group(2));
+				int typeRel2 = Integer.parseInt(matcher.group(3));
+				long idMot2 = Long.parseLong(matcher.group(4));
+				int typeRel3 = -1;
+				String motFormateIntermediaire;
 				if (matcher.group(5) != null) {
-					type_rel_3 = Integer.parseInt(matcher.group(6));
+					typeRel3 = Integer.parseInt(matcher.group(6));
 				}
 				res = "::>";
 				//1er type relation
-				ps_edge_types.setInt(1, type_rel_1);
-				rs = ps_edge_types.executeQuery();
+				nomTypeRelation.setInt(1, typeRel1);				
+				rs = nomTypeRelation.executeQuery();
 				if (rs.next()) {
 					res += rs.getString(1) + ":";
 				} else {
 					res += "[TYPE_INCONNU]:";
 				}
+				rs.close();
 				//1er nom noeud
-				ps_node_name.setLong(1, id_mot_1);
-				rs = ps_node_name.executeQuery();				
+				nomNoeud.setLong(1, idMot1);				
+				rs = nomNoeud.executeQuery();				
 				if (rs.next()) {
-					res += rs.getString(1) + ">";
+					motFormateIntermediaire = rs.getString(1);
+					motFormateIntermediaire = construireMotFormate(motFormateIntermediaire);
+					res += motFormateIntermediaire + ">";
 				} else {
 					res += "[NOEUD_INCONNU]>";
 				}
+				rs.close();
 				//2e type relation
-				ps_edge_types.setInt(1, type_rel_2);
-				rs = ps_edge_types.executeQuery();
+				nomTypeRelation.setInt(1, typeRel2);				
+				rs = nomTypeRelation.executeQuery();
 				if (rs.next()) {
 					res += rs.getString(1) + ":";
 				} else {
 					res += "[TYPE_INCONNU]:";
 				}
+				rs.close();
 				//2e nom noeud
-				ps_node_name.setLong(1, id_mot_2);
-				rs = ps_node_name.executeQuery();
-				if (rs.next()) {
-					res += rs.getString(1) + "";
+				nomNoeud.setLong(1, idMot2);				
+				rs = nomNoeud.executeQuery();
+				if (rs.next()) {		
+					motFormateIntermediaire = rs.getString(1);
+					motFormateIntermediaire = construireMotFormate(motFormateIntermediaire);
+					res += motFormateIntermediaire + "";
 				} else {
 					res += "[NOEUD_INCONNU]";
 				}
+				rs.close();
 				//3e type relation
-				if (type_rel_3 != -1) {
-					ps_edge_types.setInt(1, type_rel_3);
-					rs = ps_edge_types.executeQuery();
+				if (typeRel3 != -1) {
+					nomTypeRelation.setInt(1, typeRel3);					
+					rs = nomTypeRelation.executeQuery();
 					if (rs.next()) {
 						res += ">" + rs.getString(1);
 					} else {
 						res += ">[TYPE_INCONNU]";
 					}
+					rs.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -221,19 +240,23 @@ public class RequeterRezoSQL extends RequeterRezo {
 		} else if (nom.contains(">")) {
 			raffs = nom.split(">");
 			res = raffs[0];
-			try {
-				ps_node_name = connexion.prepareStatement("select name from nodes where id=?;");
-				for (int i = 1; i < raffs.length; ++i) {
-					raff = Integer.parseInt(raffs[i]);
-					ps_node_name.setInt(1, raff);
-					rs = ps_node_name.executeQuery();
-					if (rs.next()) {
-						res += ">" + rs.getString(1);
-					} else {
-						res += ">" + raff;
-						if(avertissement) {
-							System.err.println("Avertissement RequeterRezo : lors de la création du mot formaté pour le noeud \"" + nom + "\", le raffinement \"" + raff + "\" n'a pas pu être trouvé");
+			try {		
+				for(int i = 1; i < raffs.length; ++i) {					
+					if(raffs[i].matches("\\d+")) {
+						raff = Integer.parseInt(raffs[i]);
+						nomNoeud.setInt(1, raff);					
+						rs = nomNoeud.executeQuery();
+						if(rs.next()) {
+							res += ">" + rs.getString(1);
+						} else {
+							res += ">" + raff;
+							if(avertissement) {
+								System.err.println("Avertissement RequeterRezo : lors de la création du mot formaté pour le noeud \"" + nom + "\", le raffinement \"" + raff + "\" n'a pas pu être trouvé");
+							}
 						}
+						rs.close();
+					} else { 
+						res += ">"+raffs[i];
 					}
 				}
 			} catch (SQLException e) {
@@ -247,7 +270,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected Resultat construireMot(CleCache cleCache) {
 		Resultat resultat = new Resultat(cleCache); 	
 		String nom = cleCache.nom;
-		boolean isType128 = cleCache.typeRelation == 128;
+		boolean estType128 = cleCache.typeRelation == 128;
 		String definition = "Pas de définition dans RequeterRezoSQL.";
 		String nomFormate;		
 		long idRezo, idRelation;
@@ -260,129 +283,120 @@ public class RequeterRezoSQL extends RequeterRezo {
 		ArrayList<Annotation> annotations = new ArrayList<>();
 
 		Noeud motAjoute;
-		ResultSet rs_noeud;
-		ResultSet rs_relations;
-		ResultSet rs_annotation;		
-		String mot_formate_autre_noeud;
+		ResultSet rsNoeud;
+		ResultSet rsRelations;
+		ResultSet rsAnnotation;		
 
-		Statement requete_relations;	
-		long id_autre_noeud;
-		int type_rel, poids_rel;
-		String nom_autre_noeud;
-		int  type_autre_noeud, poids_autre_noeud; 
-		long id_relation_annote;
+		String motFormateAutreNoeud, nomAutreNoeud;
+		int  typeAutreNoeud, poidsAutreNoeud;
+		long idAutreNoeud;
+
+		int typeRel, poidsRel;				
+		long idRelationAnnote;
 		Noeud source, destination;
-		int type_relation_annote, poids_relation_annote;
+		int typeRelationAnnote, poidsRelationAnnote;
 		String nomRelationAnnote;
-		PreparedStatement relation_depuis_id;
-		Statement noeud_depuis_nom;
-		//		long time_before, time_after;
+		PreparedStatement requeteSortante, requeteEntrante;
 		try {			
-			relation_depuis_id = connexion.prepareStatement("select source, destination, type, weight from edges where id=?;");
-			noeud_depuis_nom = connexion.createStatement();
-			rs_noeud = noeud_depuis_nom.executeQuery("select id, type, weight from nodes where name=\""+nom+"\";");
-			if(rs_noeud.next()) {				
-				idRezo= rs_noeud.getInt(1);			
+			noeudDepuisNom.setString(1, nom);
+			rsNoeud = noeudDepuisNom.executeQuery("select id, type, weight from nodes where name=\""+nom+"\";");
+			if(rsNoeud.next()) {				
+				idRezo= rsNoeud.getInt(1);			
 				nomFormate=this.construireMotFormate(nom);
-				type=rs_noeud.getInt(2);				
-				poids=rs_noeud.getInt(3);
+				type=rsNoeud.getInt(2);				
+				poids=rsNoeud.getInt(3);
 				//On ajoute le noeud dans son voisinage
 				noeudCourant = new Noeud(nom, idRezo, type, nomFormate, poids);
 				voisinage.put(idRezo, noeudCourant);
 
 				//Relations sortantes
-				String requeteRelationsSortantes=""
-						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
-						+ "from edges e, nodes n "
-						+ "where e.source= \""+idRezo+"\" and e.destination=n.id ";
-				if(cleCache.typeRelation>=0) {
-					requeteRelationsSortantes+="and e.type="+cleCache.typeRelation;
-				}	
-				requeteRelationsSortantes += ";";
-				if(cleCache.filtre != Filtre.RejeterRelationsSortantes  && cleCache.filtre != Filtre.RejeterRelationsEntrantesEtSortantes) {
-					requete_relations = connexion.createStatement();
-					rs_relations = requete_relations.executeQuery(requeteRelationsSortantes);
-					while (rs_relations.next()) {										
-						type_rel=rs_relations.getInt(1);	
-						poids_rel = rs_relations.getInt(2);
-						id_autre_noeud = rs_relations.getInt(3);
-						nom_autre_noeud = rs_relations.getString(4);
-						mot_formate_autre_noeud = this.construireMotFormate(nom_autre_noeud);
-						type_autre_noeud = rs_relations.getInt(5);
-						poids_autre_noeud = rs_relations.getInt(6);
-						idRelation = rs_relations.getInt(7);
+				if(cleCache.typeRelation >= 0) {
+					requeteSortante = this.relationsSortantesType;
+					requeteSortante.setInt(2, cleCache.typeRelation);
+				}else {
+					requeteSortante = this.relationsSortantes;
+				}
+				requeteSortante.setLong(1, idRezo);				
+				if(cleCache.filtre != Filtre.RejeterRelationsSortantes  && cleCache.filtre != Filtre.RejeterRelationsEntrantesEtSortantes) {					
+					rsRelations = requeteSortante.executeQuery();
+					while(rsRelations.next()) {										
+						typeRel=rsRelations.getInt(1);	
+						poidsRel = rsRelations.getInt(2);
+						idAutreNoeud = rsRelations.getInt(3);
+						nomAutreNoeud = rsRelations.getString(4);
+						motFormateAutreNoeud = this.construireMotFormate(nomAutreNoeud);
+						typeAutreNoeud = rsRelations.getInt(5);
+						poidsAutreNoeud = rsRelations.getInt(6);
+						idRelation = rsRelations.getInt(7);
 						//cas annotation. Si la reqûete porte sur le type 128, on ne considère pas cela comme une annotation
-						if(!isType128 && type_rel == 128 && nom_autre_noeud.startsWith(":r")) {
-							id_relation_annote = Long.parseLong(nom_autre_noeud.substring(2));
-							relation_depuis_id.setLong(1, id_relation_annote);									
-							rs_annotation = relation_depuis_id.executeQuery();							
-							if(rs_annotation.next()) {								
-								source=this.formerNoeud(rs_annotation.getInt(1));		
+						if(!estType128 && typeRel == 128 && nomAutreNoeud.startsWith(":r")) {
+							idRelationAnnote = Long.parseLong(nomAutreNoeud.substring(2));
+							relationDepuisID.setLong(1, idRelationAnnote);															
+							rsAnnotation = relationDepuisID.executeQuery();							
+							if(rsAnnotation.next()) {								
+								source=this.formerNoeud(rsAnnotation.getInt(1));		
 								if(source != null) {
-									destination=this.formerNoeud(rs_annotation.getInt(2));	
+									destination=this.formerNoeud(rsAnnotation.getInt(2));	
 									if(destination != null) {
-										type_relation_annote=rs_annotation.getInt(3);																
-										poids_relation_annote=rs_annotation.getInt(4);		
-										nomRelationAnnote = RequeterRezo.correspondancesRelations.get(type_relation_annote);
+										typeRelationAnnote=rsAnnotation.getInt(3);																
+										poidsRelationAnnote=rsAnnotation.getInt(4);		
+										nomRelationAnnote = RequeterRezo.correspondancesRelations.get(typeRelationAnnote);
 										annotations.add(new Annotation(
-												nom_autre_noeud,id_autre_noeud,type_autre_noeud,poids_autre_noeud,
+												nomAutreNoeud,idAutreNoeud,typeAutreNoeud,poidsAutreNoeud,
 												source,
-												type_relation_annote,nomRelationAnnote,
+												typeRelationAnnote,nomRelationAnnote,
 												destination,
-												poids_relation_annote));
+												poidsRelationAnnote));
 									}else if(avertissement) {										
-										System.err.println("Avertissement RequeterRezo : la destination (id="+rs_annotation.getInt(2)+") de l'annotation \""+mot_formate_autre_noeud+" n'existe pas.");										
+										System.err.println("Avertissement RequeterRezo : la destination (id="+rsAnnotation.getInt(2)+") de l'annotation \""+motFormateAutreNoeud+" n'existe pas.");										
 									}
 								}else if(avertissement) {
-									System.err.println("Avertissement RequeterRezo : la source (id="+rs_annotation.getInt(1)+") de l'annotation \""+mot_formate_autre_noeud+" n'existe pas.");								
+									System.err.println("Avertissement RequeterRezo : la source (id="+rsAnnotation.getInt(1)+") de l'annotation \""+motFormateAutreNoeud+" n'existe pas.");								
 								}
 							}else if(avertissement) {
-								System.err.println("Avertissement RequeterRezo : aucune relation ne correspond à l'annotation \""+nom_autre_noeud+"\".");								
+								System.err.println("Avertissement RequeterRezo : aucune relation ne correspond à l'annotation \""+nomAutreNoeud+"\".");								
 							}
-							rs_annotation.close();
+							rsAnnotation.close();
 						} else {
-							if(!(relationsSortantes.containsKey(type_rel))) {
-								relationsSortantes.put(type_rel, new ArrayList<>());
+							if(!(relationsSortantes.containsKey(typeRel))) {
+								relationsSortantes.put(typeRel, new ArrayList<>());
 							}
-							motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);						
-							voisinage.put(id_autre_noeud,motAjoute);
-							relationsSortantes.get(type_rel).add(new Relation(idRelation, noeudCourant, type_rel, motAjoute, poids_rel));							
+							motAjoute=new Noeud(nomAutreNoeud, idAutreNoeud,typeAutreNoeud, motFormateAutreNoeud,poidsAutreNoeud);						
+							voisinage.put(idAutreNoeud,motAjoute);
+							relationsSortantes.get(typeRel).add(new Relation(idRelation, noeudCourant, typeRel, motAjoute, poidsRel));							
 						}
-					}					
-					relation_depuis_id.close();
-					rs_relations.close();
-					requete_relations.close();
+					}	
+					rsRelations.close();
 				}
 
 				//relations entrantes
-				String requeteRelationsEntrantes=""
-						+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
-						+ "from edges e, nodes n "
-						+ "where e.destination= \""+idRezo+"\" and e.source=n.id ";
-				if(cleCache.typeRelation>=0) {
-					requeteRelationsEntrantes+="and e.type="+cleCache.typeRelation;
-				}				
-				requeteRelationsEntrantes+=";";				
-				if(cleCache.filtre != Filtre.RejeterRelationsEntrantes && cleCache.filtre != Filtre.RejeterRelationsEntrantesEtSortantes) {
-					requete_relations = connexion.createStatement();
-					rs_relations = requete_relations.executeQuery(requeteRelationsEntrantes);
-					while (rs_relations.next()) {
-						type_rel=rs_relations.getInt(1);	
-						poids_rel = rs_relations.getInt(2);
-						id_autre_noeud = rs_relations.getInt(3);
-						nom_autre_noeud = rs_relations.getString(4);
-						mot_formate_autre_noeud = this.construireMotFormate(nom_autre_noeud);
-						type_autre_noeud = rs_relations.getInt(5);
-						poids_autre_noeud = rs_relations.getInt(6);
-						idRelation = rs_relations.getInt(7);
+				if(cleCache.typeRelation >= 0) {
+					requeteEntrante = this.relationsEntrantesType;
+					requeteEntrante.setInt(2, cleCache.typeRelation);
+				}else {
+					requeteEntrante= this.relationsEntrantes;
+				}
+				requeteEntrante.setLong(1, idRezo);					
+				if(cleCache.filtre != Filtre.RejeterRelationsEntrantes && cleCache.filtre != Filtre.RejeterRelationsEntrantesEtSortantes) {					
+					rsRelations = requeteEntrante.executeQuery();
+					while (rsRelations.next()) {
+						typeRel=rsRelations.getInt(1);	
+						poidsRel = rsRelations.getInt(2);
+						idAutreNoeud = rsRelations.getInt(3);
+						nomAutreNoeud = rsRelations.getString(4);
+						motFormateAutreNoeud = this.construireMotFormate(nomAutreNoeud);
+						typeAutreNoeud = rsRelations.getInt(5);
+						poidsAutreNoeud = rsRelations.getInt(6);
+						idRelation = rsRelations.getInt(7);
 						//Pas d'annotations dans les relations entrantes 
-						if(!(relationsEntrantes.containsKey(type_rel))) {
-							relationsEntrantes.put(type_rel, new ArrayList<>());
+						if(!(relationsEntrantes.containsKey(typeRel))) {
+							relationsEntrantes.put(typeRel, new ArrayList<>());
 						}								
-						motAjoute=new Noeud(nom_autre_noeud, id_autre_noeud,type_autre_noeud, mot_formate_autre_noeud,poids_autre_noeud);
-						voisinage.put(id_autre_noeud,motAjoute);
-						relationsEntrantes.get(type_rel).add(new Relation(idRelation, motAjoute, type_rel, noeudCourant, poids_rel));													
+						motAjoute=new Noeud(nomAutreNoeud, idAutreNoeud,typeAutreNoeud, motFormateAutreNoeud,poidsAutreNoeud);
+						voisinage.put(idAutreNoeud,motAjoute);
+						relationsEntrantes.get(typeRel).add(new Relation(idRelation, motAjoute, typeRel, noeudCourant, poidsRel));													
 					}
+					rsRelations.close();
 				}
 				Mot mot = new Mot(nom, idRezo, type, nomFormate, poids, definition,
 						voisinage, relationsEntrantes, relationsSortantes, annotations,
@@ -391,8 +405,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 			}else {
 				resultat.etat = Etat.INEXISTANT;
 			}
-			rs_noeud.close();
-			noeud_depuis_nom.close();
+			rsNoeud.close();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -408,8 +421,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected Noeud formerNoeud(int id) {
 		Noeud res=null;
 		try {			
-			this.formerNoeud.setInt(1, id);
-			ResultSet rs=formerNoeud.executeQuery();
+			this.noeudDepuisID.setInt(1, id);
+			ResultSet rs = noeudDepuisID.executeQuery();
 			if(rs.next()) {				
 				String nom = rs.getString(1);
 				//String nom, long id, int type, String mot_formate, int poids
@@ -440,7 +453,40 @@ public class RequeterRezoSQL extends RequeterRezo {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			connexion = DriverManager.getConnection(connexion_string, configuration.getNom_utilisateur(), configuration.getMot_de_passe());
-			this.formerNoeud = connexion.prepareStatement("select name, type, weight from nodes where id=?;");
+			/*
+			 * PreparedStatement : requêtes courantes, précompilées.
+			 */
+			//Noeuds
+			this.noeudDepuisID = connexion.prepareStatement("select name, type, weight from nodes where id=?;");
+			this.noeudDepuisNom = connexion.prepareStatement("select id, type, weight from nodes where name=?;");
+			this.nomNoeud = connexion.prepareStatement("select name from nodes where id=?;");
+
+			//Type relation
+			this.nomTypeRelation = connexion.prepareStatement("select name from edge_types where id=?;");
+
+			//Relations
+			this.relationDepuisID = connexion.prepareStatement("select source, destination, type, weight from edges where id=?;");
+
+			//Requêtes			
+			this.relationsSortantes = connexion.prepareStatement(""
+					+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
+					+ "from edges e, nodes n "
+					+ "where e.source=? and e.destination=n.id;");
+			this.relationsSortantesType = connexion.prepareStatement(""
+					+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
+					+ "from edges e, nodes n "
+					+ "where e.source=? and e.destination=n.id and e.type=?;");
+
+			this.relationsEntrantes = connexion.prepareStatement(""
+					+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
+					+ "from edges e, nodes n "
+					+ "where e.destination=? and e.source=n.id;");
+			this.relationsEntrantesType = connexion.prepareStatement(""
+					+ "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
+					+ "from edges e, nodes n "
+					+ "where e.destination=? and e.source=n.id and e.type=?;");
+
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			this.sauvegarder();
