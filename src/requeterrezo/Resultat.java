@@ -135,8 +135,9 @@ public class Resultat implements Serializable{
 	}
 
 	/**
-	 * Construit un objet Resultat d'après un fichier du cache ([ID].cache) construit par la méthode {@link Resultat#ecrireCache(String, Resultat)}.
+	 * Construit un objet Resultat d'après un fichier du cache construit par la méthode {@link Resultat#ecrireCache(String, Resultat)}.
 	 * @param chemin Chemin vers un fichier Resultat.
+	 * @param cleCache Requête mise en cache.
 	 * @return Un Resultat construit depuis le cache si cela est possible. Null si le fichier est corrumpu (le processus d'écriture a été interrompu avant 
 	 * sa complétion) et null avec affichage d'erreur en cas d'autre erreur. 
 	 */

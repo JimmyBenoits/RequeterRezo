@@ -260,6 +260,7 @@ public class RequeterRezoDump extends RequeterRezo {
 			HashMap<Long, Noeud> motVoisinage = new HashMap<>();
 			HashMap<Integer, ArrayList<Relation>> motRelationsEntrantes = new HashMap<>();
 			HashMap<Integer, ArrayList<Relation>> motRelationsSortantes = new HashMap<>();
+			ArrayList<Relation> voisins;
 			ArrayList<Annotation> motAnnotations = new ArrayList<>();
 
 			//definition
@@ -470,7 +471,8 @@ public class RequeterRezoDump extends RequeterRezo {
 					type_relation=Integer.parseInt(pdivisions[4]);
 					poids_relation = Integer.parseInt(pdivisions[5]);
 					if (!(motRelationsSortantes.containsKey(type_relation))) {
-						motRelationsSortantes.put(type_relation, new ArrayList<>());
+						voisins = new ArrayList<>();
+						motRelationsSortantes.put(type_relation, voisins);
 					}
 					//cas annotation. Si la reqûete porte sur le type 128, on ne considère pas cela comme une annotation
 					if(!isType128 && type_relation == 128) {						
@@ -497,7 +499,8 @@ public class RequeterRezoDump extends RequeterRezo {
 					type_relation=Integer.parseInt(pdivisions[4]);
 					poids_relation = Integer.parseInt(pdivisions[5]);
 					if (!(motRelationsEntrantes.containsKey(type_relation))) {
-						motRelationsEntrantes.put(type_relation, new ArrayList<>());
+						voisins = new ArrayList<>();
+						motRelationsEntrantes.put(type_relation, voisins);
 					}
 					noeud_voisin = motVoisinage.get(idSource);
 					voisin = new Relation(idRelation,noeud_voisin,type_relation,noeudCourant,poids_relation);											

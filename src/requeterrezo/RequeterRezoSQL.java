@@ -280,6 +280,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 		HashMap<Long, Noeud> voisinage = new HashMap<>();
 		HashMap<Integer, ArrayList<Relation>> relationsEntrantes = new HashMap<>();
 		HashMap<Integer, ArrayList<Relation>> relationsSortantes = new HashMap<>();
+		ArrayList<Relation> voisins;
 		ArrayList<Annotation> annotations = new ArrayList<>();
 
 		Noeud motAjoute;
@@ -358,8 +359,9 @@ public class RequeterRezoSQL extends RequeterRezo {
 							}
 							rsAnnotation.close();
 						} else {
-							if(!(relationsSortantes.containsKey(typeRel))) {
-								relationsSortantes.put(typeRel, new ArrayList<>());
+							if(!(relationsSortantes.containsKey(typeRel))) {	
+								voisins = new ArrayList<>();
+								relationsSortantes.put(typeRel, voisins);
 							}
 							motAjoute=new Noeud(nomAutreNoeud, idAutreNoeud,typeAutreNoeud, motFormateAutreNoeud,poidsAutreNoeud);						
 							voisinage.put(idAutreNoeud,motAjoute);
@@ -390,7 +392,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 						idRelation = rsRelations.getInt(7);
 						//Pas d'annotations dans les relations entrantes 
 						if(!(relationsEntrantes.containsKey(typeRel))) {
-							relationsEntrantes.put(typeRel, new ArrayList<>());
+							voisins = new ArrayList<>();
+							relationsEntrantes.put(typeRel, voisins);
 						}								
 						motAjoute=new Noeud(nomAutreNoeud, idAutreNoeud,typeAutreNoeud, motFormateAutreNoeud,poidsAutreNoeud);
 						voisinage.put(idAutreNoeud,motAjoute);

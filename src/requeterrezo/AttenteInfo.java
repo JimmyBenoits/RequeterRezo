@@ -51,7 +51,7 @@ class AttenteInfo implements Serializable{
 	/**
 	 * Incrémente le nombre d'occurence. 
 	 * Si un nombre d'heure supérieur au délais de péremption s'est écoulée depuis la dernière demande, le compteur est réinitialisé.
-	 * @param peremption
+	 * @param peremption nombre d'heure avant péremption.
 	 */
     protected void incrementeOccurrences(int peremption) {
         if (Utils.perime(dateOccurrences, peremption)) {

@@ -86,15 +86,6 @@ public class Noeud implements Serializable{
 	}
 
 	/**
-	 * Créé un noeud à partir uniquement de son nom et utilise les valeurs par défaut pour le reste.
-	 * @param nom
-	 */
-	protected Noeud(String nom) {
-		this.nom = nom;
-		this.motFormate = nom;
-	}
-
-	/**
 	 * Retourne le nom du mot. C'est la partie à utiliser pour effectuer des requêtes. 
 	 * @return une chaîne de caractère unique (généralement le "mot" lui-même).
 	 */

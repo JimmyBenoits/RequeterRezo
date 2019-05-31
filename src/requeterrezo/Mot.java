@@ -83,7 +83,7 @@ public class Mot extends Noeud implements Serializable{
 	 * @param mot_formate mot formaté du terme dans rezoJDM.
 	 * @param poids poids du terme dans rezoJDM.
 	 * @param description définition du terme dans rezoJDM.
-	 * @param voisinage Table d'association du voisinnage d'un terme (id -> {@link Noeud}).
+	 * @param voisinage Table d'association du voisinnage d'un terme (id vers {@link Noeud}).
 	 * @param relationsEntrantes Table d'assocation des relations entrantes (dont le Mot est la destination).
 	 * @param relationsSortantes Table d'assocation des relations sortantes (dont le Mot est la source).
 	 * @param annotations Liste des annotations portant sur les relations du mot.
@@ -106,9 +106,9 @@ public class Mot extends Noeud implements Serializable{
 	
 	/**
 	 * Construit un mot à partir d'un Noeud.
-	 * @param noeud
-	 * @param description définition du terme dans rezoJDM.
-	 * @param voisinage Table d'association du voisinnage d'un terme (id -> {@link Noeud}).
+	 * @param noeud Noeud rezoJDM à partir duquel le mot est créé.
+	 * @param description Définition du terme dans rezoJDM.
+	 * @param voisinage Table d'association du voisinnage d'un terme (id vers {@link Noeud}).
 	 * @param relationsEntrantes Table d'assocation des relations entrantes (dont le Mot est la destination).
 	 * @param relationsSortantes Table d'assocation des relations sortantes (dont le Mot est la source).
 	 * @param annotations Liste des annotations portant sur les relations du mot.

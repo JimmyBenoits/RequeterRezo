@@ -255,6 +255,8 @@ public abstract class RequeterRezo {
 	 * @param tailleCache Taille maximale du cache (en octet).
 	 * @param peremption Délais de péremption (en heure).
 	 * @param avertissement True si le système est autorisé à envoyer des messages sur System.err, false sinon.
+	 * @param modeAvance True si l'utilisateur doit effectuer les sauvegardes du cache manuellement, false sinon.
+	 * @param cheminCache Chemin vers le dossier contenant le cache.
 	 */
 	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache) {
 		this.tailleCache = tailleCache;

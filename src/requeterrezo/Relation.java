@@ -67,9 +67,11 @@ public class Relation implements Serializable{
 
 	/**
 	 * Constructeur.
-	 * @param mot Noeud voisin.
-	 * @param poids Poids de la relation.
 	 * @param idRelation Identifiant rezoJDM de la relation.
+	 * @param source Noeud source de la relation.
+	 * @param type Type de la relation	 * 
+	 * @param destination Noeud destination de la relation.
+	 * @param poids Poids de la relation.
 	 */
 	protected Relation(long idRelation, Noeud source, int type, Noeud destination, int poids) {
 		this.idRelation = idRelation;
