@@ -1,6 +1,7 @@
 package requeterrezo;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,10 @@ class Utils {
 	 */
 	protected static SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aaa");
 
+	/**
+	 * Format pour les grands nombres.
+	 */
+	protected static DecimalFormat formatNombre = new DecimalFormat();
 	/**
 	 * Détermine si une date est "périmée".
 	 * @param date Date à tester.

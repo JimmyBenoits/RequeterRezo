@@ -1,6 +1,7 @@
 package requeterrezo;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 
 
@@ -84,4 +85,21 @@ class AttenteInfo implements Serializable{
     public String toString() {       
         return occurrences + ";" + Utils.formatDate.format(dateOccurrences);
     }
+
+	public static AttenteInfo Construire(String ligne) {
+		AttenteInfo attenteInfo = null;
+		int index = ligne.indexOf(";");
+		if(index != -1) {
+			int occurrences;
+			Date dateOccurrences = null;
+			occurrences = Integer.parseInt(ligne.substring(0, index));
+			try {
+				dateOccurrences = Utils.formatDate.parse(ligne.substring(index+1));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			attenteInfo = new AttenteInfo(occurrences, dateOccurrences);
+		}		
+		return attenteInfo;		
+	}
 }

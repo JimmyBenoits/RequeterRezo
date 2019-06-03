@@ -120,6 +120,10 @@ public abstract class RequeterRezo {
 	 */
 	protected boolean modeAvance;  
 
+	protected int cycle = 0;
+	private SauvegarderCache sauvegarderCache;
+	private SauvegarderAttente sauvegarderAttente;
+
 	/**
 	 * Permet (ou non) à RequeterRezo d'afficher des messages sur System.err.
 	 */
@@ -150,7 +154,7 @@ public abstract class RequeterRezo {
 	public RequeterRezo(String tailleCache, String peremption, boolean avertissement) {
 		this.avertissement = avertissement;
 		String suffixe;
-		int multiplieur;
+		int multiplieur;		
 		long tailleCacheLong;
 		//Partie taille cache
 		if (tailleCache.length() > 2) {
@@ -298,11 +302,47 @@ public abstract class RequeterRezo {
 
 	/**
 	 * Sauvegarde les index permettant le bon fonctionnement du cache d'une exécution sur l'autre. 
-	 * Cette méthode n'est utile seulement si le mode avancé a été activé (ce qui est fortement déconseillé).	
+	 * Cette méthode n'est utile seulement si le mode avancé a été activé (ce qui est fortement déconseillé).
+	 * Les fichiers sont sauvegardés en sortie de programme. 	
 	 */
 	public void sauvegarder() {
 		cache.sauvegarderCache(fichierCache);
 		attente.sauvegarderAttente(fichierAttente);
+	}
+	
+	private static class SauvegarderCache implements Runnable {
+		
+		final Cache cache;
+		final String fichierCache;		
+
+		public SauvegarderCache(Cache cache, String fichierCache) {		
+			this.cache = cache;
+			this.fichierCache = fichierCache;
+		}
+
+		@Override
+		public void run() {
+			cache.sauvegarderCache(fichierCache);			
+		}
+
+	}
+	
+	
+	private static class SauvegarderAttente implements Runnable {
+			
+		final Attente attente;
+		final String fichierAttente;		
+
+		public SauvegarderAttente(Attente attente, String fichierAttente) {					
+			this.attente = attente;
+			this.fichierAttente = fichierAttente;
+		}
+
+		@Override
+		public void run() {					
+			attente.sauvegarderAttente(fichierAttente);			
+		}
+
 	}
 
 	/**
@@ -327,13 +367,15 @@ public abstract class RequeterRezo {
 				}
 			}			
 		}
+		sauvegarderAttente = new SauvegarderAttente(attente, fichierAttente);
+		Runtime.getRuntime().addShutdownHook(new Thread(sauvegarderAttente));
 	}
 
 	/**
 	 * Initialise l'index des mots du cache soit à partir d'une exécution précédente soit en recommençant de 0.
 	 * Une vérification est effectuée ({@link Cache#verifierIntegrite(String, boolean)} si le chargement se fait depuis un cache existant. 
 	 */
-	protected final void initialiserCache() {
+	protected final void initialiserCache() {		
 		File dossierCache = new File(cheminCache);
 		if(!dossierCache.exists()) {
 			dossierCache.mkdir();
@@ -343,7 +385,7 @@ public abstract class RequeterRezo {
 			if(!fichier.exists()) {
 				cache = new Cache(peremption, tailleCache);
 			}else {
-				cache = Cache.chargerCache(fichierCache);
+				cache = Cache.chargerCache(fichierCache, tailleCache, avertissement);
 				if(cache == null) {
 					if(avertissement) {
 						System.err.println("Avertissement RequeterRezo : l'index du cache est illisible");
@@ -353,7 +395,8 @@ public abstract class RequeterRezo {
 				cache.verifierIntegrite(cheminCache, avertissement);
 			}	
 		}
-
+		sauvegarderCache = new SauvegarderCache(cache, fichierCache);
+		Runtime.getRuntime().addShutdownHook(new Thread(sauvegarderCache));
 	}
 
 
@@ -368,9 +411,6 @@ public abstract class RequeterRezo {
 	public Resultat requete(String mot, int typeRelation, Filtre filtre) {
 		CleCache cleCache = new CleCache(mot, typeRelation, filtre);
 		Resultat resultat = requeteInterne(cleCache);
-		if(!modeAvance) {
-			sauvegarder();
-		}
 		return resultat;
 	}	
 
@@ -759,4 +799,20 @@ public abstract class RequeterRezo {
 	public void setAvertissement(boolean avertissement) {
 		this.avertissement = avertissement;
 	}
+
+	/**
+	 * Affiche des informations sur le cache : nombre de requêtes en cache, nombre de requêtes en attente, tailles, etc.
+	 */
+	public void cacheInfo() {
+		System.out.println("RequeterRezo, info cache : ");
+		System.out.println("\tPéremption : "+this.peremption+"h");		
+		System.out.println("\tTaille maximale du cache : "+ Utils.formatNombre.format(this.tailleCache));
+		System.out.println("\tTaille actuelle du cache : "+Utils.formatNombre.format(this.cache.tailleCourante));
+		System.out.println("\tNombre de requêtes en cache : "+Utils.formatNombre.format(this.cache.cache.size()));
+		System.out.println("\tNombre de requêtes en attente : "+Utils.formatNombre.format(this.attente.index.size()));
+
+	}
+	
+	
+	
 }

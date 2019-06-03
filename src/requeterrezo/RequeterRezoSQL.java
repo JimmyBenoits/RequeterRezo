@@ -112,7 +112,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 	 * à la connexion à un serveur MySQL.
 	 */
 	public RequeterRezoSQL(ConfigurationSQL configuration) {
-		super();
+		super(configuration);
 		connexion(configuration);
 		construireRelations();
 	}

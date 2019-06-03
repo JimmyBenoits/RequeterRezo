@@ -1,16 +1,15 @@
 package requeterrezo;
 
-import java.io.EOFException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Queue;
@@ -57,12 +56,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * 
  * @author jimmy.benoits
  */
-class Cache implements Serializable{
-
-	/**
-	 * 01/01/2019 - V1.0 
-	 */
-	private static final long serialVersionUID = 1L;
+class Cache {	
 
 	/**
 	 * Table d'association entre une requête et ses informations associées 
@@ -107,6 +101,16 @@ class Cache implements Serializable{
 		this.tailleMax = tailleMax;
 		this.peremption = peremption;
 		this.recyclesID = new LinkedList<>();
+	}
+
+	private Cache(int idMax, Queue<Integer> recyclesID, int peremption, long tailleCourante, long tailleMax,
+			HashMap<CleCache, CacheInfo> cache) {
+		this.idMax = idMax;
+		this.tailleCourante = tailleCourante;
+		this.tailleMax = tailleMax;
+		this.peremption = peremption;
+		this.recyclesID = recyclesID;
+		this.cache = cache;
 	}
 
 	/**
@@ -180,41 +184,126 @@ class Cache implements Serializable{
 	 * @return Un cache précedemment rempli. Si le fichier est illisible (l'écriture a été interrompu avant sa fin), retourne null.
 	 * En cas d'autre erreur, retourne null après avoir affiché la trace d'erreur.
 	 */
-	protected static Cache chargerCache(String chemin) {
-		FileInputStream fichierFluxEntrant;
-		ObjectInputStream objetFluxEntrant;
-		Cache cache = null;
-		try {
-			fichierFluxEntrant = new FileInputStream(chemin);
-			objetFluxEntrant = new ObjectInputStream(fichierFluxEntrant);
-			cache = (Cache) objetFluxEntrant.readObject();			
-			objetFluxEntrant.close();	
-			fichierFluxEntrant.close();
-		}catch(EOFException e) {
-			return null;		
-		}catch(Exception e) {
+	protected static Cache chargerCache(String chemin, long nouvelleTailleMax, boolean avertissement) {
+		//		long timer = System.nanoTime();		
+		Cache resultat = null;
+		String line;
+		String[] tokens;
+		HashMap<CleCache, CacheInfo> cache = new HashMap<>();
+		int idMax;
+		Queue<Integer> recyclesID;
+		int peremption;
+		long tailleCourante;	
+		long tailleMax;
+		CleCache cle;
+		CacheInfo info;
+		try(BufferedReader reader = new BufferedReader(new FileReader(chemin))){
+
+			idMax = Integer.parseInt(reader.readLine());
+			recyclesID = new LinkedList<>();			
+			line = reader.readLine();
+			if(!line.isEmpty()) {
+				tokens = line.split(",");
+				for(String token : tokens) {
+					recyclesID.add(Integer.parseInt(token));
+				}
+			}
+
+			peremption = Integer.parseInt(reader.readLine());
+			tailleCourante = Long.parseLong(reader.readLine());
+			tailleMax = Long.parseLong(reader.readLine());
+			if(tailleMax > nouvelleTailleMax && tailleCourante > nouvelleTailleMax && avertissement) {
+				System.err.println("Avertissement RequeterRezo : la nouvelle taille du cache est plus petite que l'ancienne.");
+			}
+
+			while((line = reader.readLine())!= null) {
+				tokens = line.split(";;;");
+				cle = CleCache.Construire(tokens[0]);
+				info = CacheInfo.Construire(tokens[1]);
+				cache.put(cle, info);
+			}
+			resultat = new Cache(idMax, recyclesID, peremption, tailleCourante, nouvelleTailleMax, cache);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return cache;
+		//		timer = System.nanoTime() - timer;
+		//		System.out.println("Cache loaded in: "+ (timer / 1_000_000)+"ms");
+		return resultat;
 	}
+
+	//	protected static Cache chargerCache(String chemin) {
+	//		FileInputStream fichierFluxEntrant;
+	//		ObjectInputStream objetFluxEntrant;
+	//		Cache cache = null;
+	//
+	//		try {			
+	//			fichierFluxEntrant = new FileInputStream(chemin);
+	//			objetFluxEntrant = new ObjectInputStream(fichierFluxEntrant);
+	//			cache = (Cache) objetFluxEntrant.readObject();			
+	//			objetFluxEntrant.close();	
+	//			fichierFluxEntrant.close();
+	//		}catch(EOFException e) {
+	//			return null;		
+	//		}catch(Exception e) {
+	//			e.printStackTrace();
+	//		}
+	//		return cache;
+	//	}
 
 	/**
 	 * Sauvegarde le cache dans un objet sérialisé pouvant être lu par {@link Cache#chargerCache(String)}.
 	 * @param chemin Chemin du fichier où sauvegarder le cache.
 	 */
 	protected void sauvegarderCache(String chemin) {
-		FileOutputStream fichierFluxSortant;
-		ObjectOutputStream objetFluxSortant;
-		try {
-			fichierFluxSortant = new FileOutputStream(chemin);
-			objetFluxSortant = new ObjectOutputStream(fichierFluxSortant);
-			objetFluxSortant.writeObject(this);
-			objetFluxSortant.close();
-			fichierFluxSortant.close();
-		}catch(IOException e) {
+		//		long timer = System.nanoTime();		
+		String line;
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(chemin))){
+			writer.write(String.valueOf(idMax));
+			writer.newLine();
+			Iterator<Integer> iterateurID;
+			iterateurID = recyclesID.iterator();
+			line = "";
+			if(iterateurID.hasNext()) {
+				line = String.valueOf(iterateurID.next());
+				while(iterateurID.hasNext()) {
+					line += ","+String.valueOf(iterateurID.next());
+				}
+			}
+			writer.write(line);
+			writer.newLine();
+			writer.write(String.valueOf(peremption));
+			writer.newLine();
+			writer.write(String.valueOf(tailleCourante));
+			writer.newLine();
+			writer.write(String.valueOf(tailleMax));
+			writer.newLine();
+
+			for(Entry<CleCache, CacheInfo> entree : cache.entrySet()) {			
+				writer.write(entree.getKey().toString()+";;;"+entree.getValue().toString());
+				writer.newLine();
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//		timer = System.nanoTime() - timer;
+		//		System.out.println("Cache saved in: "+ (timer / 1_000_000)+"ms");
 	}
+
+	//	protected void sauvegarderCache(String chemin) {
+	//		FileOutputStream fichierFluxSortant;
+	//		ObjectOutputStream objetFluxSortant;
+	//
+	//		try {
+	//			fichierFluxSortant = new FileOutputStream(chemin);
+	//			objetFluxSortant = new ObjectOutputStream(fichierFluxSortant);
+	//			objetFluxSortant.writeObject(this);
+	//			objetFluxSortant.close();
+	//			fichierFluxSortant.close();
+	//		}catch(IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//
+	//	}
 
 	/**
 	 * Vérifie si une requête existe dans le cache.
