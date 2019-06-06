@@ -1,13 +1,15 @@
 package requeterrezo;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 
 /*
@@ -27,7 +29,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 
 /**
@@ -37,8 +39,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * @see AttenteInfo
  * @author jimmy.benoits
  */
-class Attente {
+class Attente implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Table d'association entre une requête {@link CleCache} et les informations sur sa fréquences {@link AttenteInfo}.
 	 */
@@ -64,43 +68,45 @@ class Attente {
 	 * a été interrompu), l'ancien fichier est supprimé et une nouvelle table est crée. Null sinon (avec affichage de l'erreur).
 	 */
 	protected static Attente chargerAttente(String chemin) {
-//		long timer = System.nanoTime();		
-		Attente resultat = null;
-		String line;
-		String[] tokens;
-		HashMap<CleCache, AttenteInfo> index = new HashMap<>();
-		CleCache cle;
-		AttenteInfo info;
-		try(BufferedReader reader = new BufferedReader(new FileReader(chemin))){
-			while((line = reader.readLine())!= null) {
-				tokens = line.split(";;;");
-				cle = CleCache.Construire(tokens[0]);
-				info = AttenteInfo.Construire(tokens[1]);
-				index.put(cle, info);
-			}
-			resultat = new Attente(index);
-		} catch (IOException e) {
+		//		long timer = System.nanoTime();		
+		//		Attente resultat = null;
+		//		String line;
+		//		String[] tokens;
+		//		HashMap<CleCache, AttenteInfo> index = new HashMap<>();
+		//		CleCache cle;
+		//		AttenteInfo info;
+		//		try(BufferedReader reader = new BufferedReader(new FileReader(chemin))){
+		//			while((line = reader.readLine())!= null) {
+		//				tokens = line.split(";;;");	
+		//				cle = CleCache.Construire(tokens[0]);
+		//				info = AttenteInfo.Construire(tokens[1]);
+		//				index.put(cle, info);
+		//			}
+		//			resultat = new Attente(index);
+		//		} catch (IOException e) {
+		//			e.printStackTrace();
+		//		}
+		//		timer = System.nanoTime() - timer;
+		//		System.out.println("Cache loaded in: "+ (timer / 1_000_000)+"ms");
+		//		return resultat;
+
+		FileInputStream fichierFluxEntrant;
+		ObjectInputStream objetFluxEntrant;
+		Attente attente = null;
+		try {
+			fichierFluxEntrant = new FileInputStream(chemin);
+			objetFluxEntrant = new ObjectInputStream(fichierFluxEntrant);
+			attente = (Attente) objetFluxEntrant.readObject();			
+			objetFluxEntrant.close();	
+			fichierFluxEntrant.close();
+		}catch(EOFException e) {
+			File aSupprimer = new File(chemin);
+			aSupprimer.delete();
+			return new Attente();
+		}catch(Exception e) {
 			e.printStackTrace();
-		}
-//		timer = System.nanoTime() - timer;
-//		System.out.println("Cache loaded in: "+ (timer / 1_000_000)+"ms");
-		return resultat;
-//		FileInputStream fichierFluxEntrant;
-//		ObjectInputStream objetFluxEntrant;
-//		Attente attente = null;
-//		try {
-//			fichierFluxEntrant = new FileInputStream(chemin);
-//			objetFluxEntrant = new ObjectInputStream(fichierFluxEntrant);
-//			attente = (Attente) objetFluxEntrant.readObject();			
-//			objetFluxEntrant.close();	
-//			fichierFluxEntrant.close();
-//		}catch(EOFException e) {
-//			File aSupprimer = new File(chemin);
-//			aSupprimer.delete();
-//			return new Attente();
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}	
+		}	
+		return attente;
 	}
 
 	/**
@@ -108,30 +114,30 @@ class Attente {
 	 * @param chemin Chemin vers le fichier à sauvegarder.
 	 */
 	protected void sauvegarderAttente(String chemin) {
-//		long timer = System.nanoTime();
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(chemin))){			
-			for(Entry<CleCache, AttenteInfo> entree : index.entrySet()) {				
-				writer.write(entree.getKey().toString()+";;;"+entree.getValue().toString());
-				writer.newLine();
-			}
-		} catch (IOException e) {
+		//		long timer = System.nanoTime();
+		//		try(BufferedWriter writer = new BufferedWriter(new FileWriter(chemin))){			
+		//			for(Entry<CleCache, AttenteInfo> entree : index.entrySet()) {				
+		//				writer.write(entree.getKey().toString()+";;;"+entree.getValue().toString());
+		//				writer.newLine();
+		//			}
+		//		} catch (IOException e) {
+		//			e.printStackTrace();
+		//		}
+
+
+		FileOutputStream fichierFluxSortant;
+		ObjectOutputStream objetFluxSortant;
+		try {
+			fichierFluxSortant = new FileOutputStream(chemin);
+			objetFluxSortant = new ObjectOutputStream(fichierFluxSortant);
+			objetFluxSortant.writeObject(this);
+			objetFluxSortant.close();
+			fichierFluxSortant.close();
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-//		FileOutputStream fichierFluxSortant;
-//		ObjectOutputStream objetFluxSortant;
-//		try {
-//			fichierFluxSortant = new FileOutputStream(chemin);
-//			objetFluxSortant = new ObjectOutputStream(fichierFluxSortant);
-//			objetFluxSortant.writeObject(this);
-//			objetFluxSortant.close();
-//			fichierFluxSortant.close();
-//		}catch(IOException e) {
-//			e.printStackTrace();
-//		}
-//		timer = System.nanoTime() - timer;
-//		System.out.println("Attente saved in: "+ (timer / 1_000_000)+"ms");
+		//		timer = System.nanoTime() - timer;
+		//		System.out.println("Attente saved in: "+ (timer / 1_000_000)+"ms");
 	}
 
 	/**

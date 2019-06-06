@@ -144,18 +144,16 @@ class CleCache implements Serializable{
 //		return cleCache;
 //	}
 	
-	protected static CleCache Construire(String line) {
-		String nom;
-		int typeRelation;
-		Filtre filtre;
-		
-		String[] tokens = line.split(";");
-		nom = tokens[0].substring(1, tokens[0].length()-1);
-		typeRelation = Integer.parseInt(tokens[1]);
-		filtre = Filtre.valueOf(tokens[2]);               
-		
-		return new CleCache(nom, typeRelation, filtre);
-	}
+//	protected static CleCache Construire(String line) {
+//		String nom;
+//		int typeRelation;
+//		Filtre filtre;		
+//		String[] tokens = line.split(";");
+//		nom = tokens[0].substring(1, tokens[0].length()-1);
+//		typeRelation = Integer.parseInt(tokens[1]);
+//		filtre = Filtre.valueOf(tokens[2]);               		
+//		return new CleCache(nom, typeRelation, filtre);
+//	}
 
 	@Override
 	public String toString() {

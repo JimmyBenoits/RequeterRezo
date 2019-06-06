@@ -63,12 +63,13 @@ class Exemple {
 		
 		//Pour effectuer une requête sur RequeterRezo, il suffit d'appeler la méthode "requete".
 		//Cette méthode retourne un objet de type "Resultat" qui contient le "Mot" demandé ainsi que deux autres informations : Etat et EtatCache 
-		Resultat resultatRequete = rezo.requete("toto");
+		Resultat resultatRequete = rezo.requete(";");
 		
 		//L'objet qui vous intéresse est certainement le "Mot". Il contient les informations présentes dans rezoJDM.
 		Mot mot = resultatRequete.getMot();
 		//Un Mot est notamment composé de relations sortantes (pour lesquelles il en est la source) et de relations entrantes (pour lesquelles il en est la destination).
 		//Un Voisin est un noeud rezoJDM ainsi que le poids de la relation associée.
+		
 		ArrayList<Relation> voisins = mot.getRelationsSortantesTypees("r_lieu");
 		System.out.println("Un toto peut se trouver dans les lieux suivants : ");		
 		for(Relation voisin : voisins) {
