@@ -57,6 +57,11 @@ public class Configuration {
 	 * Indique (ou non) des messages sur System.err à des fins de debug.
 	 */
 	protected boolean avertissement;
+	
+	/**
+	 * Utilisation du cache. Obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
+	 */
+	protected boolean utiliserCache;
 
 
 	/**
@@ -69,6 +74,7 @@ public class Configuration {
 		this.cheminCache = "cache";
 		this.modeAvance = false;
 		this.avertissement = true;
+		this.utiliserCache = true;
 	}
 
 	/**
@@ -101,7 +107,7 @@ public class Configuration {
 							break;
 						}
 						case "AVERTISSEMENT" : {
-							this.avertissement = valeur.toUpperCase().equals("OUI");
+							this.avertissement = valeur.toUpperCase().equals("OUI") || valeur.toUpperCase().equals("TRUE");
 							break;
 						}
 						case "PEREMPTION": {
@@ -138,15 +144,15 @@ public class Configuration {
 								try {
 									switch (suffixe.toLowerCase()) {
 									case "ko": {
-										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1000;
+										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1_000;
 										break;
 									}
 									case "mo": {
-										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1000000;
+										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1_000_000;
 										break;
 									}
 									case "go": {
-										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1000000000;
+										this.tailleCache = Long.parseLong(valeur.substring(0, valeur.length() - 2)) * 1_000_000_000;
 										break;
 									}
 									default: {
@@ -157,9 +163,13 @@ public class Configuration {
 									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de la taille maximale du cache n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}
 							} else {
-								throw new ConfigurationException("Erreur Configuration RequeterRezo : l'unitÃ© de la taille maximale du cache n'est pas reconnue. Veuillez utiliser un entier suivi de \"ko\", \"mo\" ou \"go\".");
+								throw new ConfigurationException("Erreur Configuration RequeterRezo : l'unité de la taille maximale du cache n'est pas reconnue. Veuillez utiliser un entier suivi de \"ko\", \"mo\" ou \"go\".");
 							}
 
+							break;
+						}
+						case "UTILISER_CACHE": {
+							this.utiliserCache = valeur.toUpperCase().equals("OUI") || valeur.toUpperCase().equals("TRUE");;
 							break;
 						}
 						default: {
@@ -167,7 +177,7 @@ public class Configuration {
 						}
 						}
 					} else {
-						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu Ãªtre interprÃ©tÃ©e.");
+						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu être interprÃ©tÃ©e.");
 					}
 				}
 			}
@@ -216,5 +226,13 @@ public class Configuration {
 	 */
 	public boolean getAvertissement() {
 		return avertissement;
+	}
+	
+	/**
+	 * Utilisation du cache. Obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
+	 * @return True si le cache doit être utiliser, false sinon.
+	 */
+	public boolean getUtiliserCache() {
+		return utiliserCache;
 	}
 }

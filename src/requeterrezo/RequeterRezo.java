@@ -120,7 +120,12 @@ public abstract class RequeterRezo {
 	 */
 	protected boolean modeAvance;  
 
-	protected int cycle = 0;
+	/**
+	 * Activation / désactivation du cache. Le cache est obligatoire sur RezoDump mais seulement conseillé sur RezoSQL.
+	 * Il faut utiliser le fichier de configuration afin de modifier ce comportement. 
+	 */
+	protected boolean utiliserCache;
+
 	private SauvegarderCache sauvegarderCache;
 	private SauvegarderAttente sauvegarderAttente;
 
@@ -240,7 +245,8 @@ public abstract class RequeterRezo {
 		this.tailleCache = tailleCache;
 		this.peremption = peremption;
 		this.avertissement = avertissement;
-		this.modeAvance = MODE_AVANCE_DEFAUT;
+		this.modeAvance = MODE_AVANCE_DEFAUT;	
+		this.utiliserCache = true;
 		initialiserCache();
 		initialiserAttente();
 	}
@@ -262,7 +268,12 @@ public abstract class RequeterRezo {
 	 * @param modeAvance True si l'utilisateur doit effectuer les sauvegardes du cache manuellement, false sinon.
 	 * @param cheminCache Chemin vers le dossier contenant le cache.
 	 */
-	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache) {
+	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache, boolean utiliserCache) {
+		this.utiliserCache = utiliserCache;
+		if(utiliserCache) {
+			initialiserCache();
+			initialiserAttente();
+		}
 		this.tailleCache = tailleCache;
 		this.peremption = peremption;
 		this.avertissement = avertissement;
@@ -270,8 +281,7 @@ public abstract class RequeterRezo {
 		RequeterRezo.cheminCache = cheminCache;
 		RequeterRezo.fichierAttente = cheminCache + File.separator + "indexAttente";
 		RequeterRezo.fichierCache = cheminCache + File.separator + "indexCache";
-		initialiserCache();
-		initialiserAttente();
+
 	}
 
 	/**
@@ -283,7 +293,8 @@ public abstract class RequeterRezo {
 				configuration.getPeremption(), 
 				configuration.getAvertissement(),
 				configuration.getModeAvance(),
-				configuration.getCheminCache());
+				configuration.getCheminCache(),
+				configuration.getUtiliserCache());
 	}
 
 	/**
@@ -309,9 +320,16 @@ public abstract class RequeterRezo {
 		cache.sauvegarderCache(fichierCache);
 		attente.sauvegarderAttente(fichierAttente);
 	}
-	
+
+	/**
+	 * Runnable se lançant lors de la clôture normale du programme permettant la sauvegarde du fichier d'index du cache.
+	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clôture normale.
+	 * La fin de programme, System.exit() ou encore une Exception le sont.
+	 * @author jimmy.benoits
+	 *
+	 */
 	private static class SauvegarderCache implements Runnable {
-		
+
 		final Cache cache;
 		final String fichierCache;		
 
@@ -326,10 +344,16 @@ public abstract class RequeterRezo {
 		}
 
 	}
-	
-	
+
+	/**
+	 * Runnable se lançant lors de la clôture normale du programme permettant la sauvegarde du fichier d'index du cache.
+	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clôture normale.
+	 * La fin de programme, System.exit() ou encore une Exception le sont.
+	 * @author jimmy.benoits
+	 *
+	 */
 	private static class SauvegarderAttente implements Runnable {
-			
+
 		final Attente attente;
 		final String fichierAttente;		
 
@@ -619,27 +643,30 @@ public abstract class RequeterRezo {
 	 * @return Le résultat de la requête. Soit en provenance du cache, soit en effectuant réellement la requête.
 	 */
 	protected Resultat requeteInterne(CleCache cleCache) {
-		String avisCache = rencontrerMot(cleCache);
+		String avisCache;
 		boolean demande = false;
 		Resultat resultat;
-		switch (avisCache) {
-		case "$DEMANDE$": {
-			demande = true;
-			break;
-		}
-		case "$OSEF$": {
-			demande = false;
-			break;
-		}
-		default: {                
-			resultat = Resultat.lireCache(avisCache, cleCache);
-			if(resultat == null) {
-				cache.supprimer(cleCache);
+		if(this.utiliserCache) {
+			avisCache = rencontrerMot(cleCache);
+			switch (avisCache) {
+			case "$DEMANDE$": {
 				demande = true;
-			}else {
-				return resultat;
+				break;
 			}
-		}
+			case "$OSEF$": {
+				demande = false;
+				break;
+			}
+			default: {                
+				resultat = Resultat.lireCache(avisCache, cleCache);
+				if(resultat == null) {
+					cache.supprimer(cleCache);
+					demande = true;
+				}else {
+					return resultat;
+				}
+			}
+			}
 		}
 		resultat = construireMot(cleCache);
 		if (resultat.mot != null && demande) {
@@ -805,14 +832,17 @@ public abstract class RequeterRezo {
 	 */
 	public void cacheInfo() {
 		System.out.println("RequeterRezo, info cache : ");
-		System.out.println("\tPéremption : "+this.peremption+"h");		
-		System.out.println("\tTaille maximale du cache : "+ Utils.formatNombre.format(this.tailleCache));
-		System.out.println("\tTaille actuelle du cache : "+Utils.formatNombre.format(this.cache.tailleCourante));
-		System.out.println("\tNombre de requêtes en cache : "+Utils.formatNombre.format(this.cache.cache.size()));
-		System.out.println("\tNombre de requêtes en attente : "+Utils.formatNombre.format(this.attente.index.size()));
-
+		if(this.utiliserCache) {
+			System.out.println("\tPéremption : "+this.peremption+"h");		
+			System.out.println("\tTaille maximale du cache : "+ Utils.formatNombre.format(this.tailleCache));
+			System.out.println("\tTaille actuelle du cache : "+Utils.formatNombre.format(this.cache.tailleCourante));
+			System.out.println("\tNombre de requêtes en cache : "+Utils.formatNombre.format(this.cache.cache.size()));
+			System.out.println("\tNombre de requêtes en attente : "+Utils.formatNombre.format(this.attente.index.size()));
+		}else {
+			System.out.println("\tCache non utilisé pour cette session.");
+		}
 	}
-	
-	
-	
+
+
+
 }

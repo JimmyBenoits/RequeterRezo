@@ -113,6 +113,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 	 */
 	public RequeterRezoSQL(ConfigurationSQL configuration) {
 		super(configuration);
+		this.utiliserCache = configuration.getUtiliserCache();
 		connexion(configuration);
 		construireRelations();
 	}

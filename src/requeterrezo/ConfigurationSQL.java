@@ -108,6 +108,7 @@ public class ConfigurationSQL extends Configuration {
 			int indexOf;
 			String cle, valeur;
 			this.parametres = new ArrayList<>();
+			this.utiliserCache = true;
 			while ((ligne = reader.readLine()) != null) {
 				if (!ligne.isEmpty() && ligne.charAt(0) != '#') {
 					if ((indexOf = ligne.indexOf('=')) != -1) {
@@ -170,7 +171,7 @@ public class ConfigurationSQL extends Configuration {
 	 */
 	public String getServeur_SQL() {
 		return serveur_SQL;
-	}
+	}	
 
 
 	/**
@@ -196,7 +197,8 @@ public class ConfigurationSQL extends Configuration {
 	public String getMot_de_passe() {
 		return mot_de_passe;
 	}
-	
+
+
 	/**
 	 * Paramètres complémentaires utilisés lors de la connexion au serveur MySQL.
 	 * @return La liste des couples (CLE,VALEUR) des paramètres complémentaires.
