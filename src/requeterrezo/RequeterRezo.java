@@ -124,7 +124,7 @@ public abstract class RequeterRezo {
 	 * Activation / désactivation du cache. Le cache est obligatoire sur RezoDump mais seulement conseillé sur RezoSQL.
 	 * Il faut utiliser le fichier de configuration afin de modifier ce comportement. 
 	 */
-	protected boolean utiliserCache;
+	protected boolean ignorerCache;
 
 	private SauvegarderCache sauvegarderCache;
 	private SauvegarderAttente sauvegarderAttente;
@@ -246,7 +246,7 @@ public abstract class RequeterRezo {
 		this.peremption = peremption;
 		this.avertissement = avertissement;
 		this.modeAvance = MODE_AVANCE_DEFAUT;	
-		this.utiliserCache = true;
+		this.ignorerCache = true;
 		initialiserCache();
 		initialiserAttente();
 	}
@@ -268,12 +268,7 @@ public abstract class RequeterRezo {
 	 * @param modeAvance True si l'utilisateur doit effectuer les sauvegardes du cache manuellement, false sinon.
 	 * @param cheminCache Chemin vers le dossier contenant le cache.
 	 */
-	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache, boolean utiliserCache) {
-		this.utiliserCache = utiliserCache;
-		if(utiliserCache) {
-			initialiserCache();
-			initialiserAttente();
-		}
+	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache, boolean ignorerCache) {
 		this.tailleCache = tailleCache;
 		this.peremption = peremption;
 		this.avertissement = avertissement;
@@ -281,7 +276,11 @@ public abstract class RequeterRezo {
 		RequeterRezo.cheminCache = cheminCache;
 		RequeterRezo.fichierAttente = cheminCache + File.separator + "indexAttente";
 		RequeterRezo.fichierCache = cheminCache + File.separator + "indexCache";
-
+		this.ignorerCache = ignorerCache;
+		if(!ignorerCache) {
+			initialiserCache();
+			initialiserAttente();
+		}
 	}
 
 	/**
@@ -294,7 +293,7 @@ public abstract class RequeterRezo {
 				configuration.getAvertissement(),
 				configuration.getModeAvance(),
 				configuration.getCheminCache(),
-				configuration.getUtiliserCache());
+				configuration.getIgnorerCache());
 	}
 
 	/**
@@ -646,7 +645,7 @@ public abstract class RequeterRezo {
 		String avisCache;
 		boolean demande = false;
 		Resultat resultat;
-		if(this.utiliserCache) {
+		if(!this.ignorerCache) {
 			avisCache = rencontrerMot(cleCache);
 			switch (avisCache) {
 			case "$DEMANDE$": {
@@ -832,7 +831,7 @@ public abstract class RequeterRezo {
 	 */
 	public void cacheInfo() {
 		System.out.println("RequeterRezo, info cache : ");
-		if(this.utiliserCache) {
+		if(this.ignorerCache) {
 			System.out.println("\tPéremption : "+this.peremption+"h");		
 			System.out.println("\tTaille maximale du cache : "+ Utils.formatNombre.format(this.tailleCache));
 			System.out.println("\tTaille actuelle du cache : "+Utils.formatNombre.format(this.cache.tailleCourante));

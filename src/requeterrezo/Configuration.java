@@ -59,9 +59,9 @@ public class Configuration {
 	protected boolean avertissement;
 	
 	/**
-	 * Utilisation du cache. Obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
+	 * Ignore le cache. Le cache est obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
 	 */
-	protected boolean utiliserCache;
+	protected boolean ignorerCache;
 
 
 	/**
@@ -74,7 +74,7 @@ public class Configuration {
 		this.cheminCache = "cache";
 		this.modeAvance = false;
 		this.avertissement = true;
-		this.utiliserCache = true;
+		this.ignorerCache = false;
 	}
 
 	/**
@@ -168,8 +168,8 @@ public class Configuration {
 
 							break;
 						}
-						case "UTILISER_CACHE": {
-							this.utiliserCache = valeur.toUpperCase().equals("OUI") || valeur.toUpperCase().equals("TRUE");;
+						case "IGNORER_CACHE": {
+							this.ignorerCache = valeur.toUpperCase().equals("OUI") || valeur.toUpperCase().equals("TRUE");;
 							break;
 						}
 						default: {
@@ -232,7 +232,7 @@ public class Configuration {
 	 * Utilisation du cache. Obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
 	 * @return True si le cache doit être utiliser, false sinon.
 	 */
-	public boolean getUtiliserCache() {
-		return utiliserCache;
+	public boolean getIgnorerCache() {
+		return ignorerCache;
 	}
 }
