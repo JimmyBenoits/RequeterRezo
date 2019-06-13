@@ -571,4 +571,27 @@ public class RequeterRezoDump extends RequeterRezo {
 		return resultat;
 	}
 
+	
+	/**
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
+	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
+	 * Retourne 0 si la relation n'existe pas.  
+	 * @param motSource Terme JDM de départ de la relation
+	 * @param typeRelation Type de relation devant lier les deux termes.
+	 * @param motDestination Terme JDM d'arriver de la relation
+	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 */	
+	public int verifierExistenceRelation(String motSource, int typeRelation, String motDestination) {
+		Resultat resultat = this.requete(motSource, typeRelation, Filtre.RejeterRelationsEntrantes);
+		Mot mot = resultat.getMot();
+		if(mot != null) {
+			ArrayList<Relation> voisins = mot.getRelationsSortantesTypees(typeRelation);
+			for(Relation voisin : voisins) {
+				if(voisin.getNomDestination().equals(motDestination)) {
+					return voisin.getPoids();
+				}
+			}
+		}
+		return 0;
+	}
 }

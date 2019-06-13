@@ -104,6 +104,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected PreparedStatement relationsEntrantes;
 	protected PreparedStatement relationsEntrantesType;
 
+	protected PreparedStatement verifierExistenceRelation;
+
 
 	/**
 	 * Construit un objet RequeterRezoSQL à partir d'une configuration spéficique puis effectue les requêtes nécessaires afin de construire les
@@ -417,6 +419,34 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
+	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
+	 * Retourne 0 si la relation n'existe pas.  
+	 * @param motSource Terme JDM de départ de la relation
+	 * @param typeRelation Type de relation devant lier les deux termes.
+	 * @param motDestination Terme JDM d'arriver de la relation
+	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 */	
+	public int verifierExistenceRelation(String motSource, int typeRelation, String motDestination) {
+		int res = 0;
+		try {
+			this.verifierExistenceRelation.setString(1, motSource);
+			this.verifierExistenceRelation.setInt(2, typeRelation);
+			this.verifierExistenceRelation.setString(3, motDestination);
+			ResultSet rsExistence;
+			rsExistence = this.verifierExistenceRelation.executeQuery();
+			if(rsExistence.next()) {
+				res = rsExistence.getInt(1);
+			}
+			rsExistence.close();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	/**
 	 * Construit un noeud à partir de son identifiant. 
 	 * @param id Identifiant rezoJDM.
 	 * @return Le noeud s'il existe, null sinon.
@@ -489,14 +519,19 @@ public class RequeterRezoSQL extends RequeterRezo {
 					+ "from edges e, nodes n "
 					+ "where e.destination=? and e.source=n.id and e.type=?;");
 
+			//Vérifier l'existence d'une relation de type R entre X et Y
+			this.verifierExistenceRelation = connexion.prepareStatement(""
+					+"select e.weight "
+					+ "from edges e, nodes n1, nodes n2 "
+					+ "where n1.name=? and e.type = ? and n2.name=? and "
+					+ "e.source=n1.id and e.destination=n2.id;");
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			this.sauvegarder();
 			System.exit(1);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			this.sauvegarder();
 			System.exit(1);
 		}
 	}
