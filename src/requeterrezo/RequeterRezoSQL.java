@@ -302,7 +302,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 		PreparedStatement requeteSortante, requeteEntrante;
 		try {			
 			noeudDepuisNom.setString(1, nom);
-			rsNoeud = noeudDepuisNom.executeQuery("select id, type, weight from nodes where name=\""+nom+"\";");
+			rsNoeud = noeudDepuisNom.executeQuery();
 			if(rsNoeud.next()) {				
 				idRezo= rsNoeud.getInt(1);			
 				nomFormate=this.construireMotFormate(nom);
