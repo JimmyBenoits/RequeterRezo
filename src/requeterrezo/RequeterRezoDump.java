@@ -481,8 +481,12 @@ public class RequeterRezoDump extends RequeterRezo {
 					//cas normal
 					else {
 						noeud_voisin=motVoisinage.get(id_destination);
-						voisin = new Relation(idRelation,noeudCourant,type_relation,noeud_voisin,poids_relation);						
-						motRelationsSortantes.get(type_relation).add(voisin);
+						if(noeud_voisin != null) {
+							voisin = new Relation(idRelation,noeudCourant,type_relation,noeud_voisin,poids_relation);						
+							motRelationsSortantes.get(type_relation).add(voisin);
+						}else if(avertissement) {
+							System.err.println("Avertissement RequeterRezo : le noeud sortant "+ id_destination +" n'existe pas dans le voisinage.");
+						}
 					}
 					mapping_relations.put(idRelation, ligne);
 				}
@@ -503,9 +507,13 @@ public class RequeterRezoDump extends RequeterRezo {
 						motRelationsEntrantes.put(type_relation, voisins);
 					}
 					noeud_voisin = motVoisinage.get(idSource);
-					voisin = new Relation(idRelation,noeud_voisin,type_relation,noeudCourant,poids_relation);											
-					motRelationsEntrantes.get(type_relation).add(voisin);
-					mapping_relations.put(idRelation, ligne);
+					if(noeud_voisin != null) {
+						voisin = new Relation(idRelation,noeud_voisin,type_relation,noeudCourant,poids_relation);											
+						motRelationsEntrantes.get(type_relation).add(voisin);
+						mapping_relations.put(idRelation, ligne);
+					}else if(avertissement){
+						System.err.println("Avertissement RequeterRezo : le noeud entrant "+ idSource +" n'existe pas dans le voisinage.");
+					}
 				}
 			}
 
@@ -519,25 +527,25 @@ public class RequeterRezoDump extends RequeterRezo {
 				id_annotation = entry.getKey();
 				noeud_annotation = motVoisinage.get(id_annotation);
 				if(noeud_annotation != null) {
-				id_relation_annotee = 0;				
-				id_relation_annotee = Long.parseLong(noeud_annotation.getNom().substring(2));				
-				if(mapping_relations.containsKey(id_relation_annotee)) {									
-					ligne = mapping_relations.get(Long.parseLong(noeud_annotation.getNom().substring(2)));
-					pdivisions = ligne.split(";");
-					id_source_relation = Long.parseLong(pdivisions[2]);
-					id_destination_relation = Long.parseLong(pdivisions[3]);
-					type_relation = Integer.parseInt(pdivisions[4]);
-					poids_relation = Integer.parseInt(pdivisions[5]);
-					source_relation = motVoisinage.get(id_source_relation);
-					destination_relation = motVoisinage.get(id_destination_relation);
+					id_relation_annotee = 0;				
+					id_relation_annotee = Long.parseLong(noeud_annotation.getNom().substring(2));				
+					if(mapping_relations.containsKey(id_relation_annotee)) {									
+						ligne = mapping_relations.get(Long.parseLong(noeud_annotation.getNom().substring(2)));
+						pdivisions = ligne.split(";");
+						id_source_relation = Long.parseLong(pdivisions[2]);
+						id_destination_relation = Long.parseLong(pdivisions[3]);
+						type_relation = Integer.parseInt(pdivisions[4]);
+						poids_relation = Integer.parseInt(pdivisions[5]);
+						source_relation = motVoisinage.get(id_source_relation);
+						destination_relation = motVoisinage.get(id_destination_relation);
 
-					annotation = new Annotation(noeud_annotation.getNom(), noeud_annotation.getIdRezo(), noeud_annotation.getType(), entry.getValue(),
-							source_relation, type_relation, correspondance.get(type_relation), destination_relation, poids_relation);
-					motAnnotations.add(annotation);				
-				}
-				else if(avertissement){					
-					System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" réfère une relation qui n'existe pas.");
-				}
+						annotation = new Annotation(noeud_annotation.getNom(), noeud_annotation.getIdRezo(), noeud_annotation.getType(), entry.getValue(),
+								source_relation, type_relation, correspondance.get(type_relation), destination_relation, poids_relation);
+						motAnnotations.add(annotation);				
+					}
+					else if(avertissement){					
+						System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" réfère une relation qui n'existe pas.");
+					}
 				}else if (avertissement){
 					System.err.println("Avertissement RequeterRezo : l'annotation "+ id_annotation +" n'existe pas dans le voisinage.");
 				}
@@ -576,7 +584,7 @@ public class RequeterRezoDump extends RequeterRezo {
 		return resultat;
 	}
 
-	
+
 	/**
 	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
 	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
