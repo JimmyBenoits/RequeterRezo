@@ -63,7 +63,7 @@ class Exemple {
 		
 		//Pour effectuer une requête sur RequeterRezo, il suffit d'appeler la méthode "requete".
 		//Cette méthode retourne un objet de type "Resultat" qui contient le "Mot" demandé ainsi que deux autres informations : Etat et EtatCache 
-		Resultat resultatRequete = rezo.requete(";");
+		Resultat resultatRequete = rezo.requete("toto");
 		
 		//L'objet qui vous intéresse est certainement le "Mot". Il contient les informations présentes dans rezoJDM.
 		Mot mot = resultatRequete.getMot();

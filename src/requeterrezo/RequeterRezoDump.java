@@ -517,7 +517,9 @@ public class RequeterRezoDump extends RequeterRezo {
 			Noeud source_relation, destination_relation;					
 			for(Entry<Long, Integer> entry : liste_annotations) {
 				id_annotation = entry.getKey();
-				noeud_annotation = motVoisinage.get(id_annotation);				
+				noeud_annotation = motVoisinage.get(id_annotation);
+				if(noeud_annotation != null) {
+				id_relation_annotee = 0;				
 				id_relation_annotee = Long.parseLong(noeud_annotation.getNom().substring(2));				
 				if(mapping_relations.containsKey(id_relation_annotee)) {									
 					ligne = mapping_relations.get(Long.parseLong(noeud_annotation.getNom().substring(2)));
@@ -531,10 +533,13 @@ public class RequeterRezoDump extends RequeterRezo {
 
 					annotation = new Annotation(noeud_annotation.getNom(), noeud_annotation.getIdRezo(), noeud_annotation.getType(), entry.getValue(),
 							source_relation, type_relation, correspondance.get(type_relation), destination_relation, poids_relation);
-					motAnnotations.add(annotation);
+					motAnnotations.add(annotation);				
 				}
 				else if(avertissement){					
 					System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" réfère une relation qui n'existe pas.");
+				}
+				}else if (avertissement){
+					System.err.println("Avertissement RequeterRezo : l'annotation "+ id_annotation +" n'existe pas dans le voisinage.");
 				}
 			}
 			Mot mot = new Mot(noeudCourant, motDefinition,
