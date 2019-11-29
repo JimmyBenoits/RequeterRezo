@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
- * La classe Mot est l'objet principal retourné par une requête dans RequeterRezo. 
+ * La classe Mot est l'objet principal retourné par une requête dans RequeterRezo. <br>
  * Un mot contient notamment les informations sur le noeud rezoJDM associé ({@link Noeud}) 
- * ainsi que les relations entrantes, sortantes et les annotations.
+ * ainsi que les relations entrantes, sortantes et les annotations.<br>
  * Si un mot a été construit par une requête "live" ({@link RequeterRezoDump}), alors sa définition (si elle existe) est aussi retournée.
  * 
  * @author jimmy.benoits
@@ -156,7 +156,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre.<br>
 	 * Une relation entrante est une relation dont la destination est le mot.
 	 * @param nomType Nom de la relation.
 	 * @return Les voisins ({@link Relation}) du terme pour les relations entrantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
@@ -174,7 +174,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre.<br>
 	 * Une relation sortante est une relation dont la source est le mot.
 	 * @param nomType Nom de la relation.
 	 * @return Les voisins ({@link Relation}) du terme pour les relations sortantes dont le nom de la relation est passé en paramètre. S'il n'y en a aucun,
@@ -193,7 +193,7 @@ public class Mot extends Noeud implements Serializable{
 
 
 	/**
-	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre.<br>
 	 * Une relation entrante est une relation dont la destination est le mot.
 	 * @param type Type de la relation.
 	 * @return Les voisins ({@link Relation}) du terme pour les relations entrantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
@@ -208,7 +208,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre.
+	 * Retourne les voisins ({@link Relation}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre.<br>
 	 * Une relation sortante est une relation dont la destination est le mot.
 	 * @param type Type de la relation.
 	 * @return Les voisins ({@link Relation}) du terme pour les relations sortantes dont le type de la relation est passé en paramètre. S'il n'y en a aucun,
@@ -223,7 +223,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 	
 	/**
-	 * Retourne la liste des relations entrantes.
+	 * Retourne la liste des relations entrantes.<br>
 	 * Une relation entrantes est une relation dont le mot est la destination.
 	 * @return La liste des relations entrantes.
 	 */
@@ -236,7 +236,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 	
 	/**
-	 * Retourne la liste des relations sortantes.
+	 * Retourne la liste des relations sortantes.<br>
 	 * Une relation sortantes est une relation dont le mot est la source.
 	 * @return La liste des relations sortantes.
 	 */
@@ -249,8 +249,8 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne la table d'association des relations entrantes.
-	 * Une relation entrantes est une relation dont le mot est la destination.
+	 * Retourne la table d'association des relations entrantes.<br>
+	 * Une relation entrantes est une relation dont le mot est la destination.<br>
 	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Relation}). 
 	 * @return La table d'association des relations entrantes.
 	 */
@@ -259,8 +259,8 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne la table d'association des relations sortantes.
-	 * Une relation sortantes est une relation dont le mot est la source.
+	 * Retourne la table d'association des relations sortantes.<br>
+	 * Une relation sortantes est une relation dont le mot est la source.<br>
 	 * La clé correspond au type de la relation et la valeur à la liste des voisins ({@link Relation}). 
 	 * @return La table d'association des relations sortantes.
 	 */
@@ -278,7 +278,7 @@ public class Mot extends Noeud implements Serializable{
 
 	
 	/**
-	 * Fusionne deux mots dans un seul. Cette fonction peut être utile lorsque l'on a effectué deux requêtes filtrées sur un même terme.
+	 * Fusionne deux mots dans un seul. Cette fonction peut être utile lorsque l'on a effectué deux requêtes filtrées sur un même terme.<br>
 	 * Cela permet de regrouper les deux résultats dans un même objet.
 	 * @param mot1 Premier mot à fusionner. 
 	 * @param mot2 Second mot à fusionner.
@@ -292,7 +292,7 @@ public class Mot extends Noeud implements Serializable{
 	}
 
 	/**
-	 * Fusionne une liste de mot dans un seul. Cette fonction peut être utile lorsque l'on a effectué plusieurs requêtes filtrées sur un même terme.
+	 * Fusionne une liste de mot dans un seul. Cette fonction peut être utile lorsque l'on a effectué plusieurs requêtes filtrées sur un même terme. <br>
 	 * Cela permet de regrouper les résultats dans un même objet.
 	 * @param mots Liste de mots à fusionner.
 	 * @return Retourne la fusion (l'union des voisinages) des termes identiques au premier mot de la liste.

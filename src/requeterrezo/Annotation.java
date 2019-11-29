@@ -26,12 +26,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * Les annotations sont un moyen dans rezoJDM de poser des informations sur les relations.
  * Ces informations peuvent porter sur la fréquence (toujours vrai, rare, toujours faux, etc.), la pertinence, le caractère humouristique, etc.
  * Une relation peut être annotée plusieurs fois (quelque chose peut être à la fois "toujours vrai" et "non pertinent").
- * Et une annotation peut être elle-même annotée.
+ * Et une annotation peut être elle-même annotée.<br><br>
  * 
  *  Les annotations sont un outils puissants mais parfois difficile à prendre en main. 
  *  Dans rezoJDM, une annotation transforme une relation en un noeud. RequeterRezo regroupe au même endroit les annotations portant sur les relations
  *  du terme demandé. Cela permet de savoir quelles relations sont annotées. Pour obtenir la valeur de (ou des) annotations ("rare", "pertinent", etc.)
- *  il est nécessaire d'effectuer une nouvelle requête (grâce au "nom" de l'annotation).
+ *  il est nécessaire d'effectuer une nouvelle requête (grâce au "nom" de l'annotation).<br><br>
  *  
  *  Le nom d'une annotation est composé de ":r" suivi de l'ID de la relation annotée. Par exemple : ":r34672520". Le nom formaté permet de lire
  *  l'annotation : "mâchoire --r_has_part#9:33524--&gt; gencive"

@@ -31,10 +31,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Objet contenant le résultat d'une requête effectuée par RequeterRezo. 
- * Une requête retourne toujours un résultat contenant : 
- * - un {@link Mot} : le mot demandé. Attention, ceci peut être null si le mot n'existait pas ou qu'une erreur est survenue. 
- * - Un {@link Etat} : l'état de la requête.
+ * Objet contenant le résultat d'une requête effectuée par RequeterRezo. <br>
+ * Une requête retourne toujours un résultat contenant : <br>
+ * - un {@link Mot} : le mot demandé. Attention, ceci peut être null si le mot n'existait pas ou qu'une erreur est survenue. <br>
+ * - Un {@link Etat} : l'état de la requête.<br>
  * - un {@link EtatCache} : information concernant la provenance de la requête.
  * 
  * @author jimmy.benoits
@@ -77,12 +77,12 @@ public class Resultat implements Serializable{
 	}
 
 	/**
-	 * Retourne le mot résultat.
+	 * Retourne le mot résultat.<br>
 	 * @return Le mot résultat ou null si l'état de la requête est 
-	 *  - {@link Etat#INEXISTANT}
-	 *  - {@link Etat#RENVOYER}
-	 *  - {@link Etat#SERVEUR_INACCESSIBLE}
-	 *  - {@link Etat#ERREUR_REQUETE}
+	 *  - {@link Etat#INEXISTANT}<br>
+	 *  - {@link Etat#RENVOYER}<br>
+	 *  - {@link Etat#SERVEUR_INACCESSIBLE}<br>
+	 *  - {@link Etat#ERREUR_REQUETE}<br>
 	 *  Dans le cas où la requête a été réalisé en "live" ({@link RequeterRezoDump}), si l'état est {@link Etat#TROP_GROS}, 
 	 *  le mot retourné a été tronqué car son nombre de relations dépassait le seuil de 25 000. Pour obtenir un résultat "complet", il faudra
 	 *  préciser la requête (appliquer des filtres) ou utiliser une version "locale" ({@link RequeterRezoSQL}) de RequeterRezo.

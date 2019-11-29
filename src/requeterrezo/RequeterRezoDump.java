@@ -39,9 +39,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 /**
  * Version "live" de RequeterRezo. Les requêtes qui ne sont pas directement récupérées depuis le cache sont effectuées sur le service rezo-dump
- * (http://www.jeuxdemots.org/rezo-dump.php). 
- * L'intérêt de RequeterRezoDump est sa rapidité de prise en main mais cela vient avec un coût : 
- * - Les requêtes dont les résultats sont trop gros sont tronqués (seulement les 25 000 premières relations sont retournées).
+ * (http://www.jeuxdemots.org/rezo-dump.php). <br><br>
+ * 
+ * L'intérêt de RequeterRezoDump est sa rapidité de prise en main mais cela vient avec un coût :<br> 
+ * - Les requêtes dont les résultats sont trop gros sont tronqués (seulement les 25 000 premières relations sont retournées).<br>
  * - Le serveur peut-être en maintenance ou inaccessible. 
  * 
  * @author jimmy.benoits
@@ -586,8 +587,8 @@ public class RequeterRezoDump extends RequeterRezo {
 
 
 	/**
-	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
-	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
+	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.  
 	 * @param motSource Terme JDM de départ de la relation
 	 * @param typeRelation Type de relation devant lier les deux termes.

@@ -30,12 +30,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Contient les éléments spécifiques à la configuration d'un système "local" de RequeterRezo ({@link RequeterRezoSQL}).
- * Les éléments en plus d'une configuration classique ({@link Configuration}) sont : 
- * - SERVEUR_MYSQL : adresse du serveur MySQL.
- * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.
- * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.
- * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.
+ * Contient les éléments spécifiques à la configuration d'un système "local" de RequeterRezo ({@link RequeterRezoSQL}).<br>
+ * Les éléments en plus d'une configuration classique ({@link Configuration}) sont : <br>
+ * - SERVEUR_MYSQL : adresse du serveur MySQL.<br>
+ * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.<br>
+ * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
+ * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
  * 
  * Tout autre couple "CLE=VALEUR" sera interprété comme un paramètre spécifique à passer lors de la connexion au serveur MySQL.
  * @author jimmy.benoits
@@ -87,14 +87,14 @@ public class ConfigurationSQL extends Configuration {
 
 
 	/**
-	 * Construit un objet ConfigurationSQL à partir d'un fichier de configuration. 
-	 * Les valeurs génériques ({@link Configuration}) doivent être présentes.
-	 * Les valeurs spécifiques sont : 
-	 * - SERVEUR_MYSQL : adresse du serveur MySQL.
-	 * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.
-	 * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.
-	 * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.
-	 * 
+	 * Construit un objet ConfigurationSQL à partir d'un fichier de configuration. <br>
+	 * Les valeurs génériques ({@link Configuration}) doivent être présentes.<br>
+	 * Les valeurs spécifiques sont : <br>
+	 * - SERVEUR_MYSQL : adresse du serveur MySQL.<br>
+	 * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.<br>
+	 * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
+	 * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
+	 * <br>
 	 * Tout autre couple "CLE=VALEUR" sera interprété comme un paramètre spécifique à passer lors de la connexion au serveur MySQL.
 	 * @param chemin_fichier_configuration Chemin vers le fichier de configuration pour {@link RequeterRezoSQL}.
 	 * @throws FileNotFoundException Le fichier de configuration n'a pas été trouvé.

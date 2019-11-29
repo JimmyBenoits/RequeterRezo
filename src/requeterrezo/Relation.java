@@ -24,10 +24,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Représente une relation dans rezoJDM. 
- * Un voisin associe à un type et à deux mots. Ces trois éléments permettent de construire une relation de rezoJDM. 
- * Exemple, la relation ["chat" r_can_eat "souris"] de poids 235 donnera :
- * Dans les relations sortantes du mot "chat", le voisin "souris, 235" sera présent dans la liste des voisins associés à la valeur 102. 
+ * Représente une relation dans rezoJDM. <br>
+ * Une relation associe un type à deux mots. Ces trois éléments permettent de construire une relation de rezoJDM. 
  * 
  * @see Mot#getRelationsEntrantes()
  * @see Mot#getRelationsSortantes() 
@@ -100,7 +98,7 @@ public class Relation implements Serializable{
 	}
 
 	/**
-	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un noeud.
+	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un noeud.<br>
 	 * Null si le paramètre n'est pas une extrémité de la relation. 
 	 *
 	 * @param noeud Une extrémité de la relation.
@@ -117,7 +115,7 @@ public class Relation implements Serializable{
 	}
 	
 	/**
-	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un nom.
+	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un nom.<br>
 	 * Null si le paramètre n'est pas une extrémité de la relation. 
 	 *
 	 * @param nom Une extrémité de la relation.

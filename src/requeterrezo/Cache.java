@@ -38,18 +38,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Index permettant de garder en mémoire les requêtes dont le résultat est stocké localement. 
+ * Index permettant de garder en mémoire les requêtes dont le résultat est stocké localement. <br><br>
  * 
  * Le cache (@{@link Cache#cache}) est une table d'association liant une requête ({@link CleCache})
  * a un ensemble d'informations ({@link CacheInfo}). Il permet de savoir si une requête a besoin d'être envoyé
  * sur le serveur ou si elle peut être chargée directement. Il a une capacité maximum (en octet) et 
  * une peremption (en nombre d'heure). Une nouvelle requête est systématiquement placée dans le cache s'il y a de la place.
  * Si le cache est plein (sans aucune entrée périmée), le nombre d'occurrence de la nouvelle requête est comparée avec 
- * la requête la plus "petite" du cache afin de déterminer si elle doit y la remplacer. 
+ * la requête la plus "petite" du cache afin de déterminer si elle doit y la remplacer.<br><br> 
  * 
  * Lors du chargement, une vérification du cache est effectuée ({@link Cache#verifierIntegrite(String, boolean)}). Cette opération vérifie
  * que toutes les entrée du cache possèdent un fichier et que tous les fichiers du cache ont une entrée. Cela permet de conserver un cache
- * même après une exécution ayant rencontré un problème.
+ * même après une exécution ayant rencontré un problème.<br><br>
  * 
  * Le cache n'autorise plus de nouvelles entrées sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication
  * Le cache peut dépasser cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
@@ -222,6 +222,8 @@ class Cache implements Serializable {
 	/**
 	 * Charge un objet Cache depuis un fichier sérialisé. 
 	 * @param chemin Chemin vers un fichier créé par la fonction {@link Cache#sauvegarderCache(String)}.
+	 * @param nouvelleTailleMax Nouvelle taille maximale autorisée pour le cache. Ne peut pas être plus petite que l'ancienne.
+	 * @param avertissement Autorise ou non la diffusion d'avertissement sur la sortie d'erreur standard.
 	 * @return Un cache précedemment rempli. Si le fichier est illisible (l'écriture a été interrompu avant sa fin), retourne null.
 	 * En cas d'autre erreur, retourne null après avoir affiché la trace d'erreur.
 	 */
@@ -285,9 +287,9 @@ class Cache implements Serializable {
 	//		//		timer = System.nanoTime() - timer;
 	//		//		System.out.println("Cache saved in: "+ (timer / 1_000_000)+"ms");
 	//	}
-
+	
 	/**
-	 * Sauvegarde le cache dans un objet sérialisé pouvant être lu par {@link Cache#chargerCache(String)}.
+	 * Sauvegarde le cache dans un objet sérialisé pouvant être lu par {@link Cache#chargerCache(String, long, boolean)}.
 	 * @param chemin Chemin du fichier où sauvegarder le cache.
 	 */
 	protected void sauvegarderCache(String chemin) {

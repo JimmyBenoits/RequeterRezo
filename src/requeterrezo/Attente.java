@@ -61,7 +61,7 @@ class Attente implements Serializable{
 
 
 	/**
-	 * Fonction appelée lors du démarrage d'une session RequeterRezo si un cache existe.
+	 * Fonction appelée lors du démarrage d'une session RequeterRezo si un cache existe.<br>
 	 * Cela permet de garder en mémoire d'une session sur l'autre les requêtes courantes. 
 	 * @param chemin Chemin vers le fichier à charger.
 	 * @return Une table remplie si le fichier a pu être chargé correctement. En cas d'EOFException (la processus d'écriture 

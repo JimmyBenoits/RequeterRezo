@@ -25,13 +25,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Objet de base de rezoJDM. Un noeud est composé de : 
- * - un nom : chaîne de caractère unique (généralement le "mot" lui-même).
- * - d'un ID : entier unique.
+ * Objet de base de rezoJDM. Un noeud est composé de : <br>
+ * - un nom : chaîne de caractère unique (généralement le "mot" lui-même).<br>
+ * - d'un ID : entier unique.<br>
  * - d'un type : les types de noeuds utilisés dans rezoJDM sont disponibles à l'adresse (http://www.jeuxdemots.org/jdm-about.php) 
- * et dans l'enum {@link TypeNoeud}.
+ * et dans l'enum {@link TypeNoeud}.<br>
  * - d'un mot formaté : souvent identique au "nom" sauf lorsque celui-ci est sous une forme peu lisible. Dans ce cas, 
- * le mot formaté permet un affichage lisible. Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.
+ * le mot formaté permet un affichage lisible. Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.<br>
  * - d'un poids : le poids du noeud dans rezoJDM.
  * @author jimmy.benoits
  */
@@ -43,7 +43,7 @@ public class Noeud implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Chaîne de caractères décrivant le mot. Le nom d'un terme est unique dans rezoJDM.
+	 * Chaîne de caractères décrivant le mot. Le nom d'un terme est unique dans rezoJDM.<br>
 	 * C'est l'élément à utiliser pour effectuer une requête.	
 	 */
 	protected final String nom;
@@ -59,7 +59,7 @@ public class Noeud implements Serializable{
 	protected int type = -1;
 
 	/**
-	 * Bien souvent identique au "nom", mais propose parfois d'autres informations (notamment pour les annotations où les raffinements).
+	 * Bien souvent identique au "nom", mais propose parfois d'autres informations (notamment pour les annotations où les raffinements).<br>
 	 * Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.
 	 */
 	protected String motFormate;

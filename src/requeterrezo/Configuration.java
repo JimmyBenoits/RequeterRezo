@@ -78,12 +78,13 @@ public class Configuration {
 	}
 
 	/**
-	 * Créé une configuration à partir d'un fichier ".ini". Le fichier doit être rempli sous le format "CLE=VALEUR". Les clés sont : 
-	 * - PEREMPTION : la valeur doit être un nombre suivi d'une unité ('j' pour jour et 'h' pour heure). Ex : 24h
-	 * - CHEMIN_CACHE : la valeur correspond au chemin où le cache sera stocké.
-	 * - TAILLE_MAX_CACHE : la valeur doit être un nombre suivi d'une unité ('ko', 'mo' ou 'go'). Ex : 200mo
-	 * - AVERTISSEMENT : OUI si l'on souhaite obtenir des messages en provenance de RequeterRezo, NON sinon.
-	 * - MODE : AVANCE si l'on souhaite activer le mode avancé (déconseillé). 
+	 * Créé une configuration à partir d'un fichier ".ini". Le fichier doit être rempli sous le format "CLE=VALEUR".
+	 *  Les clés sont :<br> 
+	 * - PEREMPTION : la valeur doit être un nombre suivi d'une unité ('j' pour jour et 'h' pour heure). Ex : 24h<br>
+	 * - CHEMIN_CACHE : la valeur correspond au chemin où le cache sera stocké.<br>
+	 * - TAILLE_MAX_CACHE : la valeur doit être un nombre suivi d'une unité ('ko', 'mo' ou 'go'). Ex : 200mo<br>
+	 * - AVERTISSEMENT : OUI si l'on souhaite obtenir des messages en provenance de RequeterRezo, NON sinon.<br>
+	 * - MODE : AVANCE si l'on souhaite activer le mode avancé (déconseillé). <br>
 	 * Le caractère dièse (#) est utilisé pour commenter une ligne. 
 	 * @param chemin_fichier_configuration Chemin vers le fichier ".ini".
 	 * @throws FileNotFoundException Le fichier n'a pas pu être trouvé.
@@ -193,8 +194,8 @@ public class Configuration {
 	}
 
 	/**
-	 * Taille maximale du cache (en Octet).
-	 * Le cache n'autorise plus de nouvelles entrées sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication
+	 * Taille maximale du cache (en Octet).<br>
+	 * Le cache n'autorise plus de nouvelles entrées sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication<br>
 	 * Le cache peut dépasser cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
 	 * d'un échange.
 	 * @return La taille maximale du cache.
@@ -213,7 +214,7 @@ public class Configuration {
 
 	/**
 	 * Le mode avancé laisse à l'utilisateur le soin de sauvegarder les index de cache et de mise en attente de lui-même, plutôt que de le faire
-	 * après chaque mise à jour. Ce mode est désactivé par défaut et il n'est pas conseillé de l'activer.
+	 * automatiquement. Ce mode est désactivé par défaut et il n'est pas conseillé de l'activer.
 	 * @return True si le mode Avancé a été activé, false sinon.
 	 */
 	public boolean getModeAvance(){

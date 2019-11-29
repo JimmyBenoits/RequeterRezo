@@ -39,7 +39,7 @@ class AttenteInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Nombre d'occurrences de la requête (depuis sa première rencontre, même si elle est passée par le cache en attendant).
+	 * Nombre d'occurrences de la requête (depuis sa première rencontre, même si elle est passée par le cache en attendant).<br>
 	 * Si un nombre d'heure supérieur au délais de péremption s'est écoulée depuis la dernière demande, le compteur est réinitialisé.
 	 */
 	protected int occurrences;
@@ -50,7 +50,7 @@ class AttenteInfo implements Serializable{
 	protected Date dateOccurrences;
 
 	/**
-	 * Incrémente le nombre d'occurence. 
+	 * Incrémente le nombre d'occurence. <br>
 	 * Si un nombre d'heure supérieur au délais de péremption s'est écoulée depuis la dernière demande, le compteur est réinitialisé.
 	 * @param peremption nombre d'heure avant péremption.
 	 */

@@ -35,41 +35,42 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 /**
  * Version "locale" de RequeterRezo. Les requêtes qui ne sont pas directement récupérées depuis le cache sont effectuées sur un serveur MySQL
- * que l'utilisateur doit mettre en place.
- * L'intérêt de RequeterRezoSQL est sa performance par rapport à {@link RequeterRezoDump} et l'absence de limitation. 
+ * que l'utilisateur doit mettre en place.<br>
+ * L'intérêt de RequeterRezoSQL est sa performance par rapport à {@link RequeterRezoDump} et l'absence de limitation.<br> 
  * En contrepartie, l'utilisateur doit importer les données de rezoJDM (disponible sous licence "Domaine Publique" à l'adresse :
  * http://www.jeuxdemots.org/JDM-LEXICALNET-FR/?C=M;O=D
  * 
  * L'importation est laissée à l'utilisateur mais il doit respecter certaines règles. 
+ * Un projet est disponible à cet effet : https://gite.lirmm.fr/benoits/jdmimport.<br> 
  * 
- * I] Les noeuds
- * Les noeuds doivent être stockés dans une table "nodes" contenant (au moins) les colonnes suivantes : 
- *   - "id" (int, primary)
- *   - "name" (varchar)
- *   - "type" (int, qui vient de node_types)
- *   - "weight" (int)
- *   
- * II] Les relations
- * Les relations doivent être stockées dans une tables "edges" contenant (au moins) les colonnes suivantes : 
- *   - "id" (int, primary)
- *   - "source" (int, id de "nodes")
- *   - "destination" (int, id de "nodes")
- *   - "type" (int, qui vient de edge_types)
- *   - "weight" (int)
- *   
- * III] Type de noeuds 
- * Les types de noeuds doivent être stockés dans une table "node_types" contenant (au moins) les colonnes suivantes : 
- *   - "id" (int, primary)
- *	 - "name" (varchar)
- *
- * IV] Type de relations 
- * Les types de relations doivent être stockés dans une table "edge_types" contenant (au moins) les colonnes suivantes : 
- *   - "id" (int, primary)
- *	 - "name" (varchar)
+ * I] Les noeuds<br>
+ * Les noeuds doivent être stockés dans une table "nodes" contenant (au moins) les colonnes suivantes : <br>
+ *   - "id" (int, primary)<br>
+ *   - "name" (varchar)<br>
+ *   - "type" (int, qui vient de node_types)<br>
+ *   - "weight" (int)<br>
+ *   <br>
+ * II] Les relations<br>
+ * Les relations doivent être stockées dans une tables "edges" contenant (au moins) les colonnes suivantes :<br> 
+ *   - "id" (int, primary)<br>
+ *   - "source" (int, id de "nodes")<br>
+ *   - "destination" (int, id de "nodes")<br>
+ *   - "type" (int, qui vient de edge_types)<br>
+ *   - "weight" (int)<br>
+ *   <br>
+ * III] Type de noeuds <br>
+ * Les types de noeuds doivent être stockés dans une table "node_types" contenant (au moins) les colonnes suivantes : <br>
+ *   - "id" (int, primary)<br>
+ *	 - "name" (varchar)<br>
+ *<br>
+ * IV] Type de relations<br> 
+ * Les types de relations doivent être stockés dans une table "edge_types" contenant (au moins) les colonnes suivantes :<br> 
+ *   - "id" (int, primary)<br>
+ *	 - "name" (varchar)<br>
  * 
- * 
- * De plus, pour faire fonctionner RequeterRezoSQL, il est nécessaire d'ajouter à votre projet un mysql-connector.
- * 
+ * <br><br>
+ * De plus, pour faire fonctionner RequeterRezoSQL, il est nécessaire d'ajouter à votre projet un mysql-connector.<br>
+ * <br>
  * Enfin, si vous souhaitez contribuer au projet JeuxDeMots en envoyant les données récoltées, vous pouvez utiliser des identifiants négatifs 
  * pour vos noeuds et vos relations. Ces valeurs ne sont pas utilisées et permettent une fusion simplifiée !
 
@@ -88,7 +89,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected static Connection connexion;
 
 	/**
-	 * Requête utiliser de nombreuses fois pour obtenir un noeud à partir de son identifiant. 
+	 * Requête utiliser de nombreuses fois pour obtenir un noeud à partir de son identifiant. <br>
 	 * Cela permet notamment de construire les mots formatés.  
 	 */
 	protected PreparedStatement noeudDepuisID; //select name, type, weight from nodes where id=?	
@@ -419,8 +420,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Permet de vérifier l'existence d'une relation dans rezoJDM. 
-	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
+	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.  
 	 * @param motSource Terme JDM de départ de la relation
 	 * @param typeRelation Type de relation devant lier les deux termes.
