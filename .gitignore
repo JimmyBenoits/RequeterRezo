@@ -5,6 +5,8 @@ cache
 javadoc
 .classpath
 .project
+.gitignore
+target/
 src/test/Test.java
 Archive/RequeterRezo
 /RequeterRezo.ini
