@@ -409,7 +409,7 @@ public class RequeterRezoDump extends RequeterRezo {
 
 				if (terme.length()>2) {
 					terme=terme.substring(1, terme.length());}
-				if (motFormate=="") {
+				if (motFormate.isEmpty()) {
 					motFormate=terme;
 				}
 				else {
