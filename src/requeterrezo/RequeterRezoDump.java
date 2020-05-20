@@ -38,12 +38,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Version "live" de RequeterRezo. Les requêtes qui ne sont pas directement récupérées depuis le cache sont effectuées sur le service rezo-dump
+ * Version "live" de RequeterRezo. Les requï¿½tes qui ne sont pas directement rï¿½cupï¿½rï¿½es depuis le cache sont effectuï¿½es sur le service rezo-dump
  * (http://www.jeuxdemots.org/rezo-dump.php). <br><br>
  * 
- * L'intérêt de RequeterRezoDump est sa rapidité de prise en main mais cela vient avec un coût :<br> 
- * - Les requêtes dont les résultats sont trop gros sont tronqués (seulement les 25 000 premières relations sont retournées).<br>
- * - Le serveur peut-être en maintenance ou inaccessible. 
+ * L'intï¿½rï¿½t de RequeterRezoDump est sa rapiditï¿½ de prise en main mais cela vient avec un coï¿½t :<br> 
+ * - Les requï¿½tes dont les rï¿½sultats sont trop gros sont tronquï¿½s (seulement les 25 000 premiï¿½res relations sont retournï¿½es).<br>
+ * - Le serveur peut-ï¿½tre en maintenance ou inaccessible. 
  * 
  * @author jimmy.benoits
  */
@@ -51,8 +51,8 @@ public class RequeterRezoDump extends RequeterRezo {
 
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo(Configuration)
 	 * @param configuration Configuration
 	 */
@@ -62,12 +62,12 @@ public class RequeterRezoDump extends RequeterRezo {
 	}
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo(long, int, boolean)
 	 * @param tailleCache Taille maximale du cache (en octet)
-	 * @param peremption Délais de péremption (en heure)
-	 * @param avertissement True si RequeterRezo est autorisé à utiliser System.err pour afficher des messages, false sinon. 
+	 * @param peremption Dï¿½lais de pï¿½remption (en heure)
+	 * @param avertissement True si RequeterRezo est autorisï¿½ ï¿½ utiliser System.err pour afficher des messages, false sinon. 
 	 */
 	public RequeterRezoDump(long tailleCache, int peremption, boolean avertissement) {
 		super(tailleCache, peremption, avertissement);
@@ -75,11 +75,11 @@ public class RequeterRezoDump extends RequeterRezo {
 	}
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo(long, int)
 	 * @param tailleCache Taille maximale du cache (en octet)
-	 * @param peremption Délais de péremption (en heure)
+	 * @param peremption Dï¿½lais de pï¿½remption (en heure)
 	 */
 	public RequeterRezoDump(long tailleCache, int peremption) {
 		super(tailleCache, peremption);
@@ -87,12 +87,12 @@ public class RequeterRezoDump extends RequeterRezo {
 	}
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo(String, String, boolean)
-	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unité ("ko", "mo", "go", avec "ko" par défaut).
-	 * @param peremption Délais de péremption. Attent un nombre suivi d'une unité ('j' pour journée ou 'h' pour heure, 'h' par défaut).
-	 * @param avertissement True si le système est autorisé à envoyer des messages sur System.err, false sinon.
+	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unitï¿½ ("ko", "mo", "go", avec "ko" par dï¿½faut).
+	 * @param peremption Dï¿½lais de pï¿½remption. Attent un nombre suivi d'une unitï¿½ ('j' pour journï¿½e ou 'h' pour heure, 'h' par dï¿½faut).
+	 * @param avertissement True si le systï¿½me est autorisï¿½ ï¿½ envoyer des messages sur System.err, false sinon.
 	 */
 	public RequeterRezoDump(String tailleCache, String peremption, boolean avertissement) {
 		super(tailleCache, peremption, avertissement);
@@ -100,11 +100,11 @@ public class RequeterRezoDump extends RequeterRezo {
 	}
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo(String, String)
-	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unité ("ko", "mo", "go", avec "ko" par défaut).
-	 * @param peremption Délais de péremption. Attent un nombre suivi d'une unité ('j' pour journée ou 'h' pour heure, 'h' par défaut).
+	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unitï¿½ ("ko", "mo", "go", avec "ko" par dï¿½faut).
+	 * @param peremption Dï¿½lais de pï¿½remption. Attent un nombre suivi d'une unitï¿½ ('j' pour journï¿½e ou 'h' pour heure, 'h' par dï¿½faut).
 	 */
 	public RequeterRezoDump(String tailleCache, String peremption) {
 		super(tailleCache, peremption);
@@ -112,8 +112,8 @@ public class RequeterRezoDump extends RequeterRezo {
 	}
 
 	/**
-	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les équivalences entre 
-	 * noms et types de relations grâce à la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
+	 * Les constructeurs de RequeterRezoDump utilisent les constructeurs de {@link RequeterRezo} puis construisent les ï¿½quivalences entre 
+	 * noms et types de relations grï¿½ce ï¿½ la page : http://www.jeuxdemots.org/jdm-about-detail-relations.php
 	 * @see RequeterRezo#RequeterRezo()
 	 */
 	public RequeterRezoDump() {
@@ -149,7 +149,7 @@ public class RequeterRezoDump extends RequeterRezo {
 					}
 					if (ligne.contains("rel_name")) {
 //						div = ligne.split("\\\"");
-						div = ligne.split(">");
+						div = ligne.split("\">");
 						if (ligne.length() > 1 && div.length>1) {
 							nom = div[div.length-1];
 //							nom = nom.substring(1, nom.length());
@@ -160,20 +160,20 @@ public class RequeterRezoDump extends RequeterRezo {
 				}                
 			} catch (IOException e) {
 				if(avertissement){
-					System.err.println("Avertissement RequeterRezo : Une erreur est survenue lors de la lecture de la liste des relations depuis JeuxDeMots... La liste des relations sera construites au fur et à mesure.");            	
+					System.err.println("Avertissement RequeterRezo : Une erreur est survenue lors de la lecture de la liste des relations depuis JeuxDeMots... La liste des relations sera construites au fur et ï¿½ mesure.");            	
 				}
 			}
 		} catch (IOException e) {
 			if(avertissement){
-				System.err.println("Avertissement RequeterRezo : Impossible de charger la liste des relations depuis JeuxDeMots... Le serveur est peut-être indisponible.");            
+				System.err.println("Avertissement RequeterRezo : Impossible de charger la liste des relations depuis JeuxDeMots... Le serveur est peut-ï¿½tre indisponible.");            
 			}
 		}
 	}
 
 	/**
-	 * Construit l'URL rezo-dump à partir d'une requête.
-	 * @param cleCache Requête à effectuer.
-	 * @return l'URL rezo-dump correspondant à la requête.
+	 * Construit l'URL rezo-dump ï¿½ partir d'une requï¿½te.
+	 * @param cleCache Requï¿½te ï¿½ effectuer.
+	 * @return l'URL rezo-dump correspondant ï¿½ la requï¿½te.
 	 */
 	protected static String construireURL(CleCache cleCache) {
 		String mot = cleCache.nom;
@@ -291,7 +291,7 @@ public class RequeterRezoDump extends RequeterRezo {
 			}
 
 			if (ligne == null) {
-				//Balise <CODE> mais pas balise <def> => la requête doit être relancer
+				//Balise <CODE> mais pas balise <def> => la requï¿½te doit ï¿½tre relancer
 				resultat.etat = Etat.RENVOYER;
 				return resultat;
 			}     
@@ -305,7 +305,7 @@ public class RequeterRezoDump extends RequeterRezo {
 			definition = definition.replaceAll("<br />", "");
 
 			if (definition.equals("")) {
-				definition = "Pas de définition disponible ou définition répartie dans les raffinements sémantiques (voir relation \"r_raff_sem\").";
+				definition = "Pas de dï¿½finition disponible ou dï¿½finition rï¿½partie dans les raffinements sï¿½mantiques (voir relation \"r_raff_sem\").";
 			}
 			while ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("// les noeuds/termes (Entries) : e;eid;'name';type;w;'formated name'"))) {
 			}
@@ -438,7 +438,7 @@ public class RequeterRezoDump extends RequeterRezo {
 
 			noeudCourant = new Noeud(motNom, motIdRezo, motType, motMotFormate, motPoids);
 
-			//Traitement des types de relations utilisées dans le mot : on ajoute s'il y a des choses à ajouter
+			//Traitement des types de relations utilisï¿½es dans le mot : on ajoute s'il y a des choses ï¿½ ajouter
 			CorrespondanceRelation correspondance = RequeterRezo.correspondancesRelations;			
 			Integer id_type_relation;
 			String nom_type_relation;
@@ -461,7 +461,7 @@ public class RequeterRezoDump extends RequeterRezo {
 			HashMap<Long, String> mapping_relations = new HashMap<>();
 
 			//Traitement des relations sortantes
-			//(possibilité d'annotations)			
+			//(possibilitï¿½ d'annotations)			
 			int poids_relation;
 			long id_destination, idSource;
 			idSource = motIdRezo;
@@ -476,7 +476,7 @@ public class RequeterRezoDump extends RequeterRezo {
 						voisins = new ArrayList<>();
 						motRelationsSortantes.put(type_relation, voisins);
 					}
-					//cas annotation. Si la reqûete porte sur le type 128, on ne considère pas cela comme une annotation
+					//cas annotation. Si la reqï¿½ete porte sur le type 128, on ne considï¿½re pas cela comme une annotation
 					if(!isType128 && type_relation == 128) {						
 						liste_annotations.add(new SimpleEntry<Long, Integer>(id_destination, poids_relation));
 					}
@@ -546,7 +546,7 @@ public class RequeterRezoDump extends RequeterRezo {
 						motAnnotations.add(annotation);				
 					}
 					else if(avertissement){					
-						System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" réfère une relation qui n'existe pas.");
+						System.err.println("Avertissement RequeterRezo : l'annotation \""+noeud_annotation.getNom()+"\" rï¿½fï¿½re une relation qui n'existe pas.");
 					}
 				}else if (avertissement){
 					System.err.println("Avertissement RequeterRezo : l'annotation "+ id_annotation +" n'existe pas dans le voisinage.");
@@ -559,27 +559,27 @@ public class RequeterRezoDump extends RequeterRezo {
 		}
 		catch (SocketTimeoutException ex) {
 			if(avertissement){
-				System.err.println("ERREUR RequeterRezo : Timeout en effectuant la requête \""+cleCache.toString()+"\".");			
+				System.err.println("ERREUR RequeterRezo : Timeout en effectuant la requï¿½te \""+cleCache.toString()+"\".");			
 			}
 			resultat.etat = Etat.SERVEUR_INACCESSIBLE;
 			return resultat;
 		} 
 		catch (IOException ex) {
 			if(avertissement){
-				System.err.println("ERREUR RequeterRezo : le fichier n'a pas le format attendu pour la requête \""+cleCache.toString()+"\".");
+				System.err.println("ERREUR RequeterRezo : le fichier n'a pas le format attendu pour la requï¿½te \""+cleCache.toString()+"\".");
 			}
 			ex.printStackTrace();
 			return resultat;
 		}
 
-		//Important : demandé par le créateur de JeuxDeMots 
-		//afin d'éviter une surcharge du serveur. 
-		//La mise en cache permet de limiter néanmoins ces appels.
+		//Important : demandï¿½ par le crï¿½ateur de JeuxDeMots 
+		//afin d'ï¿½viter une surcharge du serveur. 
+		//La mise en cache permet de limiter nï¿½anmoins ces appels.
 		try {
 			Thread.sleep(100);
 		}catch(InterruptedException e) {
 			if(avertissement){
-				System.err.println("ERREUR RequeterRezo : mise en pause interrompue lors de la requête \""+cleCache.toString()+". La mise en pause est importante pour éviter une surcharge du serveur.");						
+				System.err.println("ERREUR RequeterRezo : mise en pause interrompue lors de la requï¿½te \""+cleCache.toString()+". La mise en pause est importante pour ï¿½viter une surcharge du serveur.");						
 			}
 			return new Resultat(cleCache);
 		}	   
@@ -588,10 +588,10 @@ public class RequeterRezoDump extends RequeterRezo {
 
 
 	/**
-	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
+	 * Permet de vï¿½rifier l'existence d'une relation dans rezoJDM. <br>
 	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.  
-	 * @param motSource Terme JDM de départ de la relation
+	 * @param motSource Terme JDM de dï¿½part de la relation
 	 * @param typeRelation Type de relation devant lier les deux termes.
 	 * @param motDestination Terme JDM d'arriver de la relation
 	 * @return Le poids de la relation si elle existe, 0 sinon.
