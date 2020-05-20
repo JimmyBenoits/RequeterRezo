@@ -148,10 +148,11 @@ public class RequeterRezoDump extends RequeterRezo {
 						id = Integer.parseInt(id_);
 					}
 					if (ligne.contains("rel_name")) {
-						div = ligne.split("\\\"");
+//						div = ligne.split("\\\"");
+						div = ligne.split(">");
 						if (ligne.length() > 1) {
 							nom = div[4];
-							nom = nom.substring(1, nom.length());
+//							nom = nom.substring(1, nom.length());
 							correspondanceRelation.ajouter(nom, id);
 							correspondanceRelation.ajouter(id, nom);                            
 						}
