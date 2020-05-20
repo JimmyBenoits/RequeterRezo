@@ -150,8 +150,8 @@ public class RequeterRezoDump extends RequeterRezo {
 					if (ligne.contains("rel_name")) {
 //						div = ligne.split("\\\"");
 						div = ligne.split(">");
-						if (ligne.length() > 1) {
-							nom = div[4];
+						if (ligne.length() > 1 && div.length>1) {
+							nom = div[div.length-1];
 //							nom = nom.substring(1, nom.length());
 							correspondanceRelation.ajouter(nom, id);
 							correspondanceRelation.ajouter(id, nom);                            
