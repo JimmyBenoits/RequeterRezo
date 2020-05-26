@@ -29,68 +29,68 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Classe mère de la classe principale de RequeterRezo. Regroupe les comportements partagés par la version "live" ({@link RequeterRezoDump})
- * qui effectue ses requêtes sur le service rezo-dump (www.jeuxdemots.org/rezo-dump.php) et la version "locale" ({@link RequeterRezoSQL}) qui
- * les effectue sur un serveur MySQL hébergeant les données de rezoJDM.
+ * Classe mï¿½re de la classe principale de RequeterRezo. Regroupe les comportements partagï¿½s par la version "live" ({@link RequeterRezoDump})
+ * qui effectue ses requï¿½tes sur le service rezo-dump (www.jeuxdemots.org/rezo-dump.php) et la version "locale" ({@link RequeterRezoSQL}) qui
+ * les effectue sur un serveur MySQL hï¿½bergeant les donnï¿½es de rezoJDM.
  * 
  * <br><br>
  * 
- * Les paramètres principaux de RequeterRezo sont :<br> 
- * - La taille maximale du cache : nombre d'octet à partir duquel le système n'acceptera plus de nouvelles entrées dans le cache sans en faire
- * sortir une autre. Cela a pour effet de limiter la taille du cache mais le calcul exact pourra être légèrement plus élevé que le nombre prévu.
- * La valeur par défaut est fixée à 100mo.<br>
+ * Les paramï¿½tres principaux de RequeterRezo sont :<br> 
+ * - La taille maximale du cache : nombre d'octet ï¿½ partir duquel le systï¿½me n'acceptera plus de nouvelles entrï¿½es dans le cache sans en faire
+ * sortir une autre. Cela a pour effet de limiter la taille du cache mais le calcul exact pourra ï¿½tre lï¿½gï¿½rement plus ï¿½levï¿½ que le nombre prï¿½vu.
+ * La valeur par dï¿½faut est fixï¿½e ï¿½ 100mo.<br>
  * 
- * - Le délais de péremption : nombre d'heure à partir duquel un élément du cache est jugé obsolète. RezoJDM est une ressource vivante et les
- * éléments changent régulièrement. C'est pour cela qu'il est parfois nécessaire de redemander un mot. La fréquence doit être définie par l'utilisateur
- * en fonction de ses besoins (être toujours à jour avec rezoJDM est-il très important ?).
- * La valeur par défaut est fixé à 168h (7 jours).<br>
+ * - Le dï¿½lais de pï¿½remption : nombre d'heure ï¿½ partir duquel un ï¿½lï¿½ment du cache est jugï¿½ obsolï¿½te. RezoJDM est une ressource vivante et les
+ * ï¿½lï¿½ments changent rï¿½guliï¿½rement. C'est pour cela qu'il est parfois nï¿½cessaire de redemander un mot. La frï¿½quence doit ï¿½tre dï¿½finie par l'utilisateur
+ * en fonction de ses besoins (ï¿½tre toujours ï¿½ jour avec rezoJDM est-il trï¿½s important ?).
+ * La valeur par dï¿½faut est fixï¿½ ï¿½ 168h (7 jours).<br>
  * 
  * <br><br>
  * 
- * De nombreux constructeurs et méthodes pour effectuées des requêtes sont disponibles. Il est également possible de construire votre objet
- * à partir d'un fichier de configuration ".ini" dont un exemplaire est fourni avec cette archive. Passer par un fichier de configuration débloque
- * des paramétrages non-disponible autrement comme le mode avancé (qui laisse le soin à l'utilisateur d'appeler lui-même la méthode 
- * {@link RequeterRezo#sauvegarder()}, ce qui est déconseillé) ou de changer le chemin de stockage du cache.<br>
+ * De nombreux constructeurs et mï¿½thodes pour effectuï¿½es des requï¿½tes sont disponibles. Il est ï¿½galement possible de construire votre objet
+ * ï¿½ partir d'un fichier de configuration ".ini" dont un exemplaire est fourni avec cette archive. Passer par un fichier de configuration dï¿½bloque
+ * des paramï¿½trages non-disponible autrement comme le mode avancï¿½ (qui laisse le soin ï¿½ l'utilisateur d'appeler lui-mï¿½me la mï¿½thode 
+ * {@link RequeterRezo#sauvegarder()}, ce qui est dï¿½conseillï¿½) ou de changer le chemin de stockage du cache.<br>
  * 
  * <br>
- * Un fichier Exemple.java est normalement distribuée avec RequeterRezo. Il explique les premiers pas pour commencer à utiliser
+ * Un fichier Exemple.java est normalement distribuï¿½e avec RequeterRezo. Il explique les premiers pas pour commencer ï¿½ utiliser
  * RequeterRezo.
  * @author jimmy.benoits
  */
 public abstract class RequeterRezo {
 
 	/**
-	 * Chemin par défaut du dossier du cache.
+	 * Chemin par dï¿½faut du dossier du cache.
 	 */
 	protected final static String CHEMIN_CACHE_DEFAUT = "cache";
 
 	/**
-	 * Chemin par défaut du fichier contenant la sérialisation de l'index d'attente ({@link Attente}).
+	 * Chemin par dï¿½faut du fichier contenant la sï¿½rialisation de l'index d'attente ({@link Attente}).
 	 */
 	protected final static String FICHIER_ATTENTE_DEFAUT = CHEMIN_CACHE_DEFAUT + File.separator + "indexAttente";
 
 	/**
-	 * Chemin par défaut du fichier contenant la sérialisation de l'index du cache ({@link Cache}).
+	 * Chemin par dï¿½faut du fichier contenant la sï¿½rialisation de l'index du cache ({@link Cache}).
 	 */
 	protected final static String FICHIER_CACHE_DEFAUT = CHEMIN_CACHE_DEFAUT + File.separator + "indexCache";
 
 	/**
-	 * Taille maximale par défaut du cache (en octet).
+	 * Taille maximale par dï¿½faut du cache (en octet).
 	 */
 	protected final static long TAILLE_CACHE_DEFAUT = 100_000_000;
 
 	/**
-	 * Délais de péremption par défaut (en heure).
+	 * Dï¿½lais de pï¿½remption par dï¿½faut (en heure).
 	 */
 	protected final static int PEREMPTION_DEFAUT = 168;
 
 	/**
-	 * Etat par défaut du mode avancé.
+	 * Etat par dï¿½faut du mode avancï¿½.
 	 */
 	protected final static boolean MODE_AVANCE_DEFAUT = false;
 
 	/**
-	 * Etat par défaut de l'affichage des messages.
+	 * Etat par dï¿½faut de l'affichage des messages.
 	 */
 	protected final static boolean AVERTISSEMENT_DEFAUT = true;
 
@@ -105,7 +105,7 @@ public abstract class RequeterRezo {
 	protected Attente attente;
 
 	/**
-	 * Mots stockés dans le cache.
+	 * Mots stockï¿½s dans le cache.
 	 */
 	protected Cache cache;
 
@@ -115,18 +115,18 @@ public abstract class RequeterRezo {
 	protected final long tailleCache;
 
 	/**
-	 * Nombre d'heure à partir duquel un fichier du cache est considéré comme périmé. 
+	 * Nombre d'heure ï¿½ partir duquel un fichier du cache est considï¿½rï¿½ comme pï¿½rimï¿½. 
 	 */
 	protected final int peremption;
 
 	/**
-	 * Le mode avancé désactive la sauvegarde automatique des index. L'utilisateur doit lui-même sauvegarder régulièrement grâce à la méthode
+	 * Le mode avancï¿½ dï¿½sactive la sauvegarde automatique des index. L'utilisateur doit lui-mï¿½me sauvegarder rï¿½guliï¿½rement grï¿½ce ï¿½ la mï¿½thode
 	 * {@link RequeterRezo#sauvegarder()}.
 	 */
 	protected boolean modeAvance;  
 
 	/**
-	 * Activation / désactivation du cache. Le cache est obligatoire sur RezoDump mais seulement conseillé sur RezoSQL.<br>
+	 * Activation / dï¿½sactivation du cache. Le cache est obligatoire sur RezoDump mais seulement conseillï¿½ sur RezoSQL.<br>
 	 * Il faut utiliser le fichier de configuration afin de modifier ce comportement. 
 	 */
 	protected boolean ignorerCache;
@@ -135,7 +135,7 @@ public abstract class RequeterRezo {
 	private SauvegarderAttente sauvegarderAttente;
 
 	/**
-	 * Permet (ou non) à RequeterRezo d'afficher des messages sur System.err.
+	 * Permet (ou non) ï¿½ RequeterRezo d'afficher des messages sur System.err.
 	 */
 	protected boolean avertissement;
 
@@ -155,11 +155,11 @@ public abstract class RequeterRezo {
 	protected static String fichierCache = FICHIER_CACHE_DEFAUT;
 
 	/**
-	 * Constructeur paramétré utilisant la taille maximale du cache, le délais de péremption et la possibilité (ou non) d'afficher
+	 * Constructeur paramï¿½trï¿½ utilisant la taille maximale du cache, le dï¿½lais de pï¿½remption et la possibilitï¿½ (ou non) d'afficher
 	 * des messages d'avertissement sur System.err.
-	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unité ("ko", "mo", "go", avec "ko" par défaut).
-	 * @param peremption Délais de péremption. Attent un nombre suivi d'une unité ('j' pour journée ou 'h' pour heure, 'h' par défaut).
-	 * @param avertissement True si le système est autorisé à envoyer des messages sur System.err, false sinon.
+	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unitï¿½ ("ko", "mo", "go", avec "ko" par dï¿½faut).
+	 * @param peremption Dï¿½lais de pï¿½remption. Attent un nombre suivi d'une unitï¿½ ('j' pour journï¿½e ou 'h' pour heure, 'h' par dï¿½faut).
+	 * @param avertissement True si le systï¿½me est autorisï¿½ ï¿½ envoyer des messages sur System.err, false sinon.
 	 */
 	public RequeterRezo(String tailleCache, String peremption, boolean avertissement) {
 		this.avertissement = avertissement;
@@ -222,29 +222,29 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Constructeur paramétré utilisant la taille maximale du cache et le délais de péremption.
-	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unité ("ko", "mo", "go", avec "ko" par défaut).
-	 * @param peremption Délais de péremption. Attent un nombre suivi d'une unité ('j' pour journée ou 'h' pour heure, 'h' par défaut).
+	 * Constructeur paramï¿½trï¿½ utilisant la taille maximale du cache et le dï¿½lais de pï¿½remption.
+	 * @param tailleCache Taille maximale du cache. Attent un nombre suivi d'une unitï¿½ ("ko", "mo", "go", avec "ko" par dï¿½faut).
+	 * @param peremption Dï¿½lais de pï¿½remption. Attent un nombre suivi d'une unitï¿½ ('j' pour journï¿½e ou 'h' pour heure, 'h' par dï¿½faut).
 	 */
 	public RequeterRezo(String tailleCache, String peremption) {		
 		this(tailleCache, peremption, AVERTISSEMENT_DEFAUT);
 	}
 
 	/**
-	 * Constructeur paramétré utilisant la taille maximale du cache et le délais de péremption.
+	 * Constructeur paramï¿½trï¿½ utilisant la taille maximale du cache et le dï¿½lais de pï¿½remption.
 	 * @param tailleCache Taille maximale du cache (en octet).
-	 * @param peremption Délais de péremption (en heure).
+	 * @param peremption Dï¿½lais de pï¿½remption (en heure).
 	 */
 	public RequeterRezo(long tailleCache, int peremption) {
 		this(tailleCache,peremption,AVERTISSEMENT_DEFAUT);
 	}
 
 	/**
-	 * Constructeur paramétré utilisant la taille maximale du cache, le délais de péremption et la possibilité (ou non) d'afficher
+	 * Constructeur paramï¿½trï¿½ utilisant la taille maximale du cache, le dï¿½lais de pï¿½remption et la possibilitï¿½ (ou non) d'afficher
 	 * des messages d'avertissement sur System.err.
 	 * @param tailleCache Taille maximale du cache (en octet).
-	 * @param peremption Délais de péremption (en heure).
-	 * @param avertissement True si le système est autorisé à envoyer des messages sur System.err, false sinon.
+	 * @param peremption Dï¿½lais de pï¿½remption (en heure).
+	 * @param avertissement True si le systï¿½me est autorisï¿½ ï¿½ envoyer des messages sur System.err, false sinon.
 	 */
 	public RequeterRezo(long tailleCache, int peremption, boolean avertissement) {
 		this.tailleCache = tailleCache;
@@ -257,22 +257,22 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Constructeur par défaut - utilise les valeurs par défaut.
+	 * Constructeur par dï¿½faut - utilise les valeurs par dï¿½faut.
 	 */
 	public RequeterRezo() {
 		this(TAILLE_CACHE_DEFAUT,PEREMPTION_DEFAUT,AVERTISSEMENT_DEFAUT);
 	}
 
 	/**
-	 * Constructeur paramétré utilisant la taille maximale du cache, le délais de péremption, la possibilité (ou non) d'afficher
-	 * des messages d'avertissement sur System.err, l'activation (ou non) du mode avancé et le chemin vers le dossier de cache. 
+	 * Constructeur paramï¿½trï¿½ utilisant la taille maximale du cache, le dï¿½lais de pï¿½remption, la possibilitï¿½ (ou non) d'afficher
+	 * des messages d'avertissement sur System.err, l'activation (ou non) du mode avancï¿½ et le chemin vers le dossier de cache. 
 	 * Ce constructeur n'est utilisable qu'en passant par un fichier de configuration. 
 	 * @param tailleCache Taille maximale du cache (en octet).
-	 * @param peremption Délais de péremption (en heure).
-	 * @param avertissement True si le système est autorisé à envoyer des messages sur System.err, false sinon.
+	 * @param peremption Dï¿½lais de pï¿½remption (en heure).
+	 * @param avertissement True si le systï¿½me est autorisï¿½ ï¿½ envoyer des messages sur System.err, false sinon.
 	 * @param modeAvance True si l'utilisateur doit effectuer les sauvegardes du cache manuellement, false sinon.
 	 * @param cheminCache Chemin vers le dossier contenant le cache.
-	 * @param ignorerCache True si le cache ne doit pas être utiliser, false sinon.
+	 * @param ignorerCache True si le cache ne doit pas ï¿½tre utiliser, false sinon.
 	 */
 	private RequeterRezo(long tailleCache, int peremption, boolean avertissement, boolean modeAvance, String cheminCache, boolean ignorerCache) {
 		this.tailleCache = tailleCache;
@@ -290,7 +290,7 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Construit un objet RequeterRezo à partir d'une {@link Configuration}.
+	 * Construit un objet RequeterRezo ï¿½ partir d'une {@link Configuration}.
 	 * @param configuration Configuration a utiliser.
 	 */
 	public RequeterRezo(Configuration configuration) {
@@ -303,23 +303,23 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Construit les équivalences entre nom et type de relation. La façon de construire est différente suivant que l'on travaille en "live" ({@link RequeterRezoDump}) 
+	 * Construit les ï¿½quivalences entre nom et type de relation. La faï¿½on de construire est diffï¿½rente suivant que l'on travaille en "live" ({@link RequeterRezoDump}) 
 	 * ou en "local" ({@link RequeterRezoSQL}).
 	 */
 	protected abstract void construireRelations();
 
 	/**
-	 * Effectue la requête lorsque le cache ne possède pas l'élément demande. La façon de construire le mot est différente suivant 
+	 * Effectue la requï¿½te lorsque le cache ne possï¿½de pas l'ï¿½lï¿½ment demande. La faï¿½on de construire le mot est diffï¿½rente suivant 
 	 * que l'on travaille en "live" ({@link RequeterRezoDump}) ou en "local" ({@link RequeterRezoSQL}).
-	 * @param cacheKey Requête à effectuer.
-	 * @return Le resultat de la requête.
+	 * @param cacheKey Requï¿½te ï¿½ effectuer.
+	 * @return Le resultat de la requï¿½te.
 	 */
 	protected abstract Resultat construireMot(CleCache cacheKey);
 
 	/**
-	 * Sauvegarde les index permettant le bon fonctionnement du cache d'une exécution sur l'autre.<br> 
-	 * Cette méthode n'est utile seulement si le mode avancé a été activé (ce qui est fortement déconseillé).<br>
-	 * Les fichiers sont sauvegardés en sortie de programme. 	
+	 * Sauvegarde les index permettant le bon fonctionnement du cache d'une exï¿½cution sur l'autre.<br> 
+	 * Cette mï¿½thode n'est utile seulement si le mode avancï¿½ a ï¿½tï¿½ activï¿½ (ce qui est fortement dï¿½conseillï¿½).<br>
+	 * Les fichiers sont sauvegardï¿½s en sortie de programme. 	
 	 */
 	public void sauvegarder() {
 		cache.sauvegarderCache(fichierCache);
@@ -327,8 +327,8 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Runnable se lançant lors de la clôture normale du programme permettant la sauvegarde du fichier d'index du cache.<br>
-	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clôture normale.
+	 * Runnable se lanï¿½ant lors de la clï¿½ture normale du programme permettant la sauvegarde du fichier d'index du cache.<br>
+	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clï¿½ture normale.
 	 * La fin de programme, System.exit() ou encore une Exception le sont.
 	 * @author jimmy.benoits
 	 *
@@ -351,8 +351,8 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Runnable se lançant lors de la clôture normale du programme permettant la sauvegarde du fichier d'index du cache.<br>
-	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clôture normale.
+	 * Runnable se lanï¿½ant lors de la clï¿½ture normale du programme permettant la sauvegarde du fichier d'index du cache.<br>
+	 * Pour rappel, le "bouton rouge" d'Eclipse permettant d'interrompre un programme n'est pas une clï¿½ture normale.
 	 * La fin de programme, System.exit() ou encore une Exception le sont.
 	 * @author jimmy.benoits
 	 *
@@ -375,7 +375,7 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Initialise l'index des mots en attente soit à partir d'une exécution précédente soit en recommençant de 0.
+	 * Initialise l'index des mots en attente soit ï¿½ partir d'une exï¿½cution prï¿½cï¿½dente soit en recommenï¿½ant de 0.
 	 */
 	protected final void initialiserAttente() {
 		File dossierCache = new File(cheminCache);
@@ -401,8 +401,8 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Initialise l'index des mots du cache soit à partir d'une exécution précédente soit en recommençant de 0.<br>
-	 * Une vérification est effectuée ({@link Cache#verifierIntegrite(String, boolean)} si le chargement se fait depuis un cache existant. 
+	 * Initialise l'index des mots du cache soit ï¿½ partir d'une exï¿½cution prï¿½cï¿½dente soit en recommenï¿½ant de 0.<br>
+	 * Une vï¿½rification est effectuï¿½e ({@link Cache#verifierIntegrite(String, boolean)} si le chargement se fait depuis un cache existant. 
 	 */
 	protected final void initialiserCache() {		
 		File dossierCache = new File(cheminCache);
@@ -430,12 +430,12 @@ public abstract class RequeterRezo {
 
 
 	/**
-	 * Requête complète à partir d'un terme, d'un type de relation de rezoJDM et d'un filtre. <br>
+	 * Requï¿½te complï¿½te ï¿½ partir d'un terme, d'un type de relation de rezoJDM et d'un filtre. <br>
 	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme de rezoJDM.
 	 * @param typeRelation Type de la relation dont on cherche le voisinage pour "mot".
-	 * @param filtre Filtre à appliquer.
-	 * @return Le résultat de la requête.
+	 * @param filtre Filtre ï¿½ appliquer.
+	 * @return Le rï¿½sultat de la requï¿½te.
 	 */
 	public Resultat requete(String mot, int typeRelation, Filtre filtre) {
 		CleCache cleCache = new CleCache(mot, typeRelation, filtre);
@@ -444,46 +444,46 @@ public abstract class RequeterRezo {
 	}	
 
 	/**
-	 * Requête à partir du terme. Retourne toutes les informations présentes dans le voisinage de ce terme. <br>
-	 * Pour les mots de taille importante, il est vivement déconseillé d'utiliser une requête de la sorte mais plutôt de passer 
+	 * Requï¿½te ï¿½ partir du terme. Retourne toutes les informations prï¿½sentes dans le voisinage de ce terme. <br>
+	 * Pour les mots de taille importante, il est vivement dï¿½conseillï¿½ d'utiliser une requï¿½te de la sorte mais plutï¿½t de passer 
 	 * par des filtres (type des relations ou entrants / sortants).<br>
 	 * Retourne aussi les annotations.
-	 * @param mot Terme à rechercher dans rezoJDM.
-	 * @return Le résultat de la requête sur le terme demandé, sans aucun filtre.
+	 * @param mot Terme ï¿½ rechercher dans rezoJDM.
+	 * @return Le rï¿½sultat de la requï¿½te sur le terme demandï¿½, sans aucun filtre.
 	 */
 	public Resultat requete(String mot) {
 		return requete(mot, -1, Filtre.AucunFiltre);
 	}
 
 	/**
-	 * Requête à partir du terme et d'un filtre sur les relations entrantes, sortantes ou les deux.<br>
-	 * Pour les mots de taille importante, il est conseillé d'appliquer aussi un filtre sur le type de relation.<br>
+	 * Requï¿½te ï¿½ partir du terme et d'un filtre sur les relations entrantes, sortantes ou les deux.<br>
+	 * Pour les mots de taille importante, il est conseillï¿½ d'appliquer aussi un filtre sur le type de relation.<br>
 	 * Retourne aussi les annotations.
-	 * @param mot Terme à rechercher dans rezoJDM.
-	 * @param filtre Filtre à appliquer (entrants / sortants).
-	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur la direction des relations. 
+	 * @param mot Terme ï¿½ rechercher dans rezoJDM.
+	 * @param filtre Filtre ï¿½ appliquer (entrants / sortants).
+	 * @return Le rï¿½sultat de la requï¿½te sur le terme demandï¿½, avec un filtre sur la direction des relations. 
 	 */
 	public Resultat requete(String mot, Filtre filtre) {
 		return requete(mot, -1, filtre);
 	}
 
 	/**
-	 * Requête à partir du terme et d'un filtre sur le nom de relation.<br>
+	 * Requï¿½te ï¿½ partir du terme et d'un filtre sur le nom de relation.<br>
 	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
-	 * @param mot Terme à rechercher dans rezoJDM.
+	 * @param mot Terme ï¿½ rechercher dans rezoJDM.
 	 * @param typeRelation Type de la relation dont il faut extraire le voisinage.
-	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur le types des relations. 
+	 * @return Le rï¿½sultat de la requï¿½te sur le terme demandï¿½, avec un filtre sur le types des relations. 
 	 */
 	public Resultat requete(String mot, int typeRelation) {
 		return requete(mot, typeRelation, Filtre.AucunFiltre);
 	}
 
 	/**
-	 * Requête à partir du terme et d'un filtre sur le type de relation.<br>
+	 * Requï¿½te ï¿½ partir du terme et d'un filtre sur le type de relation.<br>
 	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
-	 * @param mot Terme à rechercher dans rezoJDM.
+	 * @param mot Terme ï¿½ rechercher dans rezoJDM.
 	 * @param nomTypeRelation nom du type de la relation dont il faut extraire le voisinage.
-	 * @return Le résultat de la requête sur le terme demandé, avec un filtre sur le types des relations. 
+	 * @return Le rï¿½sultat de la requï¿½te sur le terme demandï¿½, avec un filtre sur le types des relations. 
 	 */
 	public Resultat requete(String mot, String nomTypeRelation) {
 		Resultat res = null;
@@ -493,19 +493,19 @@ public abstract class RequeterRezo {
 		}
 		else if(avertissement){
 			System.err.println("Erreur RequeterRezo : "
-					+ "le type de relation \""+nomTypeRelation+"\" n'a pas été reconnu dans la requête : "
+					+ "le type de relation \""+nomTypeRelation+"\" n'a pas ï¿½tï¿½ reconnu dans la requï¿½te : "
 					+ "\""+mot+","+nomTypeRelation+","+Filtre.AucunFiltre.toString()+"\"");
 		}
 		return res;
 	}
 
 	/**
-	 * Requête complète à partir d'un terme, d'un nom de relation de rezoJDM et d'un filtre.<br>
+	 * Requï¿½te complï¿½te ï¿½ partir d'un terme, d'un nom de relation de rezoJDM et d'un filtre.<br>
 	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
 	 * @param mot Terme de rezoJDM.
 	 * @param nomTypeRelation nom du type de la relation dont on cherche le voisinage pour "mot".
-	 * @param filtre Filtre à appliquer.
-	 * @return Le résultat de la requête.
+	 * @param filtre Filtre ï¿½ appliquer.
+	 * @return Le rï¿½sultat de la requï¿½te.
 	 */
 	public Resultat requete(String mot, String nomTypeRelation, Filtre filtre) {		
 		Resultat res = null;
@@ -514,7 +514,7 @@ public abstract class RequeterRezo {
 			res = requete(mot, typeRelation, filtre);
 		}else if(avertissement){
 			System.err.println("Erreur RequeterRezo : "
-					+ "le type de relation \""+nomTypeRelation+"\" n'a pas été reconnu dans la requête : "
+					+ "le type de relation \""+nomTypeRelation+"\" n'a pas ï¿½tï¿½ reconnu dans la requï¿½te : "
 					+ "\""+mot+","+nomTypeRelation+","+filtre.toString()+"\"");
 		}
 		return res;
@@ -522,12 +522,12 @@ public abstract class RequeterRezo {
 
 
 	/**
-	 * Effectue deux requêtes afin de retrouver les relations d'un mot en fonction d'une requête classique ainsi que les annotations de cette relation.<br> 
-	 * Sans appel de cette méthode, filtrer par type empêche de retrouver les annotations.  
+	 * Effectue deux requï¿½tes afin de retrouver les relations d'un mot en fonction d'une requï¿½te classique ainsi que les annotations de cette relation.<br> 
+	 * Sans appel de cette mï¿½thode, filtrer par type empï¿½che de retrouver les annotations.  
 	 * @param mot Terme de rezoJDM.
 	 * @param typeRelation Type de la relation dont on cherche le voisinage pour "mot".
-	 * @param filtre Filtre à appliquer.
-	 * @return Le résultat de la requête.
+	 * @param filtre Filtre ï¿½ appliquer.
+	 * @return Le rï¿½sultat de la requï¿½te.
 	 */
 	public Resultat requeteAvecAnnotations(String mot, int typeRelation, Filtre filtre) {
 		Resultat resultatMot = requete(mot, typeRelation, filtre);
@@ -541,7 +541,7 @@ public abstract class RequeterRezo {
 		Noeud noeudVoisin;
 		ArrayList<Relation> annotations;
 		if(motCible != null && motAnnotations != null) {			
-			//récupérer les id des relations de cible			
+			//rï¿½cupï¿½rer les id des relations de cible			
 			for(Entry<Integer, ArrayList<Relation>> e : motCible.getRelationsSortantes().entrySet()) {				
 				for(Relation relation : e.getValue()) {
 					relations.put(relation.getIDRelation(), relation);
@@ -552,7 +552,7 @@ public abstract class RequeterRezo {
 					relations.put(relation.getIDRelation(), relation);
 				}
 			}
-			//parcours des annotations : on ne garde que les annotations portant sur des relations de la requête principale.
+			//parcours des annotations : on ne garde que les annotations portant sur des relations de la requï¿½te principale.
 			annotations = motAnnotations.getRelationsSortantesTypees(128);
 			if(annotations != null) {
 				for(Relation voisin : motAnnotations.getRelationsSortantesTypees(128)) {
@@ -578,22 +578,22 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Permet d'effectuer une requête filtrée sur plusieurs types.
-	 * @param mot Terme sur lequel effectuer la requête.
-	 * @param nomsTypesRelations Noms ou types des relations, séparés par un point-virgule (';').
-	 * @return Une liste de résultat, chacun contenant le mot avec son voisinage pour le type associé.
+	 * Permet d'effectuer une requï¿½te filtrï¿½e sur plusieurs types.
+	 * @param mot Terme sur lequel effectuer la requï¿½te.
+	 * @param nomsTypesRelations Noms ou types des relations, sï¿½parï¿½s par un point-virgule (';').
+	 * @return Une liste de rï¿½sultat, chacun contenant le mot avec son voisinage pour le type associï¿½.
 	 */
 	public ArrayList<Resultat> requeteMultiple(String mot, String nomsTypesRelations) {
 		return requeteMultiple(mot, nomsTypesRelations, Filtre.AucunFiltre);
 	}
 
 	/**
-	 * Permet d'effectuer une requête filtrée sur plusieurs types. <br>
+	 * Permet d'effectuer une requï¿½te filtrï¿½e sur plusieurs types. <br>
 	 * Ne retourne pas les annotations. Pour cela, utilisez {@link RequeterRezo#requeteAvecAnnotations(String, int, Filtre)}.
-	 * @param mot Terme sur lequel effectuer la requête.
-	 * @param filtre Filtre sur la direction des relations. Le même filtre est appliqué à toutes les requêtes.
-	 * @param nomsTypesRelations Noms ou types des relations, séparés par un point-virgule (';').
-	 * @return Une liste de résultat, chacun contenant le mot avec son voisinage pour le type associé.
+	 * @param mot Terme sur lequel effectuer la requï¿½te.
+	 * @param filtre Filtre sur la direction des relations. Le mï¿½me filtre est appliquï¿½ ï¿½ toutes les requï¿½tes.
+	 * @param nomsTypesRelations Noms ou types des relations, sï¿½parï¿½s par un point-virgule (';').
+	 * @return Une liste de rï¿½sultat, chacun contenant le mot avec son voisinage pour le type associï¿½.
 	 */
 	public ArrayList<Resultat> requeteMultiple(String mot, String nomsTypesRelations, Filtre filtre) {
 		String[] types = nomsTypesRelations.split(";");
@@ -611,7 +611,7 @@ public abstract class RequeterRezo {
 					listeMots.add(resultat);
 				} catch (NumberFormatException numberFormatException) {
 					if(avertissement) {
-						System.err.println("Erreur requeteMultiple : impossible de lire le type \"" + type + "\". Ignoré.");
+						System.err.println("Erreur requeteMultiple : impossible de lire le type \"" + type + "\". Ignorï¿½.");
 					}
 				}
 			}
@@ -620,10 +620,10 @@ public abstract class RequeterRezo {
 	}
 	
 	/**
-	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
+	 * Permet de vï¿½rifier l'existence d'une relation dans rezoJDM. <br>
 	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.  
-	 * @param motSource Terme JDM de départ de la relation
+	 * @param motSource Terme JDM de dï¿½part de la relation
 	 * @param typeRelation Type de relation devant lier les deux termes.
 	 * @param motDestination Terme JDM d'arriver de la relation
 	 * @return Le poids de la relation si elle existe, 0 sinon.
@@ -631,10 +631,10 @@ public abstract class RequeterRezo {
 	public abstract int verifierExistenceRelation(String motSource, int typeRelation, String motDestination);	
 
 	/**
-	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
+	 * Permet de vï¿½rifier l'existence d'une relation dans rezoJDM. <br>
 	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot destination, retourne le poids de la relation si elle existe dans rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.  
-	 * @param motSource Terme JDM de départ de la relation
+	 * @param motSource Terme JDM de dï¿½part de la relation
 	 * @param nomTypeRelation Nom du type de relation devant lier les deux termes.
 	 * @param motDestination Terme JDM d'arriver de la relation
 	 * @return Le poids de la relation si elle existe, 0 sinon.
@@ -646,16 +646,34 @@ public abstract class RequeterRezo {
 			res = verifierExistenceRelation(motSource, typeRelation, motDestination);
 		}else if(avertissement){
 			System.err.println("Erreur RequeterRezo : "
-					+ "le type de relation \""+nomTypeRelation+"\" n'a pas été reconnu dans la requête : "
+					+ "le type de relation \""+nomTypeRelation+"\" n'a pas ï¿½tï¿½ reconnu dans la requï¿½te : "
 					+ "\""+motSource+","+nomTypeRelation+","+motDestination+"\"");
 		}
 		return res;
 	}
+	
+	/**Le poids de la relation si elle existe, 0 sinon.
+	 * Verifier si le mot destination appartient au voisinage du noeud source;
+	 * @param motSource
+	 * @param motDestination
+	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 */
+	public abstract int verifierVoisinage(String motSource, String motDestination);
+	
+	
 	/**
-	 * Centralisation des requêtes vers un point unique qui vérifie si la requête existe en cache, s'il faut faire entrer la requête dans le cache
-	 * ou simplement retourner le résultat.
-	 * @param cleCache Requête à effectuer.
-	 * @return Le résultat de la requête. Soit en provenance du cache, soit en effectuant réellement la requête.
+	 * Permet de renvoyer toutes les relations entre un mot source et un mot destination
+	 * @param motSource
+	 * @param motDestination
+	 * @return une arraylist de toutes les relations entre motSource et motDestination (vide si pas de lien de voisinage)
+	 */
+	public abstract ArrayList<Relation> relationsCommunes(String motSource, String motDestination);
+	
+	/**
+	 * Centralisation des requï¿½tes vers un point unique qui vï¿½rifie si la requï¿½te existe en cache, s'il faut faire entrer la requï¿½te dans le cache
+	 * ou simplement retourner le rï¿½sultat.
+	 * @param cleCache Requï¿½te ï¿½ effectuer.
+	 * @return Le rï¿½sultat de la requï¿½te. Soit en provenance du cache, soit en effectuant rï¿½ellement la requï¿½te.
 	 */
 	protected Resultat requeteInterne(CleCache cleCache) {
 		String avisCache;
@@ -698,27 +716,27 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Analyse un requête pour déterminer si : <br>
+	 * Analyse un requï¿½te pour dï¿½terminer si : <br>
 	 * - Elle existe dans le cache<br>
 	 * - Il faut la faire entrer dans le cache<br>
 	 * - Il faut simplement la retourner.
-	 * @param mot Requête à analyser.
-	 * @return La chaîne "$DEMANDE$" si la requête doit être effectuée puis placer dans le cache, "$OSEF$" si elle ne doit pas l'être et le chemin
-	 * vers le fichier contenant la requête si elle existe déjà en cache.
+	 * @param mot Requï¿½te ï¿½ analyser.
+	 * @return La chaï¿½ne "$DEMANDE$" si la requï¿½te doit ï¿½tre effectuï¿½e puis placer dans le cache, "$OSEF$" si elle ne doit pas l'ï¿½tre et le chemin
+	 * vers le fichier contenant la requï¿½te si elle existe dï¿½jï¿½ en cache.
 	 */
 	protected String rencontrerMot(CleCache mot) {
-		//Soit la requête existe dans le cache
+		//Soit la requï¿½te existe dans le cache
 		if (this.cache.contient(mot)) {
 			return nouvelleOccurrence(mot);
 		}
-		//Si le cache ne contient pas le mot, on cherche dans les requêtes en attente  
+		//Si le cache ne contient pas le mot, on cherche dans les requï¿½tes en attente  
 		AttenteInfo attenteInfo = attente.index.get(mot);
 		if(attenteInfo != null) {
 			attenteInfo.incrementeOccurrences(peremption);
 		}else {
 			attente.ajouter(mot,1);
 		}
-		//Dans tous les cas, le mot est présent maintenant dans index
+		//Dans tous les cas, le mot est prï¿½sent maintenant dans index
 		//Regarde si on doit le faire entrer dans le cache
 		if (demande(mot)) {
 			return "$DEMANDE$";
@@ -728,15 +746,15 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Traite le cas d'une requête existant dans le cache et détermine s'il faut : <br>
-	 * - Utiliser le cache retourner le chemin vers le fichier dans le cache (le fichier n'est pas périmé)<br>
-	 * - Ne pas utiliser le cache et effectuer la requête puis : <br>
-	 *     - Ajouter le résultat au cache<br>
-	 *     - Ne pas ajouter le résultat au cache<br>
+	 * Traite le cas d'une requï¿½te existant dans le cache et dï¿½termine s'il faut : <br>
+	 * - Utiliser le cache retourner le chemin vers le fichier dans le cache (le fichier n'est pas pï¿½rimï¿½)<br>
+	 * - Ne pas utiliser le cache et effectuer la requï¿½te puis : <br>
+	 *     - Ajouter le rï¿½sultat au cache<br>
+	 *     - Ne pas ajouter le rï¿½sultat au cache<br>
 	 *     
-	 * @param mot Requête à effectuer.
-	 * @return La chaîne "$DEMANDE$" si la requête doit être effectuée puis placer dans le cache, "$OSEF$" si elle ne doit pas l'être et le chemin
-	 * vers le fichier contenant la requête si elle existe déjà en cache.
+	 * @param mot Requï¿½te ï¿½ effectuer.
+	 * @return La chaï¿½ne "$DEMANDE$" si la requï¿½te doit ï¿½tre effectuï¿½e puis placer dans le cache, "$OSEF$" si elle ne doit pas l'ï¿½tre et le chemin
+	 * vers le fichier contenant la requï¿½te si elle existe dï¿½jï¿½ en cache.
 	 */
 	protected String nouvelleOccurrence(CleCache mot) {
 		String res = null;
@@ -747,14 +765,14 @@ public abstract class RequeterRezo {
 				//On retourne la valeur du cache   
 				res = Utils.construireChemin(info.ID); 
 			} else {
-				//L'entrée est périmée : on la supprime
+				//L'entrï¿½e est pï¿½rimï¿½e : on la supprime
 				cache.supprimer(mot);
 				if (demande(mot)) {			
-					//Si le mot est intéressant (il y a de la place ou il est récurrent), 
+					//Si le mot est intï¿½ressant (il y a de la place ou il est rï¿½current), 
 					//on le demande pour le stocker en cache
 					res = "$DEMANDE$";				
 				} else {
-					//Sinon on effectue une requête sur le serveur, sans stocker le résultat
+					//Sinon on effectue une requï¿½te sur le serveur, sans stocker le rï¿½sultat
 					res = "$OSEF$";
 				}
 			}
@@ -763,21 +781,21 @@ public abstract class RequeterRezo {
 	}
 
 	/**
-	 * Détermine s'il est intéressant de faire entrer la requête dans le cache.<br>
+	 * Dï¿½termine s'il est intï¿½ressant de faire entrer la requï¿½te dans le cache.<br>
 	 * C'est le cas si : <br>
 	 * - Le cache n'est pas plein<br>
-	 * - Il existe un élément périmé dans le cache<br>
-	 * - L'élément du cache le plus proche de la péremption est moins courant que le candidat<br>
+	 * - Il existe un ï¿½lï¿½ment pï¿½rimï¿½ dans le cache<br>
+	 * - L'ï¿½lï¿½ment du cache le plus proche de la pï¿½remption est moins courant que le candidat<br>
 	 *  
-	 * @param mot Une requête
-	 * @return true si la requête doit être ajouter au cache, false sinon.
+	 * @param mot Une requï¿½te
+	 * @return true si la requï¿½te doit ï¿½tre ajouter au cache, false sinon.
 	 */
 	protected boolean demande(CleCache mot) { 
 		boolean res = !cache.estPlein();
 		if(!res) {
-			//Parcours du cache afin de trouver un voisin périmé
-			//On en profite pour garder en mémoire le voisin le plus proche de la péremption
-			//(au cas où il n'y ait aucun périmé)
+			//Parcours du cache afin de trouver un voisin pï¿½rimï¿½
+			//On en profite pour garder en mï¿½moire le voisin le plus proche de la pï¿½remption
+			//(au cas oï¿½ il n'y ait aucun pï¿½rimï¿½)
 			boolean existePerime = false;
 			Iterator<Entry<CleCache, CacheInfo>> iter = this.cache.cache.entrySet().iterator();
 			Entry<CleCache, CacheInfo> element;
@@ -827,34 +845,34 @@ public abstract class RequeterRezo {
 
 
 	/**
-	 * Indique si RequeterRezo est autorisé à indiquer des messages d'avertissement concernant l'exécution des requêtes.
-	 * @return True si RequeterRezo est autorisé à écrire sur System.err, false sinon.
+	 * Indique si RequeterRezo est autorisï¿½ ï¿½ indiquer des messages d'avertissement concernant l'exï¿½cution des requï¿½tes.
+	 * @return True si RequeterRezo est autorisï¿½ ï¿½ ï¿½crire sur System.err, false sinon.
 	 */
 	public boolean getAvertissement() {
 		return avertissement;
 	}
 
 	/**
-	 * Autorise (ou interdit) RequeterRezo à indiquer des messages d'avertissement concernant l'exécution des requêtes.
-	 * @param avertissement True si RequeterRezo est autorisé à écrire sur System.err, false sinon.
+	 * Autorise (ou interdit) RequeterRezo ï¿½ indiquer des messages d'avertissement concernant l'exï¿½cution des requï¿½tes.
+	 * @param avertissement True si RequeterRezo est autorisï¿½ ï¿½ ï¿½crire sur System.err, false sinon.
 	 */
 	public void setAvertissement(boolean avertissement) {
 		this.avertissement = avertissement;
 	}
 
 	/**
-	 * Affiche des informations sur le cache : nombre de requêtes en cache, nombre de requêtes en attente, tailles, etc.
+	 * Affiche des informations sur le cache : nombre de requï¿½tes en cache, nombre de requï¿½tes en attente, tailles, etc.
 	 */
 	public void cacheInfo() {
 		System.out.println("RequeterRezo, info cache : ");
 		if(this.ignorerCache) {
-			System.out.println("\tPéremption : "+this.peremption+"h");		
+			System.out.println("\tPï¿½remption : "+this.peremption+"h");		
 			System.out.println("\tTaille maximale du cache : "+ Utils.formatNombre.format(this.tailleCache));
 			System.out.println("\tTaille actuelle du cache : "+Utils.formatNombre.format(this.cache.tailleCourante));
-			System.out.println("\tNombre de requêtes en cache : "+Utils.formatNombre.format(this.cache.cache.size()));
-			System.out.println("\tNombre de requêtes en attente : "+Utils.formatNombre.format(this.attente.index.size()));
+			System.out.println("\tNombre de requï¿½tes en cache : "+Utils.formatNombre.format(this.cache.cache.size()));
+			System.out.println("\tNombre de requï¿½tes en attente : "+Utils.formatNombre.format(this.attente.index.size()));
 		}else {
-			System.out.println("\tCache non utilisé pour cette session.");
+			System.out.println("\tCache non utilisï¿½ pour cette session.");
 		}
 	}
 

@@ -31,15 +31,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 /**
- * RequeterRezo est une API Java permettant de manipuler les données du réseau lexico-sémantique rezoJDM.
- * Pour en savoir plus, rendez-vous à l'adresse suivante : http://www.jeuxdemots.org/jdm-accueil.php
+ * RequeterRezo est une API Java permettant de manipuler les donnï¿½es du rï¿½seau lexico-sï¿½mantique rezoJDM.
+ * Pour en savoir plus, rendez-vous ï¿½ l'adresse suivante : http://www.jeuxdemots.org/jdm-accueil.php
  * 
- * Cette classe vous permettra de découvrir les fonctionnalités de bases de l'API. 
- * Pour plus d'information (notamment sur RequeterRezoSQL), référez-vous à la documentation.
+ * Cette classe vous permettra de dï¿½couvrir les fonctionnalitï¿½s de bases de l'API. 
+ * Pour plus d'information (notamment sur RequeterRezoSQL), rï¿½fï¿½rez-vous ï¿½ la documentation.
  * 
- * N'hésitez pas à adresser vos questions & remarques à l'administrateur de JeuxDeMots (http://www.jeuxdemots.org/jdm-about.php) ou au créateur de l'API (benoitsjimmy@gmail.com).
+ * N'hï¿½sitez pas ï¿½ adresser vos questions & remarques ï¿½ l'administrateur de JeuxDeMots (http://www.jeuxdemots.org/jdm-about.php) ou au crï¿½ateur de l'API (benoitsjimmy@gmail.com).
  * 
- * Attention : Pour des raisons de comptatibilité avec les données de rezoJDM, le projet est encodé en LATIN-1. Merci de prendre les dispositions nécessaires.
+ * Attention : Pour des raisons de comptatibilitï¿½ avec les donnï¿½es de rezoJDM, le projet est encodï¿½ en LATIN-1. Merci de prendre les dispositions nï¿½cessaires.
  *  
  * 
  * @author jimmy.benoits
@@ -47,28 +47,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class Exemple {
 
 	public static void main(String[] args) {
-		//Les requêtes sont effectuées via un objet "RequeterRezo".
-		//Deux implémentations sont proposées : RequeterRezoDump et RequeterRezoSQL
-		//La première effectue des requêtes sur le serveur de JeuxDeMots en passant par le service rezo-dump (http://www.jeuxdemots.org/rezo-dump.php)
-		//La seconde effectue des requêtes sur un serveur MySQL hébergeant une base de données contenant rezoJDM (données disponible à l'adresse : http://www.jeuxdemots.org/JDM-LEXICALNET-FR/?C=M;O=D).
+		//Les requï¿½tes sont effectuï¿½es via un objet "RequeterRezo".
+		//Deux implï¿½mentations sont proposï¿½es : RequeterRezoDump et RequeterRezoSQL
+		//La premiï¿½re effectue des requï¿½tes sur le serveur de JeuxDeMots en passant par le service rezo-dump (http://www.jeuxdemots.org/rezo-dump.php)
+		//La seconde effectue des requï¿½tes sur un serveur MySQL hï¿½bergeant une base de donnï¿½es contenant rezoJDM (donnï¿½es disponible ï¿½ l'adresse : http://www.jeuxdemots.org/JDM-LEXICALNET-FR/?C=M;O=D).
 		RequeterRezo rezo;
 		
-		//RequeterRezoDump permet de commencer directement et de tester rapidement si les données de rezoJDM correspondent à votre besoin.
-		//Plusieurs constructeurs sont proposés. Il est aussi possible d'utiliser un fichier de configuration (voir le fichier RequeterRezo.ini donné en exemple).
-		//Pour plus d'informations sur les paramètres possibles et leurs valeurs par défaut, se référer à la documentation.
+		//RequeterRezoDump permet de commencer directement et de tester rapidement si les donnï¿½es de rezoJDM correspondent ï¿½ votre besoin.
+		//Plusieurs constructeurs sont proposï¿½s. Il est aussi possible d'utiliser un fichier de configuration (voir le fichier RequeterRezo.ini donnï¿½ en exemple).
+		//Pour plus d'informations sur les paramï¿½tres possibles et leurs valeurs par dï¿½faut, se rï¿½fï¿½rer ï¿½ la documentation.
 		rezo = new RequeterRezoDump();
 		
-		//RequeterRezo utilise un système de cache afin d'éviter les requêtes redondantes. Si une erreur est survenue dans une exécution précédente, des opérations de vérifications seront peut-être effecutées.
+		//RequeterRezo utilise un systï¿½me de cache afin d'ï¿½viter les requï¿½tes redondantes. Si une erreur est survenue dans une exï¿½cution prï¿½cï¿½dente, des opï¿½rations de vï¿½rifications seront peut-ï¿½tre effecutï¿½es.
 		//En cas de doute, il est toujours possible de supprimer manuellement le dossier de cache
 		
-		//Pour effectuer une requête sur RequeterRezo, il suffit d'appeler la méthode "requete".
-		//Cette méthode retourne un objet de type "Resultat" qui contient le "Mot" demandé ainsi que deux autres informations : Etat et EtatCache 
+		//Pour effectuer une requï¿½te sur RequeterRezo, il suffit d'appeler la mï¿½thode "requete".
+		//Cette mï¿½thode retourne un objet de type "Resultat" qui contient le "Mot" demandï¿½ ainsi que deux autres informations : Etat et EtatCache 
 		Resultat resultatRequete = rezo.requete("toto");
 		
-		//L'objet qui vous intéresse est certainement le "Mot". Il contient les informations présentes dans rezoJDM.
+		//L'objet qui vous intï¿½resse est certainement le "Mot". Il contient les informations prï¿½sentes dans rezoJDM.
 		Mot mot = resultatRequete.getMot();
-		//Un Mot est notamment composé de relations sortantes (pour lesquelles il en est la source) et de relations entrantes (pour lesquelles il en est la destination).
-		//Un Voisin est un noeud rezoJDM ainsi que le poids de la relation associée.
+		//Un Mot est notamment composï¿½ de relations sortantes (pour lesquelles il en est la source) et de relations entrantes (pour lesquelles il en est la destination).
+		//Un Voisin est un noeud rezoJDM ainsi que le poids de la relation associï¿½e.
 		
 		ArrayList<Relation> voisins = mot.getRelationsSortantesTypees("r_lieu");
 		System.out.println("Un toto peut se trouver dans les lieux suivants : ");		
@@ -76,39 +76,39 @@ class Exemple {
 			System.out.println("\t"+voisin);
 		}
 		
-		//Attention néanmoins, une requête retourne toujours un objet Resultat mais pas toujours un Mot ! 
-		//Le serveur peut-être indisponible, le mot inexistant, ou bien encore trop gros pour être transmis dans les temps. 
-		//Pour éviter les NullPointerException, pensez à vérifier l'objet Mot !
+		//Attention nï¿½anmoins, une requï¿½te retourne toujours un objet Resultat mais pas toujours un Mot ! 
+		//Le serveur peut-ï¿½tre indisponible, le mot inexistant, ou bien encore trop gros pour ï¿½tre transmis dans les temps. 
+		//Pour ï¿½viter les NullPointerException, pensez ï¿½ vï¿½rifier l'objet Mot !
 		mot = resultatRequete.getMot();
 		if(mot != null) {
 			//traitement
 		}
-		//Le champ "Etat" de votre objet "Resultat" permet de donner des informations précieuses sur le resultat de votre requête :
+		//Le champ "Etat" de votre objet "Resultat" permet de donner des informations prï¿½cieuses sur le resultat de votre requï¿½te :
 		Etat etat = resultatRequete.getEtat();
-		System.out.println("L'état de la requête est : "+etat);
+		System.out.println("L'ï¿½tat de la requï¿½te est : "+etat);
 		//Les valeurs possibles sont : 
-		// - INEXISTANT : le terme demandé n'existe pas dans rezoJDM
-		// - TROP_GROS : le Mot résultat possède plus de 25 000 relations entrantes ou sortantes. 
-		//Pour des raisons de performances, le nombre de relations par mot est limité sur RequeterRezoDump. 
-		//Pour palier à ces limitations, utilisez RequeterRezoSQL ou utiliser les requêtes filtrées.
-		// - RENVOYER : dans le cas d'une requête très importante (ex. "personne"), il est parfois nécessaire de relancer la requête pour avoir un résultat.
-		//Le résultat sera alors certainement "TROP_GROS". 
-		// - SERVEUR_INACCESSIBLE : Le service rezo-dump n'a pas pu être contacté.
-		// - OK : La requête s'est déroulée correctement.
-		// - ERREUR_REQUETE : tout autre erreur lors de la requête.
+		// - INEXISTANT : le terme demandï¿½ n'existe pas dans rezoJDM
+		// - TROP_GROS : le Mot rï¿½sultat possï¿½de plus de 25 000 relations entrantes ou sortantes. 
+		//Pour des raisons de performances, le nombre de relations par mot est limitï¿½ sur RequeterRezoDump. 
+		//Pour palier ï¿½ ces limitations, utilisez RequeterRezoSQL ou utiliser les requï¿½tes filtrï¿½es.
+		// - RENVOYER : dans le cas d'une requï¿½te trï¿½s importante (ex. "personne"), il est parfois nï¿½cessaire de relancer la requï¿½te pour avoir un rï¿½sultat.
+		//Le rï¿½sultat sera alors certainement "TROP_GROS". 
+		// - SERVEUR_INACCESSIBLE : Le service rezo-dump n'a pas pu ï¿½tre contactï¿½.
+		// - OK : La requï¿½te s'est dï¿½roulï¿½e correctement.
+		// - ERREUR_REQUETE : tout autre erreur lors de la requï¿½te.
 		
 		EtatCache etatCache = resultatRequete.getEtatCache();
-		System.out.println("L'état du cache de la requête est : "+etatCache);
+		System.out.println("L'ï¿½tat du cache de la requï¿½te est : "+etatCache);
 		//De plus un champ "EtatCache" permet d'obtenir des informations sur le cache :
-		// - DEPUIS_CACHE : le résultat a été produit grâce au cache
-		// - NOUVELLE_ENTREE : le résultat a été placé dans le cache
-		// - EN_ATTENTE : le résultat n'a pas été placé dans le cache mais son nombre d'occurrence est compté afin de faire entrer dans le cache
-		//les termes souvent demandés.
-		// - ERREUR_REQUETE : une erreur est survenue lors de la requête
+		// - DEPUIS_CACHE : le rï¿½sultat a ï¿½tï¿½ produit grï¿½ce au cache
+		// - NOUVELLE_ENTREE : le rï¿½sultat a ï¿½tï¿½ placï¿½ dans le cache
+		// - EN_ATTENTE : le rï¿½sultat n'a pas ï¿½tï¿½ placï¿½ dans le cache mais son nombre d'occurrence est comptï¿½ afin de faire entrer dans le cache
+		//les termes souvent demandï¿½s.
+		// - ERREUR_REQUETE : une erreur est survenue lors de la requï¿½te
 		
 		
-		//Pour éviter les états "TROP_GROS" ou "RENVOYER", il est conseillé de filter vos requêtes du mieux possible. 
-		//Ainsi, plutôt que de demander le terme "pomme de terre" et de chercher son voisinage pour la relation "lieu" comme précédemment avec "toto"
+		//Pour ï¿½viter les ï¿½tats "TROP_GROS" ou "RENVOYER", il est conseillï¿½ de filter vos requï¿½tes du mieux possible. 
+		//Ainsi, plutï¿½t que de demander le terme "pomme de terre" et de chercher son voisinage pour la relation "lieu" comme prï¿½cï¿½demment avec "toto"
 		//il est possible de demander directement les relations de types "r_lieu" et de filtrer les relations entrantes.
 		resultatRequete = rezo.requete("pomme de terre", "r_lieu", Filtre.RejeterRelationsEntrantes);
 		mot = resultatRequete.getMot();
@@ -119,11 +119,21 @@ class Exemple {
 				System.out.println("\t"+voisin);
 			}
 		}
-		//filtrer une relation permet d'obtenir des résultats bien plus rapidement et d'être sûr que le type que vous recherchez n'a pas été tronqué 
-		//avec un état "TROP_GROS"
+		//filtrer une relation permet d'obtenir des rï¿½sultats bien plus rapidement et d'ï¿½tre sï¿½r que le type que vous recherchez n'a pas ï¿½tï¿½ tronquï¿½ 
+		//avec un ï¿½tat "TROP_GROS"
 
 		
-		//Pour plus de détails, pensez à la javadoc.
+		// Pour savoir si il y a une relation entre 2 termes , il faut utiliser la mÃ©thode "verifierVoisinage" (qui renvoie le poids le + fort)
+		// Cette mÃ©thode renvoie le poids de la relation (0 si inexistante)
+		// Ensuite on va pouvoir utiliser "relationsVoisinage" pour rÃ©cupÃ©rer toutes les relations 
+		int poidsRelMax= rezo.verifierVoisinage("toto", "enfant");
+		System.out.println("Poids le plus fort des relations entre toto et enfant "+ poidsRelMax);
+		ArrayList<Relation> relationsVoisins= rezo.relationsCommunes("toto", "enfant");
+		System.out.println("Relations de voisinage entre les termes toto et enfants: ");
+		for(Relation voisin: relationsVoisins) {
+			System.out.println("\t"+voisin);
+		}
+		//Pour plus de dï¿½tails, pensez ï¿½ la javadoc.
 		//Bonne chance !		
 	}
 	

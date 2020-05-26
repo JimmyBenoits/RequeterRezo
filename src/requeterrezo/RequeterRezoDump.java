@@ -609,4 +609,48 @@ public class RequeterRezoDump extends RequeterRezo {
 		}
 		return 0;
 	}
+	
+	/**Le poids de la relation si elle existe, 0 sinon.
+	 * Verifier si le mot destination appartient au voisinage du noeud source;
+	 * @param motSource
+	 * @param motDestination
+	 * @return Le poids de la relation (de poids maximum) si elle existe, 0 sinon.
+	 */
+	public int verifierVoisinage(String motSource, String motDestination) {
+		int poidsMax= 0;
+		Resultat resultatRequete = this.requete(motSource);
+		Mot mot = resultatRequete.getMot();
+		if(mot != null) {
+			ArrayList<Relation> voisins = mot.getListeRelationsSortantes();
+			for(Relation voisin: voisins) {
+				if(voisin.getNomDestination().equals(motDestination)) {
+					if(poidsMax == 0 ||voisin.getPoids() > poidsMax) {
+						poidsMax= voisin.getPoids();
+					}
+				}
+			}
+		}
+		return poidsMax;
+	}
+	
+	/**
+	 * Permet de renvoyer toutes les relations entre un mot source et un mot destination
+	 * @param motSource
+	 * @param motDestination
+	 * @return une arraylist de toutes les relations entre motSource et motDestination (vide si pas de lien de voisinage)
+	 */
+	public ArrayList<Relation> relationsCommunes(String motSource, String motDestination){
+		ArrayList<Relation> relationsVoisinage= new ArrayList<Relation>();
+		Resultat resultatRequete = this.requete(motSource);
+		Mot mot = resultatRequete.getMot();
+		if(mot != null) {
+			ArrayList<Relation> voisins = mot.getListeRelationsSortantes();
+			for(Relation voisin: voisins) {
+				if(voisin.getNomDestination().equals(motDestination)) {
+					relationsVoisinage.add(voisin);
+				}
+			}
+		}
+		return relationsVoisinage;
+	}
 }
