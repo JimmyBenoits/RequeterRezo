@@ -126,8 +126,10 @@ public class RequeterRezoDump extends RequeterRezo {
 		CorrespondanceRelation correspondanceRelation = RequeterRezo.correspondancesRelations;
 		URL url;
 		URLConnection jd;
+		// Ici, on a rajouté dans rezoDump la possibilité de rechercher le terme ":relTypes" pour récupérer toutes les relations et équivalences nom/id
+		String urlRelations = "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel=:reltypes&rel=";
 		try {
-			url = new URL("http://www.jeuxdemots.org/jdm-about-detail-relations.php");
+			url = new URL(urlRelations);
 			jd = url.openConnection();
 			jd.setConnectTimeout(10_000);
 			jd.setReadTimeout(10_000);
@@ -138,24 +140,17 @@ public class RequeterRezoDump extends RequeterRezo {
 
 			try (BufferedReader lecteur = new BufferedReader(new InputStreamReader(jd.getInputStream(), "CP1252"))) {
 				String ligne;
-				while ((ligne = lecteur.readLine()) != null && !(ligne.contains("<TR valign= \"top\">"))) {
-				}
-				while ((ligne = lecteur.readLine()) != null) {
-					if (ligne.contains("rel_id")) {
-						div = ligne.split("\\\"");
-						id_ = div[4];
-						id_ = id_.substring(1, id_.length());
+				while ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("<CODE>"))) {}
+				
+				while ((ligne = lecteur.readLine()) != null && !(ligne.startsWith("</CODE>"))) {
+					if(ligne.startsWith("rt")) {
+						div= ligne.split(";");
+						id_= div[1];
 						id = Integer.parseInt(id_);
-					}
-					if (ligne.contains("rel_name")) {
-//						div = ligne.split("\\\"");
-						div = ligne.split("\">");
-						if (ligne.length() > 1 && div.length>1) {
-							nom = div[div.length-1];
-//							nom = nom.substring(1, nom.length());
-							correspondanceRelation.ajouter(nom, id);
-							correspondanceRelation.ajouter(id, nom);                            
-						}
+						nom= div[2];
+						nom = nom.substring(1, nom.length()-1);
+						correspondanceRelation.ajouter(nom, id);
+						correspondanceRelation.ajouter(id, nom); 
 					}
 				}                
 			} catch (IOException e) {
