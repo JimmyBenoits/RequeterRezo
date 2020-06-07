@@ -30,14 +30,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Contient les éléments spécifiques à la configuration d'un système "local" de RequeterRezo ({@link RequeterRezoSQL}).<br>
- * Les éléments en plus d'une configuration classique ({@link Configuration}) sont : <br>
+ * Contient les Ã©lÃ©ments spÃ©cifiques Ã  la configuration d'un systÃ¨me "local" de RequeterRezo ({@link RequeterRezoSQL}).<br>
+ * Les Ã©lÃ©ments en plus d'une configuration classique ({@link Configuration}) sont : <br>
  * - SERVEUR_MYSQL : adresse du serveur MySQL.<br>
- * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.<br>
- * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
- * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
+ * - NOM_BASE_DE_DONNEES : nom de la base de donnÃ©es contenant les donnÃ©es rezoJDM.<br>
+ * - NOM_UTILISATEUR : nom de l'utilisateur Ã  utiliser pour la connexion au serveur MySQL.<br>
+ * - MOT_DE_PASSE : mot de passe de l'utilisateur Ã  utiliser pour la connexion au serveur MySQL.<br>
  * 
- * Tout autre couple "CLE=VALEUR" sera interprété comme un paramètre spécifique à passer lors de la connexion au serveur MySQL.
+ * Tout autre couple "CLE=VALEUR" sera interprÃ©tÃ© comme un paramÃ¨tre spÃ©cifique Ã  passer lors de la connexion au serveur MySQL.
  * @author jimmy.benoits
  */
 public class ConfigurationSQL extends Configuration {
@@ -48,7 +48,7 @@ public class ConfigurationSQL extends Configuration {
 	protected String serveur_SQL;
 
 	/**
-	 * Nom de la base de données contenant les données rezoJDM.
+	 * Nom de la base de donnÃ©es contenant les donnÃ©es rezoJDM.
 	 */
 	protected String nom_base_de_donnees;
 
@@ -63,14 +63,14 @@ public class ConfigurationSQL extends Configuration {
 	protected String mot_de_passe;
 
 	/**
-	 * Paramètres complémentaires utilisés lors de la connexion au serveur MySQL.
+	 * ParamÃ¨tres complÃ©mentaires utilisÃ©s lors de la connexion au serveur MySQL.
 	 */
 	protected List<SimpleEntry<String, String>> parametres;
 
 	/**
-	 * Constructeur paramétré.
+	 * Constructeur paramÃ©trÃ©.
 	 * @param serveur_sql Adresse du serveur MySQL.
-	 * @param nom_base_de_donnees Nom de la base de données contenant les données rezoJDM.
+	 * @param nom_base_de_donnees Nom de la base de donnÃ©es contenant les donnÃ©es rezoJDM.
 	 * @param nom_utilisateur Nom de l'utilisateur.
 	 * @param mot_de_passe Mot de passe.
 	 */
@@ -81,25 +81,23 @@ public class ConfigurationSQL extends Configuration {
 		this.mot_de_passe = mot_de_passe;
 		this.serveur_SQL = serveur_sql;
 		this.parametres = new ArrayList<>();
-		//        this.parametres.add(new SimpleEntry<>("useLegacyDatetimeCode", "false"));
-		//        this.parametres.add(new SimpleEntry<>("serverTimezone", "Europe/Amsterdam"));
 	}
 
 
 	/**
-	 * Construit un objet ConfigurationSQL à partir d'un fichier de configuration. <br>
-	 * Les valeurs génériques ({@link Configuration}) doivent être présentes.<br>
-	 * Les valeurs spécifiques sont : <br>
+	 * Construit un objet ConfigurationSQL Ã  partir d'un fichier de configuration. <br>
+	 * Les valeurs gÃ©nÃ©riques ({@link Configuration}) doivent Ãªtre prÃ©sentes.<br>
+	 * Les valeurs spÃ©cifiques sont : <br>
 	 * - SERVEUR_MYSQL : adresse du serveur MySQL.<br>
-	 * - NOM_BASE_DE_DONNEES : nom de la base de données contenant les données rezoJDM.<br>
-	 * - NOM_UTILISATEUR : nom de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
-	 * - MOT_DE_PASSE : mot de passe de l'utilisateur à utiliser pour la connexion au serveur MySQL.<br>
+	 * - NOM_BASE_DE_DONNEES : nom de la base de donnÃ©es contenant les donnÃ©es rezoJDM.<br>
+	 * - NOM_UTILISATEUR : nom de l'utilisateur Ã  utiliser pour la connexion au serveur MySQL.<br>
+	 * - MOT_DE_PASSE : mot de passe de l'utilisateur Ã  utiliser pour la connexion au serveur MySQL.<br>
 	 * <br>
-	 * Tout autre couple "CLE=VALEUR" sera interprété comme un paramètre spécifique à passer lors de la connexion au serveur MySQL.
+	 * Tout autre couple "CLE=VALEUR" sera interprÃ©tÃ© comme un paramÃ¨tre spÃ©cifique Ã  passer lors de la connexion au serveur MySQL.
 	 * @param chemin_fichier_configuration Chemin vers le fichier de configuration pour {@link RequeterRezoSQL}.
-	 * @throws FileNotFoundException Le fichier de configuration n'a pas été trouvé.
-	 * @throws IOException Le fichier de configuration n'a pas pu être ouvert.
-	 * @throws ConfigurationException Une erreur est survenue lors de l'interprétation du fichier de configuration.
+	 * @throws FileNotFoundException Le fichier de configuration n'a pas Ã©tÃ© trouvÃ©.
+	 * @throws IOException Le fichier de configuration n'a pas pu Ãªtre ouvert.
+	 * @throws ConfigurationException Une erreur est survenue lors de l'interprÃ©tation du fichier de configuration.
 	 */
 	public ConfigurationSQL(String chemin_fichier_configuration) throws FileNotFoundException, IOException, ConfigurationException {
 		super(chemin_fichier_configuration);
@@ -113,25 +111,21 @@ public class ConfigurationSQL extends Configuration {
 					if ((indexOf = ligne.indexOf('=')) != -1) {
 						cle = ligne.substring(0, indexOf);
 						valeur = ligne.substring(indexOf + 1);
-						switch (cle.toUpperCase()) {
-						case "MODE" : {
-							//déjà  traité
-							break;
-						}    
+						switch (cle.toUpperCase()) { 
 						case "AVERTISSEMENT" : {
-							//déjà traité
+							//dÃ©jÃ  traitÃ©
 							break;
 						}
 						case "PEREMPTION": {
-							//déjà  traité
+							//dÃ©jÃ  traitÃ©
 							break;
 						}
 						case "CHEMIN_CACHE": {
-							//déjà  traité
+							//dÃ©jÃ  traitÃ©
 							break;
 						}
 						case "TAILLE_MAX_CACHE": {
-							//déjà  traité
+							//dÃ©jÃ  traitÃ©
 							break;
 						}
 						case "SERVEUR_MYSQL": {
@@ -151,13 +145,13 @@ public class ConfigurationSQL extends Configuration {
 							break;
 						}
 						default: {
-							//autres paramètres du serveur MYSQL
+							//autres paramÃ¨tres du serveur MYSQL
 							this.parametres.add(new SimpleEntry<>(cle, valeur));
 							break;
 						}
 						}
 					} else {
-						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu être interprétée.");
+						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu Ãªtre interprÃ©tÃ©e.");
 					}
 				}
 			}
@@ -174,8 +168,8 @@ public class ConfigurationSQL extends Configuration {
 
 
 	/**
-	 * Nom de la base de données contenant les données rezoJDM.
-	 * @return Nom de la base de données utilisée pour la connexion.
+	 * Nom de la base de donnÃ©es contenant les donnÃ©es rezoJDM.
+	 * @return Nom de la base de donnÃ©es utilisÃ©e pour la connexion.
 	 */
 	public String getNom_base_de_donnees() {
 		return nom_base_de_donnees;
@@ -183,7 +177,7 @@ public class ConfigurationSQL extends Configuration {
 
 	/**
 	 *  Nom d'utilisateur.
-	 * @return Le nom d'utilisateur utilisée pour la connexion. 
+	 * @return Le nom d'utilisateur utilisÃ©e pour la connexion. 
 	 */
 	public String getNom_utilisateur() {
 		return nom_utilisateur;
@@ -191,7 +185,7 @@ public class ConfigurationSQL extends Configuration {
 
 	/**
 	 * Mot de passe.
-	 * @return Le mot de passe utilisée pour la connexion.
+	 * @return Le mot de passe utilisÃ©e pour la connexion.
 	 */
 	public String getMot_de_passe() {
 		return mot_de_passe;
@@ -199,8 +193,8 @@ public class ConfigurationSQL extends Configuration {
 
 
 	/**
-	 * Paramètres complémentaires utilisés lors de la connexion au serveur MySQL.
-	 * @return La liste des couples (CLE,VALEUR) des paramètres complémentaires.
+	 * ParamÃ¨tres complÃ©mentaires utilisÃ©s lors de la connexion au serveur MySQL.
+	 * @return La liste des couples (CLE,VALEUR) des paramÃ¨tres complÃ©mentaires.
 	 */
 	public List<SimpleEntry<String, String>> getParametres() {
 		return parametres;

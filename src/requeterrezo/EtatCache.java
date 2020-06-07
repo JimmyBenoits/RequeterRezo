@@ -29,22 +29,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  */
 public enum EtatCache {
 	/**
-	 * Le résultat provient directement du cache.
+	 * Le rÃ©sultat provient directement du cache.
 	 */
 	DEPUIS_CACHE,
 	
 	/**
-	 * Le résultat provient d'une requête et a été placé dans le cache.
+	 * Le rÃ©sultat provient d'une requÃªte et a Ã©tÃ© placÃ© dans le cache.
 	 */
 	NOUVELLE_ENTREE,
 	
 	/**
-	 * Le résultat provient d'une requête mais n'a pas été placé dans le cache.
+	 * Le rÃ©sultat provient d'une requÃªte mais n'a pas Ã©tÃ© placÃ© dans le cache.
 	 */
 	EN_ATTENTE,
 	
 	/**
-	 * Une erreur est survenue lors de la requête.
+	 * Une erreur est survenue lors de la requÃªte.
 	 */
 	ERREUR_REQUETE;
 }

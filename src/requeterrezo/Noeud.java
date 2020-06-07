@@ -25,13 +25,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Objet de base de rezoJDM. Un noeud est composé de : <br>
- * - un nom : chaîne de caractère unique (généralement le "mot" lui-même).<br>
+ * Objet de base de rezoJDM. Un noeud est composï¿½ de : <br>
+ * - un nom : chaÃ®ne de caractÃ¨re unique (gÃ©nÃ©ralement le "mot" lui-mÃªme).<br>
  * - d'un ID : entier unique.<br>
- * - d'un type : les types de noeuds utilisés dans rezoJDM sont disponibles à l'adresse (http://www.jeuxdemots.org/jdm-about.php) 
+ * - d'un type : les types de noeuds utilisÃ©s dans rezoJDM sont disponibles Ã  l'adresse (http://www.jeuxdemots.org/jdm-about.php) 
  * et dans l'enum {@link TypeNoeud}.<br>
- * - d'un mot formaté : souvent identique au "nom" sauf lorsque celui-ci est sous une forme peu lisible. Dans ce cas, 
- * le mot formaté permet un affichage lisible. Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.<br>
+ * - d'un mot formatÃ© : souvent identique au "nom" sauf lorsque celui-ci est sous une forme peu lisible. Dans ce cas, 
+ * le mot formatÃ© permet un affichage lisible. Il est dÃ©conseillÃ© de l'utiliser pour d'autre raison qu'Ã  des fins d'affichage.<br>
  * - d'un poids : le poids du noeud dans rezoJDM.
  * @author jimmy.benoits
  */
@@ -43,8 +43,8 @@ public class Noeud implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Chaîne de caractères décrivant le mot. Le nom d'un terme est unique dans rezoJDM.<br>
-	 * C'est l'élément à utiliser pour effectuer une requête.	
+	 * ChaÃ®ne de caractÃ¨res dÃ©crivant le mot. Le nom d'un terme est unique dans rezoJDM.<br>
+	 * C'est l'Ã©lÃ©ment Ã  utiliser pour effectuer une requÃªte.	
 	 */
 	protected final String nom;
 
@@ -54,13 +54,13 @@ public class Noeud implements Serializable{
 	protected long idRezo;
 
 	/**
-	 * Type du noeud dans rezoJDM (-1 par défaut, en cas d'absence de type).
+	 * Type du noeud dans rezoJDM (-1 par dÃ©faut, en cas d'absence de type).
 	 */
 	protected int type = -1;
 
 	/**
-	 * Bien souvent identique au "nom", mais propose parfois d'autres informations (notamment pour les annotations où les raffinements).<br>
-	 * Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.
+	 * Bien souvent identique au "nom", mais propose parfois d'autres informations (notamment pour les annotations ou les raffinements).<br>
+	 * Il est dÃ©conseillÃ© de l'utiliser pour d'autre raison qu'Ã  des fins d'affichage.
 	 */
 	protected String motFormate;
 
@@ -70,11 +70,11 @@ public class Noeud implements Serializable{
 	protected int poids;
 
 	/**
-	 * Constructeur paramétré.
+	 * Constructeur paramÃ©trÃ©.
 	 * @param nom nom du noeud.
 	 * @param idRezo id du noeud.
 	 * @param type type du noeud.
-	 * @param motFormate mot formaté du noeud.
+	 * @param motFormate mot formatÃ© du noeud.
 	 * @param poids poids du noeud.
 	 */
 	protected Noeud(String nom, long idRezo, int type, String motFormate, int poids) {
@@ -86,8 +86,8 @@ public class Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne le nom du mot. C'est la partie à utiliser pour effectuer des requêtes. 
-	 * @return une chaîne de caractère unique (généralement le "mot" lui-même).
+	 * Retourne le nom du mot. C'est la partie Ã  utiliser pour effectuer des requÃªtes. 
+	 * @return une chaÃ®ne de caractÃ¨re unique (gÃ©nÃ©ralement le "mot" lui-mÃªme).
 	 */
 	public String getNom() {
 		return nom;
@@ -102,7 +102,7 @@ public class Noeud implements Serializable{
 	}
 
 	/**
-	 * Retourne le type du mot dans rezoJDM. Les types de noeuds utilisés dans rezoJDM sont disponibles à l'adresse (http://www.jeuxdemots.org/jdm-about.php) 
+	 * Retourne le type du mot dans rezoJDM. Les types de noeuds utilisÃ©s dans rezoJDM sont disponibles Ã  l'adresse (http://www.jeuxdemots.org/jdm-about.php) 
 	 * et dans l'enum {@link TypeNoeud}.
 	 * @return retourne le type du noeud dans rezoJDM.
 	 */
@@ -112,8 +112,8 @@ public class Noeud implements Serializable{
 
 	/**
 	 * Souvent identique au "nom" sauf lorsque celui-ci est sous une forme peu lisible. Dans ce cas, 
-	 * le mot formaté permet un affichage lisible. Il est déconseillé de l'utiliser pour d'autre raison qu'à des fins d'affichage.
-	 * @return Le mot formaté du mot.
+	 * le mot formatÃ© permet un affichage lisible. Il est dÃ©conseillÃ© de l'utiliser pour d'autre raison qu'Ã  des fins d'affichage.
+	 * @return Le mot formatÃ© du mot.
 	 */
 	public String getMotFormate() {
 		return motFormate;

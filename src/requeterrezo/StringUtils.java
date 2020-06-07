@@ -25,8 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Solution proposée par Nick Frolov sur StackOverflow afin de gérer les
- * caractères échappés
+ * Solution proposÃ©e par Nick Frolov sur StackOverflow afin de gÃ©rer les
+ * caractÃ¨res Ã©chappÃ©s
  *
  * @author Nick Frolov
  */

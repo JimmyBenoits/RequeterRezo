@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,21 +34,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  */
 
 /**
- * Version "locale" de RequeterRezo. Les requ�tes qui ne sont pas directement
- * r�cup�r�es depuis le cache sont effectu�es sur un serveur MySQL que
+ * Version "locale" de RequeterRezo. Les requêtes qui ne sont pas directement
+ * récupérées depuis le cache sont effectuées sur un serveur MySQL que
  * l'utilisateur doit mettre en place.<br>
- * L'int�r�t de RequeterRezoSQL est sa performance par rapport �
+ * L'intérêt de RequeterRezoSQL est sa performance par rapport à
  * {@link RequeterRezoDump} et l'absence de limitation.<br>
- * En contrepartie, l'utilisateur doit importer les donn�es de rezoJDM
+ * En contrepartie, l'utilisateur doit importer les données de rezoJDM
  * (disponible sous licence "Domaine Publique" � l'adresse :
  * http://www.jeuxdemots.org/JDM-LEXICALNET-FR/?C=M;O=D
  * 
- * L'importation est laiss�e � l'utilisateur mais il doit respecter certaines
- * r�gles. Un projet est disponible � cet effet :
- * https://gite.lirmm.fr/benoits/jdmimport.<br>
+ * L'importation est laissée à l'utilisateur mais il doit respecter certaines
+ * règles. Un projet est disponible à cet effet :
+ * https://github.com/JimmyBenoits/JDMImport.<br>
  * 
  * I] Les noeuds<br>
- * Les noeuds doivent �tre stock�s dans une table "nodes" contenant (au moins)
+ * Les noeuds doivent être stockés dans une table "nodes" contenant (au moins)
  * les colonnes suivantes : <br>
  * - "id" (int, primary)<br>
  * - "name" (varchar)<br>
@@ -54,7 +56,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * - "weight" (int)<br>
  * <br>
  * II] Les relations<br>
- * Les relations doivent �tre stock�es dans une tables "edges" contenant (au
+ * Les relations doivent être stockées dans une tables "edges" contenant (au
  * moins) les colonnes suivantes :<br>
  * - "id" (int, primary)<br>
  * - "source" (int, id de "nodes")<br>
@@ -63,34 +65,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * - "weight" (int)<br>
  * <br>
  * III] Type de noeuds <br>
- * Les types de noeuds doivent �tre stock�s dans une table "node_types"
+ * Les types de noeuds doivent être stockés dans une table "node_types"
  * contenant (au moins) les colonnes suivantes : <br>
  * - "id" (int, primary)<br>
  * - "name" (varchar)<br>
  * <br>
  * IV] Type de relations<br>
- * Les types de relations doivent �tre stock�s dans une table "edge_types"
+ * Les types de relations doivent être stockés dans une table "edge_types"
  * contenant (au moins) les colonnes suivantes :<br>
  * - "id" (int, primary)<br>
  * - "name" (varchar)<br>
  * 
  * <br>
  * <br>
- * De plus, pour faire fonctionner RequeterRezoSQL, il est n�cessaire d'ajouter
- * � votre projet un mysql-connector.<br>
+ * De plus, pour faire fonctionner RequeterRezoSQL, il est nécessaire d'ajouter
+ * à votre projet un mysql-connector.<br>
  * <br>
  * Enfin, si vous souhaitez contribuer au projet JeuxDeMots en envoyant les
- * donn�es r�colt�es, vous pouvez utiliser des identifiants n�gatifs pour vos
- * noeuds et vos relations. Ces valeurs ne sont pas utilis�es et permettent une
- * fusion simplifi�e !
+ * données récoltées localement, vous pouvez utiliser des identifiants négatifs pour vos
+ * noeuds et vos relations. Ces valeurs ne sont pas utilisées et permettent une
+ * fusion simplifiée !
  * 
  * @author jimmy.benoits
  */
 public class RequeterRezoSQL extends RequeterRezo {
 
 	/**
-	 * Expression r�guli�re permettant de d�tecter les formes complexes de nom de
-	 * rezoJDM telles que les questions ou les agr�gats.
+	 * Expression régulière permettant de détecter les formes complexes de nom de
+	 * rezoJDM telles que les questions ou les agrégats.
 	 */
 	private Pattern schemaAgregat = Pattern.compile("::>(\\d+):(\\d+)>(\\d+):(\\d+)(>(\\d+))?");
 
@@ -100,9 +102,9 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected static Connection connexion;
 
 	/**
-	 * Requ�te utiliser de nombreuses fois pour obtenir un noeud � partir de son
+	 * Requête utiliser de nombreuses fois pour obtenir un noeud à partir de son
 	 * identifiant. <br>
-	 * Cela permet notamment de construire les mots format�s.
+	 * Cela permet notamment de construire les mots formatés.
 	 */
 	protected PreparedStatement noeudDepuisID; // select name, type, weight from nodes where id=?
 	protected PreparedStatement noeudDepuisNom; // select id, type, weight from nodes where name=?
@@ -122,13 +124,13 @@ public class RequeterRezoSQL extends RequeterRezo {
 	protected PreparedStatement verifierVoisinage;
 
 	/**
-	 * Construit un objet RequeterRezoSQL � partir d'une configuration sp�ficique
-	 * puis effectue les requ�tes n�cessaires afin de construire les �quivalences
+	 * Construit un objet RequeterRezoSQL à partir d'une configuration spéficique
+	 * puis effectue les requêtes nécessaires afin de construire les équivalences
 	 * entre nom et type de relation.
 	 * 
-	 * @param configuration Configuration sp�cifique � RequeterRezoSQL comprenant
-	 *                      les informations de bases ainsi que les �l�ments
-	 *                      sp�cifiques � la connexion � un serveur MySQL.
+	 * @param configuration Configuration spécifique à RequeterRezoSQL comprenant
+	 *                      les informations de bases ainsi que les éléments
+	 *                      spécifiques à la connexion à un serveur MySQL.
 	 */
 	public RequeterRezoSQL(ConfigurationSQL configuration) {
 		super(configuration);
@@ -137,12 +139,12 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Construit un objet RequeterRezoSQL � partir des �l�ments par d�faut et des
-	 * informations n�cessaires pour se connecter au serveur MySQL.
+	 * Construit un objet RequeterRezoSQL à partir des éléments par défaut et des
+	 * informations nécessaires pour se connecter au serveur MySQL.
 	 * 
 	 * @param serveurSql       Adresse du serveur MySQL.
-	 * @param nomBaseDeDonnees Nom de la base de donn�es MySQL h�bergeant les
-	 *                         donn�es de rezoJDM.
+	 * @param nomBaseDeDonnees Nom de la base de données MySQL hébergeant les
+	 *                         données de rezoJDM.
 	 * @param nomUtilisateur   Nom d'utilisateur.
 	 * @param motDePasse       Mot de passe.
 	 */
@@ -176,12 +178,12 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Construit le mot format� � partir d'un nom.
+	 * Construit le mot formaté à partir d'un nom.
 	 * 
 	 * @param nom Nom d'un noeud.
-	 * @return Le param�tre d'entr�e si le mot format� est identique. Le mot format�
+	 * @return Le paramètre d'entrée si le mot formaté est identique. Le mot formaté
 	 *         sinon (remplace notamment les identifiants par leurs noms lorsque
-	 *         cela est n�cessaire).
+	 *         cela est nécessaire).
 	 */
 	protected String construireMotFormate(String nom) {
 		String res = nom;
@@ -190,7 +192,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 		// "Qui pourrait divertir avec une musique ?"
 		// ::>ID_REL_1:ID_MOT_1>ID_REL_2:ID_MOT_2>ID_REL_3
 		// second cas particulier TRIPLET, exemple : ::>66:60902>17:219016
-		// "dent [carac] cari�e"
+		// "dent [carac] cariée"
 		String[] raffs;
 		int raff;
 		Matcher matcher = schemaAgregat.matcher(nom);
@@ -276,8 +278,8 @@ public class RequeterRezoSQL extends RequeterRezo {
 							res += ">" + raff;
 							if (avertissement) {
 								System.err.println(
-										"Avertissement RequeterRezo : lors de la cr�ation du mot format� pour le noeud \""
-												+ nom + "\", le raffinement \"" + raff + "\" n'a pas pu �tre trouv�");
+										"Avertissement RequeterRezo : lors de la création du mot formaté pour le noeud \""
+												+ nom + "\", le raffinement \"" + raff + "\" n'a pas pu être trouvé");
 							}
 						}
 						rs.close();
@@ -297,17 +299,17 @@ public class RequeterRezoSQL extends RequeterRezo {
 		Resultat resultat = new Resultat(cleCache);
 		String nom = cleCache.nom;
 		boolean estType128 = cleCache.typeRelation == 128;
-		String definition = "Pas de d�finition dans RequeterRezoSQL.";
+		String definition = "Pas de définition dans RequeterRezoSQL.";
 		String nomFormate;
 		long idRezo, idRelation;
 		int type;
 		int poids;
 		Noeud noeudCourant;
-		HashMap<Long, Noeud> voisinage = new HashMap<>();
-		HashMap<Integer, ArrayList<Relation>> relationsEntrantes = new HashMap<>();
-		HashMap<Integer, ArrayList<Relation>> relationsSortantes = new HashMap<>();
-		ArrayList<Relation> voisins;
-		ArrayList<Annotation> annotations = new ArrayList<>();
+		Map<Long, Noeud> voisinage = new HashMap<>();
+		Map<Integer, List<Relation>> relationsEntrantes = new HashMap<>();
+		Map<Integer, List<Relation>> relationsSortantes = new HashMap<>();
+		List<Relation> voisins;
+		List<Annotation> annotations = new ArrayList<>();
 
 		Noeud motAjoute;
 		ResultSet rsNoeud;
@@ -356,7 +358,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 						typeAutreNoeud = rsRelations.getInt(5);
 						poidsAutreNoeud = rsRelations.getInt(6);
 						idRelation = rsRelations.getInt(7);
-						// cas annotation. Si la req�ete porte sur le type 128, on ne consid�re pas cela
+						// cas annotation. Si la requête porte sur le type 128, on ne considère pas cela
 						// comme une annotation
 						if (!estType128 && typeRel == 128 && nomAutreNoeud.startsWith(":r")) {
 							idRelationAnnote = Long.parseLong(nomAutreNoeud.substring(2));
@@ -386,7 +388,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 								}
 							} else if (avertissement) {
 								System.err.println(
-										"Avertissement RequeterRezo : aucune relation ne correspond � l'annotation \""
+										"Avertissement RequeterRezo : aucune relation ne correspond à l'annotation \""
 												+ nomAutreNoeud + "\".");
 							}
 							rsAnnotation.close();
@@ -452,15 +454,15 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Permet de v�rifier l'existence d'une relation dans rezoJDM. <br>
+	 * Permet de vérifier l'existence d'une relation dans rezoJDM. <br>
 	 * A partir du nom du mot source, du nom du type de la relation et du nom du mot
 	 * destination, retourne le poids de la relation si elle existe dans
 	 * rezoJDM.<br>
 	 * Retourne 0 si la relation n'existe pas.
 	 * 
-	 * @param motSource      Terme JDM de d�part de la relation
+	 * @param motSource      Terme JDM de départ de la relation
 	 * @param typeRelation   Type de relation devant lier les deux termes.
-	 * @param motDestination Terme JDM d'arriver de la relation
+	 * @param motDestination Terme JDM d'arrivé de la relation
 	 * @return Le poids de la relation si elle existe, 0 sinon.
 	 */
 	public int verifierExistenceRelation(String motSource, int typeRelation, String motDestination) {
@@ -482,23 +484,23 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Verifier si le mot destination appartient au voisinage du noeud source;
+	 * Verifier si le mot destination appartient au voisinage du noeud source.
 	 * 
-	 * @param motSource
-	 * @param motDestination
-	 * @return Le poids de la relation si elle existe, 0 sinon.
+	 * @param motSource Mot source de la relation recherchée.
+	 * @param motDestination Mot destination de la relation recherchée.
+	 * @return Le poids de la relation maximale si au moins une existe, 0 sinon.
 	 */
 	public int verifierVoisinage(String motSource, String motDestination) {
 		int res = 0;
+		int poids;
 		try {
 			this.verifierVoisinage.setString(1, motSource);
 			this.verifierVoisinage.setString(2, motDestination);
 			ResultSet rsVoisinage;
 			rsVoisinage = this.verifierVoisinage.executeQuery();
 			while (rsVoisinage.next()) {
-				int poids = rsVoisinage.getInt(1);
-//			int type = rsVoisinage.getInt(2);
-				if (poids > res) {
+				poids = rsVoisinage.getInt(1);
+				if (poids > res || res == 0) {
 					res = poids;
 				}
 			}
@@ -511,12 +513,12 @@ public class RequeterRezoSQL extends RequeterRezo {
 	
 	/**
 	 * Permet de renvoyer toutes les relations entre un mot source et un mot destination
-	 * @param motSource
-	 * @param motDestination
-	 * @return une arraylist de toutes les relations entre motSource et motDestination (vide si pas de lien de voisinage)
+	 * @param motSource Mot source des relations recherchées.
+	 * @param motDestination Mot destination des relations recherchées.
+	 * @return La liste de toutes les relations entre motSource et motDestination (vide si pas de lien de voisinage).
 	 */
-	public ArrayList<Relation> relationsCommunes(String motSource, String motDestination){
-		ArrayList<Relation> relationsVoisinage = new ArrayList<>();
+	public List<Relation> relationsCommunes(String motSource, String motDestination){
+		List<Relation> relationsVoisinage = new ArrayList<>();
 		try {
 			this.verifierVoisinage.setString(1, motSource);
 			this.verifierVoisinage.setString(2, motDestination);
@@ -539,7 +541,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Construit un noeud � partir de son identifiant.
+	 * Construit un noeud à partir de son identifiant.
 	 * 
 	 * @param id Identifiant rezoJDM.
 	 * @return Le noeud s'il existe, null sinon.
@@ -564,10 +566,10 @@ public class RequeterRezoSQL extends RequeterRezo {
 	}
 
 	/**
-	 * Construit une connexion avec le serveur MySQL � partir d'un objet de
+	 * Construit une connexion avec le serveur MySQL à partir d'un objet de
 	 * configuration.
 	 * 
-	 * @param configuration Configuration sp�ficique � RequeterRezoSQL
+	 * @param configuration Configuration spéficique à RequeterRezoSQL
 	 */
 	protected final void connexion(ConfigurationSQL configuration) {
 		String connexion_string = "jdbc:mysql://" + configuration.getServeur_SQL() + "/"
@@ -583,7 +585,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 			connexion = DriverManager.getConnection(connexion_string, configuration.getNom_utilisateur(),
 					configuration.getMot_de_passe());
 			/*
-			 * PreparedStatement : requ�tes courantes, pr�compil�es.
+			 * PreparedStatement : requêtes courantes, précompilées.
 			 */
 			// Noeuds
 			this.noeudDepuisID = connexion.prepareStatement("select name, type, weight from nodes where id=?;");
@@ -612,7 +614,7 @@ public class RequeterRezoSQL extends RequeterRezo {
 					.prepareStatement("" + "select e.type, e.weight, n.id, n.name, n.type, n.weight, e.id "
 							+ "from edges e, nodes n " + "where e.destination=? and e.source=n.id and e.type=?;");
 
-			// V�rifier l'existence d'une relation de type R entre X et Y
+			// Vérifier l'existence d'une relation de type R entre X et Y
 			this.verifierExistenceRelation = connexion.prepareStatement("" + "select e.weight "
 					+ "from edges e, nodes n1, nodes n2 " + "where n1.name=? and e.type = ? and n2.name=? and "
 					+ "e.source=n1.id and e.destination=n2.id;");

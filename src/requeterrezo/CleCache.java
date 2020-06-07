@@ -25,8 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Représente une requête. Composé du nom du terme recherché, du type de la relation si la requête avait un filtre de type (ou -1 sinon)
- * et du filtre ({@link Filtre}) utilisé.
+ * ReprÃ©sente une requÃªte. ComposÃ© du nom du terme recherchÃ©, du type de la relation si la requÃªte avait un filtre de type (ou -1 sinon)
+ * et du filtre ({@link Filtre}) utilisÃ©.
  * @author jimmy.benoits
  */
 class CleCache implements Serializable{
@@ -37,13 +37,13 @@ class CleCache implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Nom du terme recherché. Il est préférable de toujours effectuer des requêtes grâce au "nom" des termes de rezoJDM et de n'utiliser les
-	 * noms formatés qu'à des fins d'affichage.
+	 * Nom du terme recherchÃ©. Il est prÃ©fÃ©rable de toujours effectuer des requÃªtes grÃ¢ce au "nom" des termes de rezoJDM et de n'utiliser les
+	 * noms formatÃ©s qu'Ã  des fins d'affichage.
 	 */
 	protected String nom;
 	
 	/**
-	 * Type de la relation si un filtre sur le type a été utilisé (-1 sinon).
+	 * Type de la relation si un filtre sur le type a Ã©tÃ© utilisÃ© (-1 sinon).
 	 */
 	protected int typeRelation;
 	
@@ -63,97 +63,16 @@ class CleCache implements Serializable{
 	}
 
 	/**
-	 * Constructeur paramétré.
+	 * Constructeur paramÃ©trÃ©.
 	 * @param nom Nom du terme.
 	 * @param type Type de relation (-1 si aucun filtre sur le type).
-	 * @param filtre Filtre utilisé.
+	 * @param filtre Filtre utilisÃ©.
 	 */
 	protected CleCache(String nom, int type, Filtre filtre) {
 		this.nom = nom;
 		this.typeRelation = type;
 		this.filtre = filtre;
 	}
-
-//	protected static CleCache lire(String ligne) {
-//		CleCache res = null;
-//		String nom = ligne;
-//		int typeRelation = -1;
-//		Filtre filtre = Filtre.AucunFiltre;
-//		int indexOf;
-//		String tmp;
-//		indexOf = ligne.lastIndexOf(';');
-//		if(indexOf+1 < ligne.length()) {
-//			tmp = ligne.substring(indexOf+1, ligne.length());
-//			try{
-//				filtre = Filtre.valueOf(tmp);
-//			}catch(NumberFormatException e) {
-//				e.printStackTrace();
-//			}
-//			ligne = ligne.substring(0, indexOf);
-//
-//			indexOf = ligne.lastIndexOf(';');
-//			if(indexOf+1 < ligne.length()) {
-//				tmp = ligne.substring(indexOf+1, ligne.length());
-//				try{
-//					typeRelation = Integer.parseInt(tmp);					
-//				}catch(NumberFormatException e) {
-//					e.printStackTrace();
-//				}
-//				nom = ligne.substring(0, indexOf);
-//				res = new CleCache(nom, typeRelation, filtre);
-//			}
-//		}		
-//		return res;
-//	}
-
-//	protected static CleCache construireCleCache(String ligne) {
-//		CleCache cleCache = null;
-//		String nom;
-//		int type;
-//		Filtre filtre;
-//
-//		String tmp;
-//		//récupérer partie filtre => après dernier ';'
-//		int indexOf = ligne.lastIndexOf(';');
-//		if(indexOf != -1) {
-//			tmp = ligne.substring(indexOf+1, ligne.length());
-//			ligne = ligne.substring(0,indexOf);			
-//			try {
-//				filtre = Filtre.valueOf(tmp);
-//				//récupérer partie type relation => après dernier ';' restant
-//				indexOf = ligne.lastIndexOf(';');
-//				if(indexOf != -1) {
-//					tmp = ligne.substring(indexOf+1, ligne.length());
-//					ligne = ligne.substring(0,indexOf);			
-//					try {
-//						type = Integer.parseInt(tmp);
-//						//récupérer le mot => partie restante sans le premier (') et le dernier (') caractères
-//						if(ligne.length() >2) {
-//							nom = ligne.substring(1, ligne.length()-1);
-//							cleCache = new CleCache(nom, type, filtre);
-//						}						
-//					}catch(NumberFormatException e) {
-//						e.printStackTrace();
-//					}
-//				}	
-//			}catch(IllegalArgumentException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return cleCache;
-//	}
-	
-//	protected static CleCache Construire(String line) {
-//		String nom;
-//		int typeRelation;
-//		Filtre filtre;		
-//		String[] tokens = line.split(";");
-//		nom = tokens[0].substring(1, tokens[0].length()-1);
-//		typeRelation = Integer.parseInt(tokens[1]);
-//		filtre = Filtre.valueOf(tokens[2]);               		
-//		return new CleCache(nom, typeRelation, filtre);
-//	}
 
 	@Override
 	public String toString() {
@@ -181,7 +100,4 @@ class CleCache implements Serializable{
 		final CleCache other = (CleCache) obj;
 		return Objects.equals(this.nom, other.nom) && (this.typeRelation == other.typeRelation) && (this.filtre == other.filtre);
 	}
-
-
-
 }

@@ -24,17 +24,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /**
  * 
  * Les annotations sont un moyen dans rezoJDM de poser des informations sur les relations.
- * Ces informations peuvent porter sur la fréquence (toujours vrai, rare, toujours faux, etc.), la pertinence, le caractère humouristique, etc.
- * Une relation peut être annotée plusieurs fois (quelque chose peut être à la fois "toujours vrai" et "non pertinent").
- * Et une annotation peut être elle-même annotée.<br><br>
+ * Ces informations peuvent porter sur la frÃ©quence (toujours vrai, rare, toujours faux, etc.), la pertinence, le caractÃ¨re humouristique, etc.
+ * Une relation peut Ãªtre annotÃ©e plusieurs fois (quelque chose peut Ãªtre Ã  la fois "toujours vrai" et "non pertinent" par exemple).
+ * Et une annotation peut Ãªtre elle-mÃªme annotÃ©e.<br><br>
  * 
- *  Les annotations sont un outils puissants mais parfois difficile à prendre en main. 
- *  Dans rezoJDM, une annotation transforme une relation en un noeud. RequeterRezo regroupe au même endroit les annotations portant sur les relations
- *  du terme demandé. Cela permet de savoir quelles relations sont annotées. Pour obtenir la valeur de (ou des) annotations ("rare", "pertinent", etc.)
- *  il est nécessaire d'effectuer une nouvelle requête (grâce au "nom" de l'annotation).<br><br>
+ *  Les annotations sont un outils puissants mais parfois difficile Ã  prendre en main. 
+ *  Dans rezoJDM, une annotation transforme une relation en un noeud. RequeterRezo regroupe au mÃªme endroit les annotations portant sur les relations
+ *  du terme demandÃ©. Cela permet de savoir quelles relations sont annotÃ©es. Pour obtenir la valeur de (ou des) annotations ("rare", "pertinent", etc.)
+ *  il est nÃ©cessaire d'effectuer une nouvelle requÃªte (grÃ¢ce au "nom" de l'annotation).<br><br>
  *  
- *  Le nom d'une annotation est composé de ":r" suivi de l'ID de la relation annotée. Par exemple : ":r34672520". Le nom formaté permet de lire
- *  l'annotation : "mâchoire --r_has_part#9:33524--&gt; gencive"
+ *  Le nom d'une annotation est composÃ© de ":r" suivi de l'ID de la relation annotÃ©e. Par exemple : ":r34672520". Le nom formatÃ© permet de lire
+ *  l'annotation : "mÃ¢choire --r_has_part#9:33524--&gt; gencive"
  *  
  *  @see Noeud
  * @author jimmy.benoits
@@ -47,41 +47,41 @@ public class Annotation extends Noeud {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Noeud source de la relation annotée. 
+	 * Noeud source de la relation annotÃ©e. 
 	 */
 	protected Noeud source;
 	
 	/**
-	 * Type de la relation annotée.
+	 * Type de la relation annotÃ©e.
 	 */
     protected int typeRelation;
     
     /**
-     * Nom du type de la relation annotée. Cela permet un affichage "formaté" lisible de l'annotation.
+     * Nom du type de la relation annotÃ©e. Cela permet un affichage "formatÃ©" lisible de l'annotation.
      */
     protected String nomTypeRelation;
     
     /**
-     * Noeud destination de la relation annotée.
+     * Noeud destination de la relation annotÃ©e.
      */
     protected Noeud destination;
     
     /**
-     * Poids de la relation annotée.
+     * Poids de la relation annotÃ©e.
      */
     protected int poidsRelation;
 
     /**
-     * Construit une annotation à partir d'un noeud annotation (la réification de la relation annotée), d'un noeud source, d'un noeud destination, d'un type et d'un poids.
-     * @param nom Nom donnée à l'annotation. Par convention, dans rezoJDM, les annotations sont de la forme ":r" suivi de l'ID de la relation annotée.
-     * @param idJDM ID du noeud annotation (réification de la relation annotée).
-     * @param type type du noeud annotation (réification de la relation annotée).
-     * @param poids poids  du noeud annotation (réification de la relation annotée).
-     * @param source Noeud source de la relation annotée.
-     * @param typeRelation Type de la relation annotée.
-     * @param nomTypeRelation Nom du type de la relation annotée.
-     * @param destination Noeud destination de la relation annotée.
-     * @param poidsRelation Poids de la relation annotée.
+     * Construit une annotation Ã  partir d'un noeud annotation (la rÃ©ification de la relation annotÃ©e), d'un noeud source, d'un noeud destination, d'un type et d'un poids.
+     * @param nom Nom donnÃ© Ã  l'annotation. Par convention, dans rezoJDM, les annotations sont de la forme ":r" suivi de l'ID de la relation annotÃ©e.
+     * @param idJDM ID du noeud annotation (rÃ©ification de la relation annotÃ©e).
+     * @param type type du noeud annotation (rÃ©ification de la relation annotÃ©e).
+     * @param poids poids  du noeud annotation (rÃ©ification de la relation annotÃ©e).
+     * @param source Noeud source de la relation annotÃ©e.
+     * @param typeRelation Type de la relation annotÃ©e.
+     * @param nomTypeRelation Nom du type de la relation annotÃ©e.
+     * @param destination Noeud destination de la relation annotÃ©e.
+     * @param poidsRelation Poids de la relation annotÃ©e.
      */
     protected Annotation(
             String nom, long idJDM, int type, int poids,
