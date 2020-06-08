@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /*
@@ -33,8 +34,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Attente défini un index des requêtes déjà effectuées mais qui n'ont pas été jugées assez importantes pour entrer dans le cache. 
- * Cela peut permettre de faire entrer dans le cache une requête demandée de nombreuses fois, même si le cache est plein.
+ * Attente dÃ©finie un index des requÃªtes dÃ©jÃ  effectuÃ©es mais qui n'ont pas Ã©tÃ© jugÃ©es assez importantes pour entrer dans le cache. 
+ * Cela peut permettre de faire entrer dans le cache une requÃªte demandÃ©e de nombreuses fois, mÃªme si le cache est plein.
  * 
  * @see AttenteInfo
  * @author jimmy.benoits
@@ -44,52 +45,30 @@ class Attente implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Table d'association entre une requête {@link CleCache} et les informations sur sa fréquences {@link AttenteInfo}.
+	 * Table d'association entre une requÃªte {@link CleCache} et les informations sur sa frÃ©quences {@link AttenteInfo}.
 	 */
-	protected HashMap<CleCache, AttenteInfo> index;
+	protected Map<CleCache, AttenteInfo> index;
 
 	/**
-	 * Constructeur par défaut, initialise la table.
+	 * Constructeur par dï¿½faut, initialise la table.
 	 */
 	protected Attente() {
 		index = new HashMap<>();
 	}
 
-	public Attente(HashMap<CleCache, AttenteInfo> index) {	
+	public Attente(Map<CleCache, AttenteInfo> index) {	
 		this.index = index;
 	}
 
 
 	/**
-	 * Fonction appelée lors du démarrage d'une session RequeterRezo si un cache existe.<br>
-	 * Cela permet de garder en mémoire d'une session sur l'autre les requêtes courantes. 
-	 * @param chemin Chemin vers le fichier à charger.
-	 * @return Une table remplie si le fichier a pu être chargé correctement. En cas d'EOFException (la processus d'écriture 
-	 * a été interrompu), l'ancien fichier est supprimé et une nouvelle table est crée. Null sinon (avec affichage de l'erreur).
+	 * Fonction appelÃ©e lors du dÃ©marrage d'une session RequeterRezo si un cache existe.<br>
+	 * Cela permet de garder en mÃ©moire d'une session sur l'autre les requÃªtes courantes. 
+	 * @param chemin Chemin vers le fichier Ã  charger.
+	 * @return Retourne une table remplie si le fichier a pu Ãªtre chargÃ© correctement. En cas d'EOFException (la processus d'Ã©crriture 
+	 * a Ã©tÃ© interrompu), l'ancien fichier est supprimÃ© et une nouvelle table est crÃ©e. Null sinon (avec affichage de l'erreur).
 	 */
 	protected static Attente chargerAttente(String chemin) {
-		//		long timer = System.nanoTime();		
-		//		Attente resultat = null;
-		//		String line;
-		//		String[] tokens;
-		//		HashMap<CleCache, AttenteInfo> index = new HashMap<>();
-		//		CleCache cle;
-		//		AttenteInfo info;
-		//		try(BufferedReader reader = new BufferedReader(new FileReader(chemin))){
-		//			while((line = reader.readLine())!= null) {
-		//				tokens = line.split(";;;");	
-		//				cle = CleCache.Construire(tokens[0]);
-		//				info = AttenteInfo.Construire(tokens[1]);
-		//				index.put(cle, info);
-		//			}
-		//			resultat = new Attente(index);
-		//		} catch (IOException e) {
-		//			e.printStackTrace();
-		//		}
-		//		timer = System.nanoTime() - timer;
-		//		System.out.println("Cache loaded in: "+ (timer / 1_000_000)+"ms");
-		//		return resultat;
-
 		FileInputStream fichierFluxEntrant;
 		ObjectInputStream objetFluxEntrant;
 		Attente attente = null;
@@ -110,21 +89,10 @@ class Attente implements Serializable{
 	}
 
 	/**
-	 * Fonction appelée à chaque modification de la table d'attente afin de conserver dans un fichier les informations sur les requêtes courantes.
-	 * @param chemin Chemin vers le fichier à sauvegarder.
+	 * Fonction appelÃ©e Ã  chaque modification de la table d'attente afin de conserver dans un fichier les informations sur les requÃªtes courantes.
+	 * @param chemin Chemin vers le fichier Ã  sauvegarder.
 	 */
 	protected void sauvegarderAttente(String chemin) {
-		//		long timer = System.nanoTime();
-		//		try(BufferedWriter writer = new BufferedWriter(new FileWriter(chemin))){			
-		//			for(Entry<CleCache, AttenteInfo> entree : index.entrySet()) {				
-		//				writer.write(entree.getKey().toString()+";;;"+entree.getValue().toString());
-		//				writer.newLine();
-		//			}
-		//		} catch (IOException e) {
-		//			e.printStackTrace();
-		//		}
-
-
 		FileOutputStream fichierFluxSortant;
 		ObjectOutputStream objetFluxSortant;
 		try {
@@ -136,13 +104,11 @@ class Attente implements Serializable{
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		//		timer = System.nanoTime() - timer;
-		//		System.out.println("Attente saved in: "+ (timer / 1_000_000)+"ms");
 	}
 
 	/**
-	 * Supprime de l'attente une requête. Cela est notamment utile lors de l'entrée d'une requête en attente dans le cache.
-	 * @param cleCache Requête à supprimer.
+	 * Supprime de l'attente une requÃªte. Cela est notamment utile lors de l'entrÃ©e d'une requÃªte en attente dans le cache.
+	 * @param cleCache RequÃªte Ã  supprimer.
 	 */
 	protected void supprimer(CleCache cleCache) {
 		if (this.index.containsKey(cleCache)) {
@@ -151,10 +117,10 @@ class Attente implements Serializable{
 	}
 
 	/**
-	 * Ajoute une requête à l'attente. Le nombre d'occurence est à fixer à en cas de nouvelle entrée mais le nombre d'occurrence d'une requête passant
-	 * du cache à l'attente (pas assez utilisée ou périmée) est conserver. 
-	 * @param cleCache Requête à ajouter.
-	 * @param occurrences 1 en cas de nouvelle entrée. Sinon le nombre d'occurrence de la requête. 
+	 * Ajoute une requÃªte Ã  l'attente. Le nombre d'occurence est Ã  fixer en cas de nouvelle entrÃ©e mais le nombre d'occurrence d'une requÃªte passant
+	 * du cache Ã  l'attente (pas assez utilisÃ©e ou pÃ©rimÃ©e) est conservÃ©. 
+	 * @param cleCache RequÃªte Ã  ajouter.
+	 * @param occurrences 1 en cas d'une nouvelle entrÃ©e. Sinon, le nombre d'occurrence de la requÃªte. 
 	 */
 	protected void ajouter(CleCache cleCache, int occurrences) {
 		AttenteInfo info = new AttenteInfo(occurrences, new Date());

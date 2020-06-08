@@ -27,13 +27,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Elements de configuration partagée par le système "live" ({@link RequeterRezoDump}) et le système "local" ({@link RequeterRezoSQL}).
+ * Elements de configuration partagÃ©e par le systÃ¨me "live" ({@link RequeterRezoDump}) et le systÃ¨me "local" ({@link RequeterRezoSQL}).
  * @author jimmy.benoits
  */
 public class Configuration {
 
 	/**
-	 * Nombre d'heure à partir duquel un fichier dans le cache est considéré comme périmé.
+	 * Nombre d'heure Ã  partir duquel un fichier dans le cache est considÃ©rÃ© comme pÃ©rimÃ©.
 	 */
 	protected int peremption;
 
@@ -47,49 +47,41 @@ public class Configuration {
 	 */
 	protected String cheminCache;
 
-	/**
-	 * Le mode avancé laisse à l'utilisateur le soin de sauvegarder les index de cache et de mise en attente de lui-même, plutôt que de le faire 
-	 * après chaque mise à jour. Ce mode est désactivé par défaut et il n'est pas conseillé de l'activer.
-	 */
-	protected boolean modeAvance;
 
 	/**
-	 * Indique (ou non) des messages sur System.err à des fins de debug.
+	 * Indique (ou non) des messages sur System.err Ã  des fins de debug.
 	 */
 	protected boolean avertissement;
 	
 	/**
-	 * Ignore le cache. Le cache est obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
+	 * Ignore le cache. Le cache est obligatoire pour RezoDump, conseillÃ© pour RezoSQL. Modifiable uniquement par le fichier de configuration.
 	 */
 	protected boolean ignorerCache;
 
 
 	/**
-	 * Constructeur par défaut. Initialise le délais de péremption à 168h (1 semaine), le cache à 100mo, le chemin du cache à "cache",
-	 * n'active pas le mode avance mais active les messages.
+	 * Constructeur par dÃ©faut. Initialise le dÃ©lais de pÃ©remption Ã  168h (1 semaine), le cache Ã  100mo, le chemin du cache Ã  "cache" et active les messages.
 	 */
 	public Configuration() {
 		this.peremption = 168;
 		this.tailleCache = 100_000_000;
 		this.cheminCache = "cache";
-		this.modeAvance = false;
 		this.avertissement = true;
 		this.ignorerCache = false;
 	}
 
 	/**
-	 * Créé une configuration à partir d'un fichier ".ini". Le fichier doit être rempli sous le format "CLE=VALEUR".
-	 *  Les clés sont :<br> 
-	 * - PEREMPTION : la valeur doit être un nombre suivi d'une unité ('j' pour jour et 'h' pour heure). Ex : 24h<br>
-	 * - CHEMIN_CACHE : la valeur correspond au chemin où le cache sera stocké.<br>
-	 * - TAILLE_MAX_CACHE : la valeur doit être un nombre suivi d'une unité ('ko', 'mo' ou 'go'). Ex : 200mo<br>
+	 * CrÃ©Ã© une configuration Ã  partir d'un fichier ".ini". Le fichier doit Ãªtre rempli sous le format "CLE=VALEUR".
+	 *  Les clÃ©s sont :<br> 
+	 * - PEREMPTION : la valeur doit Ãªtre un nombre suivi d'une unitÃ© ('j' pour jour et 'h' pour heure). Ex : 24h<br>
+	 * - CHEMIN_CACHE : la valeur correspond au chemin oÃ¹ le cache sera stockÃ©.<br>
+	 * - TAILLE_MAX_CACHE : la valeur doit Ãªtre un nombre suivi d'une unitÃ© ('ko', 'mo' ou 'go'). Exemple : 200mo<br>
 	 * - AVERTISSEMENT : OUI si l'on souhaite obtenir des messages en provenance de RequeterRezo, NON sinon.<br>
-	 * - MODE : AVANCE si l'on souhaite activer le mode avancé (déconseillé). <br>
-	 * Le caractère dièse (#) est utilisé pour commenter une ligne. 
+	 * Le caractÃ¨re diÃ¨se (#) est utilisÃ© pour commenter une ligne. 
 	 * @param chemin_fichier_configuration Chemin vers le fichier ".ini".
-	 * @throws FileNotFoundException Le fichier n'a pas pu être trouvé.
-	 * @throws IOException Le fichier n'a pas pu être lu.
-	 * @throws ConfigurationException Une erreur est survenue lors de l'interprétation du fichier de configuration.
+	 * @throws FileNotFoundException Le fichier n'a pas pu Ãªtre trouvÃ©.
+	 * @throws IOException Le fichier n'a pas pu Ãªtre lu.
+	 * @throws ConfigurationException Une erreur est survenue lors de l'interprÃ©tation du fichier de configuration.
 	 */
 	public Configuration(String chemin_fichier_configuration) throws FileNotFoundException, IOException, ConfigurationException {
 		try (BufferedReader reader = new BufferedReader(new FileReader(chemin_fichier_configuration))) {
@@ -103,10 +95,6 @@ public class Configuration {
 						cle = ligne.substring(0, indexOf);
 						valeur = ligne.substring(indexOf + 1);
 						switch (cle.toUpperCase()) {
-						case "MODE": {
-							this.modeAvance = valeur.toUpperCase().equals("AVANCE");
-							break;
-						}
 						case "AVERTISSEMENT" : {
 							this.avertissement = valeur.toUpperCase().equals("OUI") || valeur.toUpperCase().equals("TRUE");
 							break;
@@ -117,7 +105,7 @@ public class Configuration {
 								try {
 									this.peremption = Integer.parseInt(valeur.substring(0, valeur.length()-1)) * 24;
 								} catch (NumberFormatException e) {
-									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de peremption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
+									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de pÃ©remption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}
 								break;
 							}
@@ -125,7 +113,7 @@ public class Configuration {
 								try {
 									this.peremption = Integer.parseInt(valeur.substring(0, valeur.length()-1)) * 24;
 								} catch (NumberFormatException e) {
-									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de peremption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
+									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de pÃ©remption n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}
 								break;
 							}
@@ -164,7 +152,7 @@ public class Configuration {
 									throw new ConfigurationException("Erreur Configuration RequeterRezo : la valeur de la taille maximale du cache n'est pas correcte. Veuillez utiliser un entier suivi de 'h' pour un nombre d'heures ou 'j' pour un nombre de jours.");
 								}
 							} else {
-								throw new ConfigurationException("Erreur Configuration RequeterRezo : l'unité de la taille maximale du cache n'est pas reconnue. Veuillez utiliser un entier suivi de \"ko\", \"mo\" ou \"go\".");
+								throw new ConfigurationException("Erreur Configuration RequeterRezo : l'unitÃ© de la taille maximale du cache n'est pas reconnue. Veuillez utiliser un entier suivi de \"ko\", \"mo\" ou \"go\".");
 							}
 
 							break;
@@ -178,7 +166,7 @@ public class Configuration {
 						}
 						}
 					} else {
-						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu être interprÃ©tÃ©e.");
+						throw new ConfigurationException("Erreur Configuration RequeterRezo : la ligne \"" + ligne + "\" n'a pas pu Ãªtre interprÃ©tÃ©e.");
 					}
 				}
 			}
@@ -186,8 +174,8 @@ public class Configuration {
 	}
 
 	/**
-	 * Nombre d'heure à partir duquel un fichier dans le cache est considéré comme périmé.
-	 * @return Le délais de peremption.
+	 * Nombre d'heure Ã  partir duquel un fichier dans le cache est considÃ©rÃ© comme pÃ©rimÃ©.
+	 * @return Le dÃ©lais de peremption.
 	 */
 	public int getPeremption() {
 		return peremption;
@@ -195,9 +183,9 @@ public class Configuration {
 
 	/**
 	 * Taille maximale du cache (en Octet).<br>
-	 * Le cache n'autorise plus de nouvelles entrées sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication<br>
-	 * Le cache peut dépasser cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
-	 * d'un échange.
+	 * Le cache n'autorise plus de nouvelles entrÃ©es sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication<br>
+	 * Le cache peut dÃ©passer cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
+	 * d'un Ã©change.
 	 * @return La taille maximale du cache.
 	 */
 	public long getTailleCache() {
@@ -211,18 +199,9 @@ public class Configuration {
 	public String getCheminCache() {
 		return cheminCache;
 	}
-
-	/**
-	 * Le mode avancé laisse à l'utilisateur le soin de sauvegarder les index de cache et de mise en attente de lui-même, plutôt que de le faire
-	 * automatiquement. Ce mode est désactivé par défaut et il n'est pas conseillé de l'activer.
-	 * @return True si le mode Avancé a été activé, false sinon.
-	 */
-	public boolean getModeAvance(){
-		return modeAvance;
-	}
 	
 	/**
-	 * Indique (ou non) des messages sur System.err à des fins de debug.
+	 * Indique (ou non) des messages sur System.err Ã  des fins de debug.
 	 * @return True si RequeterRezo doit transmettre des messages, false sinon.
 	 */
 	public boolean getAvertissement() {
@@ -230,8 +209,8 @@ public class Configuration {
 	}
 	
 	/**
-	 * Utilisation du cache. Obligatoire pour RezoDump, conseillé pour RezoSQL. Modifiable uniquement par le fichier de configuration.
-	 * @return True si le cache doit être utiliser, false sinon.
+	 * Utilisation du cache. Obligatoire pour RezoDump, conseillÃ© pour RezoSQL. Modifiable uniquement par le fichier de configuration.
+	 * @return True si le cache doit Ãªtre utilisÃ©, false sinon.
 	 */
 	public boolean getIgnorerCache() {
 		return ignorerCache;

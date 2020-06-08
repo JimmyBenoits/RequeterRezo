@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /*
@@ -34,7 +35,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class Utils {
 
 	/**
-	 * Format des dates utilisÈes pour le cache.
+	 * Format des dates utilis√©es pour le cache.
 	 */
 	protected static SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aaa");
 
@@ -43,29 +44,29 @@ class Utils {
 	 */
 	protected static DecimalFormat formatNombre = new DecimalFormat();
 	/**
-	 * DÈtermine si une date est "pÈrimÈe".
-	 * @param date Date ‡ tester.
-	 * @param peremption Nombre d'heures du dÈlais de pÈremption.
-	 * @return True si le nombre d'heures qui sÈpare la date ‡ tester du moment actuel est supÈrieur au dÈlais de pÈremption.
+	 * D√©termine si une date est "p√©rim√©e".
+	 * @param date Date √† tester.
+	 * @param peremption Nombre d'heures du d√©lais de p√©remption.
+	 * @return True si le nombre d'heures qui s√©pare la date √† tester du moment actuel est sup√©rieur au d√©lais de p√©remption.
 	 */
 	protected static boolean perime(Date date, int peremption) {
 		return heuresEcarts(new Date(), date) > peremption;
 	}
 
 	/**
-	 * DÈtermine le nombre d'heure entre deux dates.
-	 * @param maintenant PremiËre date.
+	 * D√©termine le nombre d'heure entre deux dates.
+	 * @param maintenant Premi√®re date.
 	 * @param enregistrement Seconde date.
-	 * @return Le nombre d'heure entre la premiËre et la seconde date. La premiËre est supposÈe Ítre la plus rÈcente.
+	 * @return Le nombre d'heure entre la premi√®re et la seconde date.
 	 */
 	protected static int heuresEcarts(Date maintenant, Date enregistrement) {
-		return (int) ((maintenant.getTime() - enregistrement.getTime()) / 3_600_000);
+		return Math.abs((int) ((maintenant.getTime() - enregistrement.getTime()) / 3_600_000));
 	}
 
 	/**
-	 * Retourne l'ID d'un ÈlÈment du cache ‡ partir de son chemin.
-	 * @param chemin Chemin d'un fichier du cache (si id = 126, le chemin sera "1/2/6.cache").
-	 * @return L'id d'un ÈlÈment du cache si on a pu le construire, null sinon.
+	 * Retourne l'ID d'un √©l√©ment du cache √† partir de son chemin.
+	 * @param chemin Chemin d'un fichier du cache (exemple : si id = 126, le chemin sera "1/2/6.cache").
+	 * @return L'id d'un √©l√©ment du cache si on a pu le construire, null sinon.
 	 */
 	protected static Integer recupererID(String chemin){
 		Integer res = null;
@@ -78,7 +79,7 @@ class Utils {
 			int tailleCheminCache = cheminCache.length();
 			if(indexOf != -1 && (indexOf+tailleCheminCache) < chemin.length()) {
 				chemin = chemin.substring(indexOf+tailleCheminCache+1);			
-				//replaceAll(File.separator,"") => pas possible sous WIN car File.separator est caractËre d'Èchappement
+				//replaceAll(File.separator,"") => pas possible sous WIN car File.separator est caract√®re d'√©chappement
 				for(int i = 0; i < chemin.length(); ++i) {
 					c = String.valueOf(chemin.charAt(i));
 					if(!c.equals(File.separator)) {
@@ -96,6 +97,11 @@ class Utils {
 		return res;
 	}
 
+	/**
+	 * Construit le chemin du fichier stockant un √©l√©ment dans le cache √† partir de son ID. 
+	 * @param ID ID de l'√©l√©ment pr√©sent dans le cache.
+	 * @return Chemin vers le fichier dans le cache (exemple : si id = 126, le chemin sera "1/2/6.cache").
+	 */
 	protected static String construireChemin(int ID) {
 		String res = RequeterRezo.cheminCache;
 		String tmp = Integer.toString(ID);
@@ -105,8 +111,13 @@ class Utils {
 		return res +".cache";
 	}
 
-	protected static ArrayList<File> fichiersCache(File fichierCache) {		
-		ArrayList<File> fichiersCache = new ArrayList<>();
+	/**
+	 * Retourne la liste des fichiers pr√©sent dans le cache.
+	 * @param fichierCache Fichier o√π commencer l'exploration.
+	 * @return La liste des fichiers en '.cache' pr√©sent dans le dossier (et sous-dossier) pass√© en param√®tre.
+	 */
+	protected static List<File> fichiersCache(File fichierCache) {		
+		List<File> fichiersCache = new ArrayList<>();
 		if(fichierCache.isDirectory()) {
 			for(File fichier : fichierCache.listFiles()) {
 				fichiersCache.addAll(fichiersCache(fichier));						
@@ -117,6 +128,11 @@ class Utils {
 		return fichiersCache;
 	}
 
+	/**
+	 * Retourne un {@link TypeNoeud} √† partir de son identifiant. Contrairement aux types de relations, les types de noeuds sont incorpor√©s au code. 
+	 * @param typeNoeud Id du type de noeud.
+	 * @return Le TypeNoeud associ√© √† l'identifiant.
+	 */
 	protected static TypeNoeud equivalenceNoeud(int typeNoeud) {
 		switch (typeNoeud) {
 		case 0:

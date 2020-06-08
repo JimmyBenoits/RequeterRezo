@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeSet;
@@ -38,22 +40,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Index permettant de garder en mémoire les requêtes dont le résultat est stocké localement. <br><br>
+ * Index permettant de garder en mÃ©moire les requÃªtes dont le rÃ©sultat est stockÃ© localement. <br><br>
  * 
- * Le cache (@{@link Cache#cache}) est une table d'association liant une requête ({@link CleCache})
- * a un ensemble d'informations ({@link CacheInfo}). Il permet de savoir si une requête a besoin d'être envoyé
- * sur le serveur ou si elle peut être chargée directement. Il a une capacité maximum (en octet) et 
- * une peremption (en nombre d'heure). Une nouvelle requête est systématiquement placée dans le cache s'il y a de la place.
- * Si le cache est plein (sans aucune entrée périmée), le nombre d'occurrence de la nouvelle requête est comparée avec 
- * la requête la plus "petite" du cache afin de déterminer si elle doit y la remplacer.<br><br> 
+ * Le cache (@{@link Cache#cache}) est une table d'association liant une requÃªte ({@link CleCache})
+ * a un ensemble d'informations ({@link CacheInfo}). Il permet de savoir si une requÃªte a besoin d'Ãªtre envoyÃ©
+ * sur le serveur ou si elle peut Ãªtre chargÃ©e directement. Il a une capacitÃ© maximum (en octet) et 
+ * une peremption (en nombre d'heure). Une nouvelle requÃªte est systÃ©matiquement placÃ©e dans le cache s'il y a de la place.
+ * Si le cache est plein (sans aucune entrÃ©e pÃ©rimÃ©e), le nombre d'occurrence de la nouvelle requÃªte est comparÃ©e avec 
+ * la requÃªte la plus "petite" du cache afin de dÃ©terminer si elle doit y la remplacer.<br><br> 
  * 
- * Lors du chargement, une vérification du cache est effectuée ({@link Cache#verifierIntegrite(String, boolean)}). Cette opération vérifie
- * que toutes les entrée du cache possèdent un fichier et que tous les fichiers du cache ont une entrée. Cela permet de conserver un cache
- * même après une exécution ayant rencontré un problème.<br><br>
+ * Lors du chargement, une vÃ©rification du cache est effectuÃ©e ({@link Cache#verifierIntegrite(String, boolean)}). Cette opÃ©ration vÃ©rifie
+ * que toutes les entrÃ©e du cache possÃ¨dent un fichier et que tous les fichiers du cache ont une entrÃ©e. Cela permet de conserver un cache
+ * mÃªme aprÃ¨s une exÃ©cution ayant rencontrÃ© un problÃ¨me.<br><br>
  * 
- * Le cache n'autorise plus de nouvelles entrées sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication
- * Le cache peut dépasser cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
- * d'un échange.
+ * Le cache n'autorise plus de nouvelles entrÃ©es sans en supprimer une autre lorsque le cache est "plein". La taille maximale est donc une indication.
+ * Le cache peut dÃ©passer cette limite : en ajoutant le "dernier" fichier (celui faisant franchir le seuil) et en supprimant un fichier plus petit lors
+ * d'un Ã©change.
  * 
  * @author jimmy.benoits
  */
@@ -62,9 +64,9 @@ class Cache implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Table d'association entre une requête et ses informations associées 
+	 * Table d'association entre une requÃªte et ses informations associÃ©es 
 	 */
-	protected HashMap<CleCache, CacheInfo> cache = new HashMap<>();
+	protected Map<CleCache, CacheInfo> cache = new HashMap<>();
 
 	/**
 	 * Prochain ID a affecter si la file de recyclage est vide.
@@ -72,12 +74,12 @@ class Cache implements Serializable {
 	protected int idMax;
 
 	/**
-	 * Lorsqu'une entrée quitte le cache, son ID est conservé afin d'être ré-affecter et de ne pas croître indéfiniment.
+	 * Lorsqu'une entrÃ©e quitte le cache, son ID est conservÃ© afin d'Ãªtre rÃ©-affectÃ© et de ne pas croÃ®tre indÃ©finiment.
 	 */
 	protected Queue<Integer> recyclesID;
 
 	/**
-	 * Nombre d'heures à partir duquel un fichier du cache est considéré comme trop vieux pour être utilisable.
+	 * Nombre d'heures Ã  partir duquel un fichier du cache est considÃ©rÃ© comme trop vieux pour Ãªtre utilisable.
 	 */
 	protected final int peremption;
 
@@ -87,15 +89,15 @@ class Cache implements Serializable {
 	protected long tailleCourante;
 
 	/**
-	 * Taille maximale (en octet) autorisée pour le cache. 
+	 * Taille maximale (en octet) autorisÃ©e pour le cache. 
 	 */
 	protected long tailleMax;
 
 
 
 	/**
-	 * Constructeur paramétré.
-	 * @param peremption Nombre d'heure avant lequelle un fichier du cache est considéré comme obsolète.
+	 * Constructeur paramÃ©trÃ©.
+	 * @param peremption Nombre d'heure avant lequelle un fichier du cache est considÃ©rÃ© comme obsolÃ¨te.
 	 * @param tailleMax Taille maximale du cache (en octet).
 	 */
 	protected Cache(int peremption, long tailleMax) {
@@ -107,7 +109,7 @@ class Cache implements Serializable {
 	}
 
 	/**
-	 * Retourne l'ID du prochain objet à ajouter au cache.
+	 * Retourne l'ID du prochain objet Ã  ajouter au cache.
 	 * @return idMax ou le premier id de la file de recyclage.
 	 */
 	protected int prochainID() {
@@ -122,10 +124,10 @@ class Cache implements Serializable {
 	}
 
 	/**
-	 * Ajoute une nouvelle requête au cache.
-	 * @param cleCache Requête à ajouter.
-	 * @param occurrences Nombre d'occurrence de la requête (1 si nouvelle, son nombre dans la table {@link Attente} sinon.
-	 * @param resultat Résultat de la requête.
+	 * Ajoute une nouvelle requÃªte au cache.
+	 * @param cleCache RequÃªte Ã  ajouter.
+	 * @param occurrences Nombre d'occurrence de la requte (1 si nouvelle, son nombre dans la table {@link Attente} sinon.
+	 * @param resultat Ã©sultat de la requÃªte.
 	 */
 	protected void ajouter(CleCache cleCache, int occurrences, Resultat resultat) {
 		int id = prochainID();
@@ -140,8 +142,8 @@ class Cache implements Serializable {
 	}
 
 	/**
-	 * Supprime une requête du cache. Met à jour la taille, ajoute l'ID de la requête supprimée à la file de recyclage. Supprime le fichier dans le cache.
-	 * @param cleCache Requête à supprimer.
+	 * Supprime une requÃªte du cache. Met Ã  jour la taille, ajoute l'ID de la requÃªte supprimÃ©e Ã  la file de recyclage. Supprime le fichier dans le cache.
+	 * @param cleCache RequÃªte Ã  supprimer.
 	 */
 	protected void supprimer(CleCache cleCache) {
 		CacheInfo info = cache.get(cleCache);
@@ -158,9 +160,9 @@ class Cache implements Serializable {
 	}	
 
 	/**
-	 * Détermine si une entrée dans le cache est périmée ou non.
-	 * @param cacheKey Requête à tester.
-	 * @return True si le nombre d'heure séparant la demande et l'entrée de la requête dans le cache est supérieur au délais de péremption, false sinon.
+	 * DÃ©termine si une entrÃ©e dans le cache est pÃ©rimÃ©e ou non.
+	 * @param cacheKey RequÃªte Ã  tester.
+	 * @return True si le nombre d'heure sÃ©parant la demande et l'entrÃ©e de la requÃªte dans le cache est supÃ©rieur au dÃ©lais de pÃ©remption, false sinon.
 	 */
 	protected boolean estPerime(CleCache cacheKey) {
 		boolean res = true;
@@ -172,60 +174,13 @@ class Cache implements Serializable {
 	}
 
 
-	//	protected static Cache chargerCache(String chemin, long nouvelleTailleMax, boolean avertissement) {
-	//		//		long timer = System.nanoTime();		
-	//		Cache resultat = null;
-	//		String line;
-	//		String[] tokens;
-	//		HashMap<CleCache, CacheInfo> cache = new HashMap<>();
-	//		int idMax;
-	//		Queue<Integer> recyclesID;
-	//		int peremption;
-	//		long tailleCourante;	
-	//		long tailleMax;
-	//		CleCache cle;
-	//		CacheInfo info;
-	//		try(BufferedReader reader = new BufferedReader(new FileReader(chemin))){
-	//
-	//			idMax = Integer.parseInt(reader.readLine());
-	//			recyclesID = new LinkedList<>();			
-	//			line = reader.readLine();
-	//			if(!line.isEmpty()) {
-	//				tokens = line.split(",");
-	//				for(String token : tokens) {
-	//					recyclesID.add(Integer.parseInt(token));
-	//				}
-	//			}
-	//
-	//			peremption = Integer.parseInt(reader.readLine());
-	//			tailleCourante = Long.parseLong(reader.readLine());
-	//			tailleMax = Long.parseLong(reader.readLine());
-	//			if(tailleMax > nouvelleTailleMax && tailleCourante > nouvelleTailleMax && avertissement) {
-	//				System.err.println("Avertissement RequeterRezo : la nouvelle taille du cache est plus petite que l'ancienne.");
-	//			}
-	//
-	//			while((line = reader.readLine())!= null) {
-	//				tokens = line.split(";;;");
-	//				cle = CleCache.Construire(tokens[0]);
-	//				info = CacheInfo.Construire(tokens[1]);
-	//				cache.put(cle, info);
-	//			}
-	//			resultat = new Cache(idMax, recyclesID, peremption, tailleCourante, nouvelleTailleMax, cache);
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
-	//		//		timer = System.nanoTime() - timer;
-	//		//		System.out.println("Cache loaded in: "+ (timer / 1_000_000)+"ms");
-	//		return resultat;
-	//	}
-
 	/**
-	 * Charge un objet Cache depuis un fichier sérialisé. 
-	 * @param chemin Chemin vers un fichier créé par la fonction {@link Cache#sauvegarderCache(String)}.
-	 * @param nouvelleTailleMax Nouvelle taille maximale autorisée pour le cache. Ne peut pas être plus petite que l'ancienne.
+	 * Charge un objet Cache depuis un fichier sÃ©rialisÃ©. 
+	 * @param chemin Chemin vers un fichier crÃ©Ã© par la fonction {@link Cache#sauvegarderCache(String)}.
+	 * @param nouvelleTailleMax Nouvelle taille maximale autorisÃ©e pour le cache. Ne peut pas Ãªtre plus petite que l'ancienne.
 	 * @param avertissement Autorise ou non la diffusion d'avertissement sur la sortie d'erreur standard.
-	 * @return Un cache précedemment rempli. Si le fichier est illisible (l'écriture a été interrompu avant sa fin), retourne null.
-	 * En cas d'autre erreur, retourne null après avoir affiché la trace d'erreur.
+	 * @return Un cache prÃ©cedemment rempli. Si le fichier est illisible (l'Ã©cr a Ã©tÃ© interrompu avant sa fin), retourne null.
+	 * En cas d'autre erreur, retourne null aprÃ¨s avoir affichÃ© la trace d'erreur.
 	 */
 	protected static Cache chargerCache(String chemin, long nouvelleTailleMax, boolean avertissement) {
 		FileInputStream fichierFluxEntrant;
@@ -238,7 +193,7 @@ class Cache implements Serializable {
 			objetFluxEntrant.close();	
 			fichierFluxEntrant.close();
 			if(cache.tailleMax > nouvelleTailleMax && cache.tailleCourante > nouvelleTailleMax && avertissement) {
-				System.err.println("Avertissement RequeterRezo : la nouvelle taille du cache est plus petite que l'ancienne. Blocage de la taille à la valeur actuelle.");
+				System.err.println("Avertissement RequeterRezo : la nouvelle taille du cache est plus petite que l'ancienne. Blocage de la taille Ã  la valeur actuelle.");
 				cache.tailleMax = cache.tailleCourante;				
 			}else {
 				cache.tailleMax = nouvelleTailleMax;						
@@ -252,45 +207,10 @@ class Cache implements Serializable {
 		return cache;
 	}
 
-
-	//	protected void sauvegarderCache(String chemin) {
-	//		//		long timer = System.nanoTime();		
-	//		String line;
-	//		try(BufferedWriter writer = new BufferedWriter(new FileWriter(chemin))){
-	//			writer.write(String.valueOf(idMax));
-	//			writer.newLine();
-	//			Iterator<Integer> iterateurID;
-	//			iterateurID = recyclesID.iterator();
-	//			line = "";
-	//			if(iterateurID.hasNext()) {
-	//				line = String.valueOf(iterateurID.next());
-	//				while(iterateurID.hasNext()) {
-	//					line += ","+String.valueOf(iterateurID.next());
-	//				}
-	//			}
-	//			writer.write(line);
-	//			writer.newLine();
-	//			writer.write(String.valueOf(peremption));
-	//			writer.newLine();
-	//			writer.write(String.valueOf(tailleCourante));
-	//			writer.newLine();
-	//			writer.write(String.valueOf(tailleMax));
-	//			writer.newLine();
-	//
-	//			for(Entry<CleCache, CacheInfo> entree : cache.entrySet()) {			
-	//				writer.write(entree.getKey().toString()+";;;"+entree.getValue().toString());
-	//				writer.newLine();
-	//			}
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
-	//		//		timer = System.nanoTime() - timer;
-	//		//		System.out.println("Cache saved in: "+ (timer / 1_000_000)+"ms");
-	//	}
 	
 	/**
-	 * Sauvegarde le cache dans un objet sérialisé pouvant être lu par {@link Cache#chargerCache(String, long, boolean)}.
-	 * @param chemin Chemin du fichier où sauvegarder le cache.
+	 * Sauvegarde le cache dans un objet sÃ©rialisÃ© pouvant Ãªtre lu par {@link Cache#chargerCache(String, long, boolean)}.
+	 * @param chemin Chemin du fichier oÃ¹ sauvegarder le cache.
 	 */
 	protected void sauvegarderCache(String chemin) {
 		FileOutputStream fichierFluxSortant;
@@ -308,9 +228,9 @@ class Cache implements Serializable {
 	}
 
 	/**
-	 * Vérifie si une requête existe dans le cache.
-	 * @param mot Requête à vérifier.
-	 * @return True si la requête existe dans le cache, false sinon.
+	 * VÃ©rifie si une requÃªte existe dans le cache.
+	 * @param mot RequÃªte Ã  vÃ©rifier.
+	 * @return True si la requÃªte existe dans le cache, false sinon.
 	 */
 	protected boolean contient(CleCache mot) {
 		return this.cache.containsKey(mot);
@@ -318,7 +238,7 @@ class Cache implements Serializable {
 
 
 	/**
-	 * Vérifie s'il est possible d'ajouter une nouvelle entrée. 
+	 * VÃ©rifie s'il est possible d'ajouter une nouvelle entrÃ©e. 
 	 * @return True s'il le cache est plein, false sinon.
 	 */
 	protected boolean estPlein(){
@@ -326,18 +246,18 @@ class Cache implements Serializable {
 	}
 
 	/**
-	 * Méthode à appeler après avoir charger un cache afin de vérifier son bon fonctionnement. 
-	 * Cette méthode vérifie que : 
-	 * - Toutes les entrées du cache ont un fichier associé (sinon, supprime l'entrée). 
-	 * Attention, si le fichier est illisible, cela ne sera pas détecter ici.
-	 * - Tous les fichiers du cache ont une entrée. Si un fichier est présent dans le dossier contenant le cache mais pas dans l'index,
-	 * le fichier est chargé et ensuite ajouter au cache. 
+	 * MÃ©thode Ã  appeler aprÃ¨s avoir charger un cache afin de vÃ©rifier son bon fonctionnement. 
+	 * Cette mÃ©thode vÃ©rifie que : 
+	 * - Toutes les entrÃ©es du cache ont un fichier associÃ© (sinon, supprime l'entrÃ©e). 
+	 * Attention, si le fichier est illisible, cela ne sera pas dÃ©tectÃ© ici.
+	 * - Tous les fichiers du cache ont une entrÃ©e. Si un fichier est prÃ©sent dans le dossier contenant le cache mais pas dans l'index,
+	 * le fichier est chargÃ© et ensuite ajoutÃ© au cache. 
 	 * @param cheminCache chemin vers le dossier contenant le cache.
-	 * @param avertissement True si l'utilisateur veut des détails sur l'exécution, false sinon.
+	 * @param avertissement True si l'utilisateur veut des dÃ©tails sur l'exÃ©cution, false sinon.
 	 */
 	protected void verifierIntegrite(String cheminCache, boolean avertissement) {		
-		//1er sens : vérifier que tous les mots du cache possèdent leur fichier 
-		ArrayList<CleCache> aRetirer = new ArrayList<>();
+		//1er sens : vÃ©rifier que tous les mots du cache possÃ¨dent leur fichier 
+		List<CleCache> aRetirer = new ArrayList<>();
 		String chemin;
 		File fichierCache;
 		for(Entry<CleCache,CacheInfo> entree : cache.entrySet()) {
@@ -352,44 +272,43 @@ class Cache implements Serializable {
 			supprimer(cleCache);
 		}
 
-		//2nd sens : vérifier que les fichiers présents dans le dossier sont répertorier, sinon, les ajouter		
+		//2nd sens : vÃ©rifier que les fichiers prÃ©sents dans le dossier sont rÃ©pertoriÃ©s, sinon, les ajouter		
 		File dossierCache = new File(cheminCache);
-		//Ne le faire SEULEMENT SI le nombre de fichier en ".cache" dans le cache est plus grand que le nombre d'entrée		
-		ArrayList<File> fichiersCache;
-		//Récupération des IDs présents dans le cache (normalement {0,1,...,idMax-1} moins ceux présents dans la file de recyclage		
+		//Ne le faire SEULEMENT SI le nombre de fichier en ".cache" dans le cache est plus grand que le nombre d'entrÃ©e		
+		List<File> fichiersCache;
+		//RÃ©cupÃ©ration des IDs prÃ©sents dans le cache (normalement {0,1,...,idMax-1} moins ceux prÃ©sents dans la file de recyclage		
 		TreeSet<Integer> idsCache = new TreeSet<>();
 		for(CacheInfo info : cache.values()) {
 			idsCache.add(info.ID);
 		}		
-		//Récupération récursive des fichiers dans le dossier du cache.
+		//RÃ©cupÃ©ration rÃ©cursive des fichiers dans le dossier du cache.
 		fichiersCache = Utils.fichiersCache(dossierCache);
 		//nombre de fichier.
 		int cpt = fichiersCache.size();
-		//nombre d'entrées à ajouter (0 si aucune entrée ne manque).
+		//nombre d'entrÃ©es Ã  ajouter (0 si aucune entrÃ©e ne manque).
 		int aAjouter = cpt - cache.size();
 		if(aAjouter > 0) {
 			if(avertissement) {
 				if(aAjouter == 1) {
-					System.err.println("Avertissement RequeterRezo : Problème d'intégrité du cache, "
-							+ "recherche et chargement du fichier manquant (cette opération peut prendre quelques minutes).");
+					System.err.println("Avertissement RequeterRezo : ProblÃ¨me d'intÃ©gritÃ© du cache, recherche et chargement du fichier manquant.");
 				}else {
-					System.err.println("Avertissement RequeterRezo : Problème d'intégrité du cache, "
-							+ "recherche et chargement des "+aAjouter+" fichiers manquants (cette opération peut prendre quelques minutes).");	
+					System.err.println("Avertissement RequeterRezo : ProblÃ¨me d'intÃ©gritÃ© du cache, "
+							+ "recherche et chargement des "+aAjouter+" fichiers manquants (cette opÃ©ration peut prendre quelques minutes).");	
 				}
 			}
-			ArrayList<File> aSupprimer = new ArrayList<>();
+			List<File> aSupprimer = new ArrayList<>();
 			Resultat resultat;
 			Mot mot;
 			CleCache cleCache;
 			int i = 0;
 			File fichier;
 			Integer id;
-			//Arrêt des recherches si on trouve toutes les entrées manquantes.	
+			//ArrÃªt des recherches si on trouve toutes les entrÃ©es manquantes.	
 			while(i < fichiersCache.size() && (aAjouter > 0)) {
 				fichier = fichiersCache.get(i);
 				id = Utils.recupererID(fichier.getPath());								
 				if(id != null && !idsCache.contains(id)) {
-					//lecture du fichier seulement en dernier recours (opération coûteuse, ~400ms).
+					//lecture du fichier seulement en dernier recours (opÃ©ration potentiellement coÃ»teuse).
 					resultat = Resultat.lireCache(fichier.getPath(), null);
 					if(resultat == null) {
 						//EOFException => fichier illisible, supprimer le fichier.
@@ -404,7 +323,7 @@ class Cache implements Serializable {
 							cleCache = resultat.getMot().cleCache;							
 							if(!cache.containsKey(cleCache)) {
 								if(avertissement) {
-									System.err.println("Avertissement RequeterRezo : Ajout de \""+cleCache.toString()+"\" grâce au fichier.");
+									System.err.println("Avertissement RequeterRezo : Ajout de \""+cleCache.toString()+"\" grï¿½ce au fichier.");
 								}
 								ajouter(cleCache, 1, resultat);
 								--aAjouter;
@@ -415,7 +334,7 @@ class Cache implements Serializable {
 				++i;
 			}
 
-			//Suppression des fichiers illisibles détectés.
+			//Suppression des fichiers illisibles dÃ©tectÃ©s.
 			for(File supprimer : aSupprimer) {
 				supprimer.delete();
 			}

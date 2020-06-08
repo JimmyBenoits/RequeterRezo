@@ -22,14 +22,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Exception liée à l'interprétation d'un fichier de configuration pour RequeterRezo.
+ * Exception liÃ©e Ã  l'interprÃ©tation d'un fichier de configuration pour RequeterRezo.
  * @author jimmy.benoits
  */
 @SuppressWarnings("serial")
 public class ConfigurationException extends Exception{
 
 	/**
-	 * Créé une ConfigurationException avec un message d'erreur.
+	 * CrÃ©Ã© une ConfigurationException avec un message d'erreur.
 	 * @param messageErreur Le message d'erreur.
 	 */
 	public ConfigurationException(String messageErreur) {

@@ -31,11 +31,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Objet contenant le résultat d'une requête effectuée par RequeterRezo. <br>
- * Une requête retourne toujours un résultat contenant : <br>
- * - un {@link Mot} : le mot demandé. Attention, ceci peut être null si le mot n'existait pas ou qu'une erreur est survenue. <br>
- * - Un {@link Etat} : l'état de la requête.<br>
- * - un {@link EtatCache} : information concernant la provenance de la requête.
+ * Objet contenant le rÃ©sultat d'une requÃªte effectuÃ©e par RequeterRezo. <br>
+ * Une requÃªte retourne toujours un rÃ©sultat contenant : <br>
+ * - un {@link Mot} : le mot demandÃ©. Attention, ceci peut Ãªtre null si le mot n'existait pas ou qu'une erreur est survenue. <br>
+ * - Un {@link Etat} : l'Ã©tat de la requÃªte.<br>
+ * - un {@link EtatCache} : information concernant la provenance de la requÃªte.
  * 
  * @author jimmy.benoits
  */
@@ -47,69 +47,69 @@ public class Resultat implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Descriptif interne de la requête.
+	 * Descriptif interne de la requÃªte.
 	 */
 	protected final CleCache informationRequete;
 	
 	/**
-	 * Mot demandé, construit depuis le cache ou depuis une requête.
+	 * Mot demandÃ©, construit depuis le cache ou depuis une requÃªte.
 	 */
 	protected final Mot mot;
 	
 	/**
-	 * Etat de la requête.
+	 * Etat de la requÃªte.
 	 */
 	protected Etat etat;
 	
 	/**
-	 * Provenance de la requête.
+	 * Provenance de la requÃªte.
 	 */
 	protected EtatCache etatCache;
 	
 	
 	/**
-	 * Retourne un descriptif de la requête contenant le terme recherché, le type de relation demandé (-1 si aucun) et 
-	 * le filtre ({@link Filtre}) directionnel utilisé.
-	 * @return Retourne une ligne décrivant la requête.
+	 * Retourne un descriptif de la requÃªte contenant le terme recherchÃ©, le type de relation demandÃ© (-1 si aucun) et 
+	 * le filtre ({@link Filtre}) directionnel utilisÃ©.
+	 * @return Retourne une ligne dÃ©crivant la requÃªte.
 	 */
 	public String informationRequete() {
 		return informationRequete.toString();
 	}
 
 	/**
-	 * Retourne le mot résultat.<br>
-	 * @return Le mot résultat ou null si l'état de la requête est 
+	 * Retourne le mot rÃ©sultat.<br>
+	 * @return Le mot rÃ©sultat ou null si l'Ã©tat de la requÃªte est 
 	 *  - {@link Etat#INEXISTANT}<br>
 	 *  - {@link Etat#RENVOYER}<br>
 	 *  - {@link Etat#SERVEUR_INACCESSIBLE}<br>
 	 *  - {@link Etat#ERREUR_REQUETE}<br>
-	 *  Dans le cas où la requête a été réalisé en "live" ({@link RequeterRezoDump}), si l'état est {@link Etat#TROP_GROS}, 
-	 *  le mot retourné a été tronqué car son nombre de relations dépassait le seuil de 25 000. Pour obtenir un résultat "complet", il faudra
-	 *  préciser la requête (appliquer des filtres) ou utiliser une version "locale" ({@link RequeterRezoSQL}) de RequeterRezo.
+	 *  Dans le cas oÃ¹ la requÃªte a Ã©tÃ© rÃ©alisÃ© en "live" ({@link RequeterRezoDump}), si l'Ã©tat est {@link Etat#TROP_GROS}, 
+	 *  le mot retournÃ© a Ã©tÃ© tronquÃ© car son nombre de relations dÃ©passait le seuil de 25 000. Pour obtenir un rÃ©sultat "complet", il faudra
+	 *  prÃ©ciser la requÃªte (appliquer des filtres) ou utiliser une version "locale" ({@link RequeterRezoSQL}) de RequeterRezo.
 	 */
 	public Mot getMot() {
 		return mot;
 	}
 
 	/**
-	 * Retourne l'état de la requête.
-	 * @return Indique si la requête s'est déroulée correctement.
+	 * Retourne l'Ã©tat de la requÃªte.
+	 * @return Indique si la requÃªte s'est dÃ©roulÃ©e correctement.
 	 */
 	public Etat getEtat() {
 		return etat;
 	}
 
 	/**
-	 * Retourne la provenance de la requête.
-	 * @return Indique si le résultat provient du cache et d'une requête.
+	 * Retourne la provenance de la requÃªte.
+	 * @return Indique si le rÃ©sultat provient du cache et d'une requÃªte.
 	 */
 	public EtatCache getEtatCache() {
 		return etatCache;
 	}
 
 	/**
-	 * Constructeur simple - à partir d'une requête. Permet de remplir les champs au fur et à mesure.
-	 * @param informationRequete Requête dont on construit le résultat.
+	 * Constructeur simple - Ã  partir d'une requÃªte. Permet de remplir les champs au fur et Ã  mesure.
+	 * @param informationRequete RequÃªte dont on construit le rÃ©sultat.
 	 */
 	protected Resultat(CleCache informationRequete) {
 		this(informationRequete, null, Etat.ERREUR_REQUETE, EtatCache.ERREUR_REQUETE);
@@ -117,10 +117,10 @@ public class Resultat implements Serializable{
 
 	/**
 	 * Constructeur complet. 
-	 * @param informationRequete Requête dont on construit le résultat.
-	 * @param mot Mot résultat.
-	 * @param etat Etat du résultat.
-	 * @param etatCache Provenance du résultat.
+	 * @param informationRequete RequÃªte dont on construit le rÃ©sultat.
+	 * @param mot Mot rÃ©sultat.
+	 * @param etat Etat du rÃ©sultat.
+	 * @param etatCache Provenance du rÃ©sultat.
 	 */
 	protected Resultat(CleCache informationRequete, Mot mot, Etat etat, EtatCache etatCache) {
 		this.informationRequete = informationRequete;
@@ -135,11 +135,11 @@ public class Resultat implements Serializable{
 	}
 
 	/**
-	 * Construit un objet Resultat d'après un fichier du cache construit par la méthode {@link Resultat#ecrireCache(String, Resultat)}.
+	 * Construit un objet Resultat d'aprÃ¨s un fichier du cache construit par la mÃ©thode {@link Resultat#ecrireCache(String, Resultat)}.
 	 * @param chemin Chemin vers un fichier Resultat.
-	 * @param cleCache Requête mise en cache.
-	 * @return Un Resultat construit depuis le cache si cela est possible. Null si le fichier est corrumpu (le processus d'écriture a été interrompu avant 
-	 * sa complétion) et null avec affichage d'erreur en cas d'autre erreur. 
+	 * @param cleCache RequÃªte mise en cache.
+	 * @return Un Resultat construit depuis le cache si cela est possible. Null si le fichier est corrumpu (le processus d'Ã©criture a Ã©tÃ© interrompu avant 
+	 * sa complÃ©tion) et null avec affichage d'erreur en cas d'autre erreur. 
 	 */
 	protected static Resultat lireCache(String chemin, CleCache cleCache) {
 		Resultat resultat = new Resultat(cleCache);
@@ -161,10 +161,10 @@ public class Resultat implements Serializable{
 	}
 
 	/**
-	 * Enregistre l'objet dans un fichier pouvant être lu par {@link Resultat#ecrireCache(String, Resultat)}.
+	 * Enregistre l'objet dans un fichier pouvant Ãªtre lu par {@link Resultat#ecrireCache(String, Resultat)}.
 	 * @param chemin Chemin du fichier.
-	 * @param resultat Résultat à enregistrer.
-	 * @return True si l'objet a pu être enregistrer. False sinon.
+	 * @param resultat RÃ©sultat Ã  enregistrer.
+	 * @return True si l'objet a pu Ãªtre enregistrÃ©. False sinon.
 	 */
 	protected static boolean ecrireCache(String chemin, Resultat resultat) {
 		boolean res = false;

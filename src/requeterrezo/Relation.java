@@ -24,8 +24,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Représente une relation dans rezoJDM. <br>
- * Une relation associe un type à deux mots. Ces trois éléments permettent de construire une relation de rezoJDM. 
+ * ReprÃ©sente une relation dans rezoJDM. <br>
+ * Une relation associe un type Ã  deux mots. Ces trois Ã©lÃ©ments permettent de construire une relation de rezoJDM. 
  * 
  * @see Mot#getRelationsEntrantes()
  * @see Mot#getRelationsSortantes() 
@@ -67,7 +67,7 @@ public class Relation implements Serializable{
 	 * Constructeur.
 	 * @param idRelation Identifiant rezoJDM de la relation.
 	 * @param source Noeud source de la relation.
-	 * @param type Type de la relation	 * 
+	 * @param type Type de la relation
 	 * @param destination Noeud destination de la relation.
 	 * @param poids Poids de la relation.
 	 */
@@ -98,10 +98,10 @@ public class Relation implements Serializable{
 	}
 
 	/**
-	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un noeud.<br>
-	 * Null si le paramètre n'est pas une extrémité de la relation. 
+	 * Retourne le noeud de l'autre extrÃ©mitÃ© d'une relation Ã  partir d'un noeud.<br>
+	 * Null si le paramÃ¨tre n'est pas une extrÃ©mitÃ© de la relation. 
 	 *
-	 * @param noeud Une extrémité de la relation.
+	 * @param noeud Une extrÃ©mitÃ© de la relation.
 	 * @return L'autre noeud de la relation.
 	 */
 	public Noeud getAutreNoeud(Noeud noeud) {
@@ -115,10 +115,10 @@ public class Relation implements Serializable{
 	}
 	
 	/**
-	 * Retourne le noeud de l'autre extrémité d'une relation à partir d'un nom.<br>
-	 * Null si le paramètre n'est pas une extrémité de la relation. 
+	 * Retourne le noeud de l'autre extrÃ©mitÃ© d'une relation Ã  partir d'un nom.<br>
+	 * Null si le paramÃ©tre n'est pas une extrÃ©mitÃ© de la relation. 
 	 *
-	 * @param nom Une extrémité de la relation.
+	 * @param nom Une extrÃ©mitÃ© de la relation.
 	 * @return L'autre noeud de la relation.
 	 */
 	public Noeud getAutreNoeud(String nom) {
@@ -152,18 +152,18 @@ public class Relation implements Serializable{
 	}
 	
 	/**
-	 * Retourne le mot formaté du noeud source.
+	 * Retourne le mot formatÃ© du noeud source.
 	 *
-	 * @return Le mot formaté du noeud source.
+	 * @return Le mot formatÃ© du noeud source.
 	 */
 	public String getMotFormateSource() {
 		return source.getMotFormate();
 	}
 
 	/**
-	 * Retourne le mot formaté du noeud destination.
+	 * Retourne le mot formatÃ© du noeud destination.
 	 *
-	 * @return Le mot formaté du noeud destination.
+	 * @return Le mot formatÃ© du noeud destination.
 	 */
 	public String getMotFormateDestination() {
 		return destination.getMotFormate();
@@ -171,10 +171,10 @@ public class Relation implements Serializable{
 
 	
 	/**
-	 * Retourne le poids de la relation liant le voisin au mot requêté.
+	 * Retourne le poids de la relation liant le voisin au mot requÃªtÃ©.
 	 *
 	 * @return Retourne le poids de la relation liant le voisin connexe au mot
-	 * requêté.
+	 * requÃªtÃ©.
 	 */
 	public int getPoids() {
 		return this.poids;
@@ -191,8 +191,8 @@ public class Relation implements Serializable{
 	
 
 	/**
-	 * Retourne l'id de la relation rezoJDM liant le voisin au mot requêté.
-	 * @return L'id de la relation rezoJDM liant le voisin au mot requêté.
+	 * Retourne l'id de la relation rezoJDM liant le voisin au mot requÃªtÃ©.
+	 * @return L'id de la relation rezoJDM liant le voisin au mot requÃªtÃ©.
 	 */
 	public long getIDRelation() {
 		return this.idRelation;

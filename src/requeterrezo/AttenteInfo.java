@@ -1,7 +1,6 @@
 package requeterrezo;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Date;
 
 
@@ -26,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- * Contient la date de la dernière demande ainsi que le nombre de demande d'une requête en attente.
+ * Contient la date de la derniÃ¨re demande ainsi que le nombre de demande d'une requÃªte en attente.
  * 
  *  @see Attente
  * @author jimmy.benoits
@@ -39,20 +38,20 @@ class AttenteInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Nombre d'occurrences de la requête (depuis sa première rencontre, même si elle est passée par le cache en attendant).<br>
-	 * Si un nombre d'heure supérieur au délais de péremption s'est écoulée depuis la dernière demande, le compteur est réinitialisé.
+	 * Nombre d'occurrences de la requÃªte (depuis sa premiÃ¨re rencontre, mÃªme si elle est passÃ©e par le cache en attendant).<br>
+	 * Si un nombre d'heure supÃ©rieur au dÃ©lais de pÃ©remption s'est Ã©coulÃ© depuis la derniÃ¨re demande, le compteur est rÃ©initialisÃ©.
 	 */
 	protected int occurrences;
 	
 	/**
-	 * Date de la dernière occurrence.
+	 * Date de la derniÃ¨re occurrence.
 	 */
 	protected Date dateOccurrences;
 
 	/**
-	 * Incrémente le nombre d'occurence. <br>
-	 * Si un nombre d'heure supérieur au délais de péremption s'est écoulée depuis la dernière demande, le compteur est réinitialisé.
-	 * @param peremption nombre d'heure avant péremption.
+	 * IncrÃ©mente le nombre d'occurence. <br>
+	 * Si un nombre d'heure supÃ©rieur au dÃ©lais de pÃ©remption s'est Ã©coulÃ© depuis la derniÃ¨re demande, le compteur est rÃ©initialisÃ©.
+	 * @param peremption nombre d'heure avant pÃ©remption.
 	 */
     protected void incrementeOccurrences(int peremption) {
         if (Utils.perime(dateOccurrences, peremption)) {
@@ -64,9 +63,9 @@ class AttenteInfo implements Serializable{
     }
 
     /**
-     * Constructeur paramétré 
-     * @param occurrences Nombre d'occurrence de la requête.
-     * @param date_occurrences Date de la dernère occurrence.
+     * Constructeur paramÃ©trÃ©.
+     * @param occurrences Nombre d'occurrence de la requÃªte.
+     * @param date_occurrences Date de la dernÃ¨re occurrence.
      */
     protected AttenteInfo(int occurrences, Date date_occurrences) {
         this.occurrences = occurrences;
@@ -74,7 +73,7 @@ class AttenteInfo implements Serializable{
     }
     
     /**
-     * Constructeur par défaut. Le nombre d'occurrence de base est fixé à 1 et une nouvelle date est créée.
+     * Constructeur par dÃ©faut. Le nombre d'occurrence de base est fixÃ© Ã  1 et une nouvelle date est crÃ©Ã©e.
      */
     protected AttenteInfo() {
         occurrences = 1;
@@ -86,20 +85,4 @@ class AttenteInfo implements Serializable{
         return occurrences + ";" + Utils.formatDate.format(dateOccurrences);
     }
 
-	public static AttenteInfo Construire(String ligne) {
-		AttenteInfo attenteInfo = null;
-		int index = ligne.indexOf(";");
-		if(index != -1) {
-			int occurrences;
-			Date dateOccurrences = null;
-			occurrences = Integer.parseInt(ligne.substring(0, index));
-			try {
-				dateOccurrences = Utils.formatDate.parse(ligne.substring(index+1));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			attenteInfo = new AttenteInfo(occurrences, dateOccurrences);
-		}		
-		return attenteInfo;		
-	}
 }

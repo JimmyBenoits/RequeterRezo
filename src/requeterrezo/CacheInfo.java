@@ -1,7 +1,6 @@
 package requeterrezo;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Date;
 
 
@@ -26,9 +25,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 /**
- *	Informations liées à une requête entrée dans le cache. Contient son identifiant dans le cache (permettant de retrouver son emplacement 
- *	dans le dossier de cache), sa date d'entrée dans le cache, sa date de dernière consultation, son nombre d'occurrences, la taille du fichier sur
- *	le disque (en octet) et l'état de la requête ({@link Etat}).
+ *	Informations liÃ©es Ã  une requÃªte entrÃ©e dans le cache. Contient son identifiant dans le cache (permettant de retrouver son emplacement 
+ *	dans le dossier de cache), sa date d'entrÃ©e dans le cache, sa date de derniÃ¨re consultation, son nombre d'occurrences, la taille du fichier sur
+ *	le disque (en octet) et l'Ã©tat de la requÃªte ({@link Etat}).
  * @author jimmy.benoits
  */
 class CacheInfo implements Serializable{
@@ -39,22 +38,22 @@ class CacheInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Identifiant de la requête dans le cache. Permet de retrouver son emplacement dans le cache.
+	 * Identifiant de la requÃªte dans le cache. Permet de retrouver son emplacement dans le cache.
 	 */
 	protected final int ID;
 
 	/**
-	 * Date d'entrée dans le cache.
+	 * Date d'entrÃ©e dans le cache.
 	 */
 	protected Date dateCache;
 
 	/**
-	 * Nombre d'occurrences (nombre de consultation dans le cache et éventuellement le nombre de demande avant son entrée).
+	 * Nombre d'occurrences (nombre de consultation dans le cache et Ã©ventuellement le nombre de demande avant son entrÃ©e).
 	 */
 	protected int occurrences;
 
 	/**
-	 * Date de la dernière occurrence.
+	 * Date de la derniÃ¨re occurrence.
 	 */
 	protected Date dateOccurrences;
 
@@ -64,13 +63,13 @@ class CacheInfo implements Serializable{
 	protected long tailleFichier;
 
 	/**
-	 * Etat de la requête.
+	 * Etat de la requÃªte.
 	 */
 	protected Etat etat;
 
 
 	/**
-	 * Appelée lors d'une consultation. Incrémente le nombre d'occurrence et met à jour à la date de consultation.
+	 * AppelÃ©e lors d'une consultation. IncrÃ©mente le nombre d'occurrence et met Ã  jour la date de consultation.
 	 */
 	protected void incrementeOccurrences() {
 		++occurrences;
@@ -78,13 +77,13 @@ class CacheInfo implements Serializable{
 	}
 
 	/**
-	 * Constructeur paramétré.
-	 * @param ID Id de la requête.
-	 * @param dateCache Date d'entrée dans le cache.
+	 * Constructeur paramÃ©trÃ©.
+	 * @param ID Id de la requÃªte.
+	 * @param dateCache Date d'entrÃ©e dans le cache.
 	 * @param occurrences Nombre d'occurrences.
-	 * @param dateOccurrences Date de la dernière occurrence.
+	 * @param dateOccurrences Date de la derniÃ¨re occurrence.
 	 * @param tailleFichier Taille du fichier sur le disque (en octet).
-	 * @param etat Etat de la requête.
+	 * @param etat Etat de la requÃªte.
 	 */
 	public CacheInfo(int ID, Date dateCache, int occurrences, Date dateOccurrences, long tailleFichier, Etat etat) {
 		this.ID = ID;
@@ -103,25 +102,4 @@ class CacheInfo implements Serializable{
 				Utils.formatDate.format(dateOccurrences) + ";" + 
 				this.tailleFichier+";"+this.etat;
 	}
-
-	public static CacheInfo Construire(String line) {
-		String[] tokens = line.split(";");
-		Date dateOccurrences = null;
-		Date dateCache = null;
-		try {
-			dateOccurrences = Utils.formatDate.parse(tokens[1]);
-			dateCache = Utils.formatDate.parse(tokens[3]);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return new CacheInfo(
-				Integer.parseInt(tokens[0]),
-				dateOccurrences,
-				Integer.parseInt(tokens[2]),
-				dateCache,
-				Long.parseLong(tokens[4]),
-				Etat.valueOf(tokens[5]));
-	}
-
 }
