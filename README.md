@@ -5,7 +5,7 @@ API Java facilitant la manipulation des données du réseau lexico-sémantique r
 Ajoutez la dépendance Maven suivante au ```pom.xml```:
 ```
 <dependency>
-  <groupId>lirmm.text</groupId>
+  <groupId>io.github.jimmybenoits</groupId>
   <artifactId>requeterrezo</artifactId>
   <version>1.1.7-SNAPSHOT</version>
 </dependency>
